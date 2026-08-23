@@ -74,7 +74,9 @@ namespace web_ban_hang2.Admin
                 out maSanPham))
             {
                 ShowMessage(
-                    "Mã sản phẩm không hợp lệ."
+                    "Lỗi",
+                    "Mã sản phẩm không hợp lệ.",
+                    "❌"
                 );
 
                 return;
@@ -94,31 +96,76 @@ namespace web_ban_hang2.Admin
         {
             try
             {
+                // ----------------------------------
+                // Kiểm tra sản phẩm đã có trong đơn hàng
+                // ----------------------------------
+
+                int soLuongDonHang =
+                    sanPhamDAL.CountOrderDetails(
+                        maSanPham
+                    );
+
+
+                if (soLuongDonHang > 0)
+                {
+                    ShowMessage(
+                        "Không thể xóa",
+                        "Sản phẩm này đã xuất hiện trong "
+                        + soLuongDonHang
+                        + " chi tiết đơn hàng. "
+                        + "Không thể xóa sản phẩm.",
+                        "⚠️"
+                    );
+
+                    return;
+                }
+
+
+                // ----------------------------------
+                // Thực hiện xóa
+                // ----------------------------------
+
                 bool result =
                     sanPhamDAL.Delete(
                         maSanPham
                     );
 
 
+                // ----------------------------------
+                // Xóa thành công
+                // ----------------------------------
+
                 if (result)
                 {
                     LoadSanPham();
 
                     ShowMessage(
-                        "Xóa sản phẩm thành công."
+                        "Xóa thành công",
+                        "Sản phẩm đã được xóa thành công.",
+                        "✅"
                     );
                 }
+
+
+                // ----------------------------------
+                // Không tìm thấy sản phẩm
+                // ----------------------------------
+
                 else
                 {
                     ShowMessage(
-                        "Không tìm thấy sản phẩm cần xóa."
+                        "Xóa thất bại",
+                        "Không tìm thấy sản phẩm cần xóa.",
+                        "❌"
                     );
                 }
             }
             catch (Exception ex)
             {
                 ShowMessage(
-                    ex.Message
+                    "Có lỗi xảy ra",
+                    ex.Message,
+                    "❌"
                 );
             }
         }
@@ -129,8 +176,17 @@ namespace web_ban_hang2.Admin
         // ==========================================
 
         private void ShowMessage(
-            string message)
+            string title,
+            string message,
+            string icon)
         {
+            string safeTitle =
+                System.Web.HttpUtility
+                .JavaScriptStringEncode(
+                    title
+                );
+
+
             string safeMessage =
                 System.Web.HttpUtility
                 .JavaScriptStringEncode(
@@ -138,10 +194,27 @@ namespace web_ban_hang2.Admin
                 );
 
 
+            string safeIcon =
+                System.Web.HttpUtility
+                .JavaScriptStringEncode(
+                    icon
+                );
+
+
+            string script =
+                "alert('"
+                + safeIcon
+                + " "
+                + safeTitle
+                + "\\n"
+                + safeMessage
+                + "');";
+
+
             ClientScript.RegisterStartupScript(
                 GetType(),
-                "message",
-                "alert('" + safeMessage + "');",
+                "deleteProductMessage",
+                script,
                 true
             );
         }

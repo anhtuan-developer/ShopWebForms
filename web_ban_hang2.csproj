@@ -105,6 +105,8 @@
     <Content Include="Admin\Admin_DanhMuc_Them.aspx" />
     <Content Include="Admin\Admin_Default.aspx" />
     <Content Include="Admin\Admin_SanPham.aspx" />
+    <Content Include="Admin\Admin_SanPham_Sua.aspx" />
+    <Content Include="Admin\Admin_SanPham_Them.aspx" />
     <Content Include="Cart.aspx" />
     <Content Include="Checkout.aspx" />
     <Content Include="Contact.aspx" />
@@ -287,6 +289,20 @@
     </Compile>
     <Compile Include="Admin\Admin_SanPham.aspx.designer.cs">
       <DependentUpon>Admin_SanPham.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Admin_SanPham_Sua.aspx.cs">
+      <DependentUpon>Admin_SanPham_Sua.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Admin_SanPham_Sua.aspx.designer.cs">
+      <DependentUpon>Admin_SanPham_Sua.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Admin_SanPham_Them.aspx.cs">
+      <DependentUpon>Admin_SanPham_Them.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Admin_SanPham_Them.aspx.designer.cs">
+      <DependentUpon>Admin_SanPham_Them.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />

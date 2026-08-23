@@ -138,6 +138,18 @@
             text-align: center;
             color: #777;
         }
+        .btn-xoa {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-xoa:hover {
+            background-color: #bb2d3b;
+        }
 
     </style>
 
@@ -211,14 +223,12 @@
             <Columns>
 
 
-                <!-- MÃ -->
 
                 <asp:BoundField
                     DataField="MaSanPham"
                     HeaderText="Mã" />
 
 
-                <!-- HÌNH ẢNH -->
 
                 <asp:TemplateField
                     HeaderText="Hình ảnh">
@@ -240,21 +250,17 @@
                 </asp:TemplateField>
 
 
-                <!-- TÊN -->
-
                 <asp:BoundField
                     DataField="TenSanPham"
                     HeaderText="Tên sản phẩm" />
 
 
-                <!-- DANH MỤC -->
 
                 <asp:BoundField
                     DataField="TenDanhMuc"
                     HeaderText="Danh mục" />
 
 
-                <!-- GIÁ -->
 
                 <asp:BoundField
                     DataField="Gia"
@@ -263,14 +269,11 @@
                     HtmlEncode="false" />
 
 
-                <!-- SỐ LƯỢNG -->
-
                 <asp:BoundField
                     DataField="SoLuong"
                     HeaderText="Số lượng" />
 
 
-                <!-- TRẠNG THÁI -->
 
                 <asp:TemplateField
                     HeaderText="Trạng thái">
@@ -289,8 +292,6 @@
 
                 </asp:TemplateField>
 
-
-                <!-- THAO TÁC -->
 
                 <asp:TemplateField
                     HeaderText="Thao tác">
@@ -313,17 +314,11 @@
                         <asp:Button
                             ID="btnXoa"
                             runat="server"
-
                             Text="Xóa"
-
-                            CssClass="product-button button-delete"
-
+                            CssClass="btn-xoa"
                             CommandName="DeleteProduct"
-
                             CommandArgument='<%# Eval("MaSanPham") %>'
-
                             CausesValidation="false"
-
                             OnClientClick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');" />
 
 

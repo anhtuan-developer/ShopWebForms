@@ -337,5 +337,30 @@ namespace web_ban_hang2.DAL
                 }
             }
         }
+        public int CountOrderDetails(int maSanPham)
+        {
+            string sql = @"
+        SELECT COUNT(*)
+        FROM ChiTietDonHang
+        WHERE MaSanPham = @MaSanPham
+    ";
+
+            using (SqlConnection conn = database.GetConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.Add(
+                        "@MaSanPham",
+                        SqlDbType.Int
+                    ).Value = maSanPham;
+
+                    conn.Open();
+
+                    return Convert.ToInt32(
+                        cmd.ExecuteScalar()
+                    );
+                }
+            }
+        }
     }
 }
