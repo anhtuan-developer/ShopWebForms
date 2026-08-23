@@ -1,0 +1,218 @@
+﻿<%@ Master Language="C#"
+    AutoEventWireup="true"
+    CodeBehind="Admin_Master.master.cs"
+    Inherits="web_ban_hang2.Admin.Admin_Master" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head runat="server">
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        <asp:ContentPlaceHolder
+            ID="TitleContent"
+            runat="server">
+
+            Admin - SHOP MASTER
+
+        </asp:ContentPlaceHolder>
+    </title>
+
+    <link href="../Content/bootstrap.min.css"
+          rel="stylesheet" />
+
+    <link href="../Content/Site.css"
+          rel="stylesheet" />
+
+    <style>
+
+        body {
+            background-color: #f5f6fa;
+        }
+
+        .admin-header {
+            background-color: #212529;
+            color: white;
+            padding: 15px 0;
+        }
+
+        .admin-header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .admin-logo a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        .admin-sidebar {
+            width: 240px;
+            background-color: #343a40;
+            padding-top: 20px;
+        }
+
+        .admin-sidebar a {
+            display: block;
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        .admin-sidebar a:hover {
+            background-color: #495057;
+        }
+
+        .admin-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .admin-title {
+            margin-bottom: 25px;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.08);
+        }
+
+    </style>
+
+    <asp:ContentPlaceHolder
+        ID="HeadContent"
+        runat="server">
+    </asp:ContentPlaceHolder>
+
+</head>
+
+
+<body>
+
+<form
+    id="form1"
+    runat="server">
+
+    <!-- HEADER -->
+
+    <header class="admin-header">
+
+        <div class="container admin-header-container">
+
+            <div class="admin-logo">
+
+                <a href="Admin_Default.aspx">
+
+                    SHOP MASTER - ADMIN
+
+                </a>
+
+            </div>
+
+            <div>
+
+                <a href="../index.aspx"
+                   style="color:white;">
+
+                    Xem website
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- LAYOUT -->
+
+    <div class="admin-layout">
+
+
+        <!-- SIDEBAR -->
+
+        <aside class="admin-sidebar">
+
+            <a href="Admin_Default.aspx">
+
+                📊 Dashboard
+
+            </a>
+
+
+            <a href="Admin_SanPham.aspx">
+
+                📦 Sản phẩm
+
+            </a>
+
+
+            <a href="Admin_DanhMuc.aspx">
+
+                📁 Danh mục
+
+            </a>
+
+
+            <a href="Admin_DonHang.aspx">
+
+                🛒 Đơn hàng
+
+            </a>
+
+
+            <a href="Admin_KhachHang.aspx">
+
+                👤 Khách hàng
+
+            </a>
+
+
+            <a href="../index.aspx">
+
+                🏠 Về trang bán hàng
+
+            </a>
+
+        </aside>
+
+
+        <!-- CONTENT -->
+
+        <main class="admin-content">
+
+            <asp:ContentPlaceHolder
+                ID="MainContent"
+                runat="server">
+            </asp:ContentPlaceHolder>
+
+        </main>
+
+    </div>
+
+</form>
+
+</body>
+
+</html>
