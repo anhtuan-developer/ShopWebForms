@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data;
 using web_ban_hang2.DAL;
-using web_ban_hang2.Models;
 
 namespace web_ban_hang2
 {
@@ -21,14 +20,13 @@ namespace web_ban_hang2
             {
                 SanPhamDAL sanPhamDAL = new SanPhamDAL();
 
-                List<SanPham> danhSach =
-                    sanPhamDAL.GetAll();
+                DataTable danhSach = sanPhamDAL.GetAll();
 
                 rptProducts.DataSource = danhSach;
 
                 rptProducts.DataBind();
 
-                if (danhSach.Count == 0)
+                if (danhSach.Rows.Count == 0)
                 {
                     pnlNoProduct.Visible = true;
                 }
