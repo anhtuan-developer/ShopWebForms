@@ -104,6 +104,7 @@
     <Content Include="Admin\Admin_DanhMuc_Sua.aspx" />
     <Content Include="Admin\Admin_DanhMuc_Them.aspx" />
     <Content Include="Admin\Admin_Default.aspx" />
+    <Content Include="Admin\Admin_DonHang.aspx" />
     <Content Include="Admin\Admin_SanPham.aspx" />
     <Content Include="Admin\Admin_SanPham_Sua.aspx" />
     <Content Include="Admin\Admin_SanPham_Them.aspx" />
@@ -275,6 +276,13 @@
     </Compile>
     <Compile Include="Admin\Admin_Default.aspx.designer.cs">
       <DependentUpon>Admin_Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Admin_DonHang.aspx.cs">
+      <DependentUpon>Admin_DonHang.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Admin_DonHang.aspx.designer.cs">
+      <DependentUpon>Admin_DonHang.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\Admin_Master.master.cs">
       <DependentUpon>Admin_Master.master</DependentUpon>

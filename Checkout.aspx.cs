@@ -8,13 +8,20 @@ namespace web_ban_hang2
 {
     public partial class Checkout : System.Web.UI.Page
     {
-        protected void Page_Load(object sender, EventArgs e)
+        // ==========================================
+        // PAGE LOAD
+        // ==========================================
+
+        protected void Page_Load(
+            object sender,
+            EventArgs e)
         {
             if (!IsPostBack)
             {
                 LoadCheckout();
             }
         }
+
 
         // ==========================================
         // HIỂN THỊ THÔNG TIN THANH TOÁN
@@ -25,16 +32,25 @@ namespace web_ban_hang2
             List<CartItem> cart =
                 Session["Cart"] as List<CartItem>;
 
-            // Nếu giỏ hàng không tồn tại hoặc rỗng
-            if (cart == null || cart.Count == 0)
+
+            // Kiểm tra giỏ hàng
+            if (cart == null ||
+                cart.Count == 0)
             {
-                Response.Redirect("Cart.aspx");
+                Response.Redirect(
+                    "Cart.aspx"
+                );
+
                 return;
             }
 
+
             // Tính tổng tiền
             decimal tongTien =
-                cart.Sum(x => x.ThanhTien);
+                cart.Sum(
+                    x => x.ThanhTien
+                );
+
 
             // Hiển thị tổng tiền
             lblTongTien.Text =
@@ -52,12 +68,17 @@ namespace web_ban_hang2
             object sender,
             EventArgs e)
         {
-            // Lấy giỏ hàng từ Session
+            // ======================================
+            // LẤY GIỎ HÀNG
+            // ======================================
+
             List<CartItem> cart =
                 Session["Cart"] as List<CartItem>;
 
+
             // Kiểm tra giỏ hàng
-            if (cart == null || cart.Count == 0)
+            if (cart == null ||
+                cart.Count == 0)
             {
                 lblMessage.Text =
                     "Giỏ hàng đang trống.";
@@ -67,20 +88,27 @@ namespace web_ban_hang2
 
 
             // ======================================
-            // KIỂM TRA THÔNG TIN NGƯỜI NHẬN
+            // LẤY THÔNG TIN NGƯỜI NHẬN
             // ======================================
 
             string hoTen =
                 txtHoTen.Text.Trim();
 
+
             string soDienThoai =
                 txtSoDienThoai.Text.Trim();
+
 
             string diaChi =
                 txtDiaChi.Text.Trim();
 
 
-            if (string.IsNullOrWhiteSpace(hoTen))
+            // ======================================
+            // KIỂM TRA HỌ TÊN
+            // ======================================
+
+            if (string.IsNullOrWhiteSpace(
+                hoTen))
             {
                 lblMessage.Text =
                     "Vui lòng nhập họ tên người nhận.";
@@ -89,7 +117,12 @@ namespace web_ban_hang2
             }
 
 
-            if (string.IsNullOrWhiteSpace(soDienThoai))
+            // ======================================
+            // KIỂM TRA SỐ ĐIỆN THOẠI
+            // ======================================
+
+            if (string.IsNullOrWhiteSpace(
+                soDienThoai))
             {
                 lblMessage.Text =
                     "Vui lòng nhập số điện thoại.";
@@ -98,7 +131,12 @@ namespace web_ban_hang2
             }
 
 
-            if (string.IsNullOrWhiteSpace(diaChi))
+            // ======================================
+            // KIỂM TRA ĐỊA CHỈ
+            // ======================================
+
+            if (string.IsNullOrWhiteSpace(
+                diaChi))
             {
                 lblMessage.Text =
                     "Vui lòng nhập địa chỉ giao hàng.";
@@ -112,34 +150,61 @@ namespace web_ban_hang2
             // ======================================
 
             decimal tongTien =
-                cart.Sum(x => x.ThanhTien);
+                cart.Sum(
+                    x => x.ThanhTien
+                );
 
 
             // ======================================
-            // TẠO ĐƠN HÀNG
+            // TẠO ĐỐI TƯỢNG ĐƠN HÀNG
             // ======================================
 
             DonHang donHang =
                 new DonHang();
 
+
+            // ======================================
+            // LẤY MÃ KHÁCH HÀNG TỪ SESSION
+            // ======================================
+
+            donHang.MaKhachHang =
+                GetMaKhachHang();
+
+
+            // ======================================
+            // THÔNG TIN NGƯỜI NHẬN
+            // ======================================
+
             donHang.HoTenNguoiNhan =
                 hoTen;
+
 
             donHang.SoDienThoai =
                 soDienThoai;
 
+
             donHang.DiaChiGiaoHang =
                 diaChi;
 
+
+            // ======================================
+            // TỔNG TIỀN
+            // ======================================
+
             donHang.TongTien =
                 tongTien;
+
+
+            // ======================================
+            // TRẠNG THÁI BAN ĐẦU
+            // ======================================
 
             donHang.TrangThai =
                 "Chờ xử lý";
 
 
             // ======================================
-            // CHUYỂN CARTITEM → CHITIETDONHANG
+            // TẠO CHI TIẾT ĐƠN HÀNG
             // ======================================
 
             foreach (CartItem item in cart)
@@ -147,45 +212,128 @@ namespace web_ban_hang2
                 ChiTietDonHang chiTiet =
                     new ChiTietDonHang();
 
+
                 chiTiet.MaSanPham =
                     item.MaSanPham;
+
 
                 chiTiet.SoLuong =
                     item.SoLuong;
 
+
                 chiTiet.DonGia =
                     item.Gia;
 
-                donHang.ChiTiet.Add(chiTiet);
+
+                donHang.ChiTiet.Add(
+                    chiTiet
+                );
             }
 
 
             // ======================================
-            // LƯU DATABASE
+            // LƯU ĐƠN HÀNG
             // ======================================
 
-            DonHangDAL dal =
-                new DonHangDAL();
+            try
+            {
+                DonHangDAL dal =
+                    new DonHangDAL();
 
-            int maDonHang =
-                dal.TaoDonHang(donHang);
+
+                int maDonHang =
+                    dal.TaoDonHang(
+                        donHang
+                    );
+
+
+                // Kiểm tra kết quả
+                if (maDonHang <= 0)
+                {
+                    lblMessage.Text =
+                        "Không thể tạo đơn hàng.";
+
+                    return;
+                }
+
+
+                // ==================================
+                // XÓA GIỎ HÀNG
+                // ==================================
+
+                Session.Remove(
+                    "Cart"
+                );
+
+
+                // ==================================
+                // CHUYỂN TRANG THÀNH CÔNG
+                // ==================================
+
+                Response.Redirect(
+                    "Dat_hang_thanh_cong.aspx?maDonHang="
+                    + maDonHang
+                );
+            }
+            catch (Exception ex)
+            {
+                // Hiển thị lỗi trên trang
+                lblMessage.Text =
+                    "Có lỗi xảy ra khi đặt hàng: "
+                    + Server.HtmlEncode(
+                        ex.Message
+                    );
+            }
+        }
+
+
+        // ==========================================
+        // LẤY MÃ KHÁCH HÀNG
+        // ==========================================
+
+        private int? GetMaKhachHang()
+        {
+            // ======================================
+            // KIỂM TRA SESSION
+            // ======================================
+
+            object sessionValue =
+                Session["MaKhachHang"];
+
+
+            if (sessionValue == null)
+            {
+                return null;
+            }
 
 
             // ======================================
-            // XÓA GIỎ HÀNG
+            // NẾU SESSION LÀ INT
             // ======================================
 
-            Session.Remove("Cart");
+            if (sessionValue is int)
+            {
+                return (int)sessionValue;
+            }
 
 
             // ======================================
-            // CHUYỂN SANG TRANG THÀNH CÔNG
+            // NẾU SESSION LÀ CHUỖI
             // ======================================
 
-            Response.Redirect(
-                "Dat_hang_thanh_cong.aspx?maDonHang="
-                + maDonHang
-            );
+            int maKhachHang;
+
+
+            if (int.TryParse(
+                sessionValue.ToString(),
+                out maKhachHang))
+            {
+                return maKhachHang;
+            }
+
+
+            // Không xác định được
+            return null;
         }
     }
 }
