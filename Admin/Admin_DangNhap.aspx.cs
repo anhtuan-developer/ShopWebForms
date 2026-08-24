@@ -14,8 +14,8 @@ namespace web_ban_hang2.Admin
             object sender,
             EventArgs e)
         {
-            // Nếu đã đăng nhập Admin
-            // thì chuyển về Dashboard
+            // Nếu đã đăng nhập thì không cần
+            // quay lại trang đăng nhập
 
             if (Session["AdminMa"] != null)
             {
@@ -35,19 +35,12 @@ namespace web_ban_hang2.Admin
             string email =
                 txtEmail.Text.Trim();
 
-
             string matKhau =
                 txtMatKhau.Text.Trim();
 
 
-            // Xóa thông báo cũ
-
             lblThongBao.Text = "";
 
-
-            // =================================
-            // KIỂM TRA EMAIL
-            // =================================
 
             if (string.IsNullOrEmpty(email))
             {
@@ -57,10 +50,6 @@ namespace web_ban_hang2.Admin
                 return;
             }
 
-
-            // =================================
-            // KIỂM TRA MẬT KHẨU
-            // =================================
 
             if (string.IsNullOrEmpty(matKhau))
             {
@@ -80,23 +69,25 @@ namespace web_ban_hang2.Admin
                     );
 
 
-                // =================================
-                // ĐĂNG NHẬP THÀNH CÔNG
-                // =================================
-
                 if (result.Success)
                 {
+                    // ==================================
+                    // TẠO SESSION ADMIN
+                    // ==================================
+
                     Session["AdminMa"] =
                         result.MaAdmin;
-
 
                     Session["AdminEmail"] =
                         result.Email;
 
-
                     Session["AdminHoTen"] =
                         result.HoTen;
 
+
+                    // ==================================
+                    // CHUYỂN VỀ DASHBOARD
+                    // ==================================
 
                     Response.Redirect(
                         "Admin_Default.aspx"
@@ -105,10 +96,6 @@ namespace web_ban_hang2.Admin
                     return;
                 }
 
-
-                // =================================
-                // ĐĂNG NHẬP THẤT BẠI
-                // =================================
 
                 lblThongBao.Text =
                     result.Message;

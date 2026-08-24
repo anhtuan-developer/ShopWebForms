@@ -5,7 +5,7 @@ using web_ban_hang2.DAL;
 
 namespace web_ban_hang2.Admin
 {
-    public partial class Admin_DonHang : Page
+    public partial class Admin_DonHang : AdminBasePage
     {
         private readonly DonHangDAL donHangDAL =
             new DonHangDAL();

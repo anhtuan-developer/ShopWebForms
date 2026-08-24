@@ -4,7 +4,7 @@ using web_ban_hang2.DAL;
 
 namespace web_ban_hang2.Admin
 {
-    public partial class Admin_DanhMuc : System.Web.UI.Page
+    public partial class Admin_DanhMuc : AdminBasePage
     {
         private readonly DanhMucDAL danhMucDAL =
             new DanhMucDAL();

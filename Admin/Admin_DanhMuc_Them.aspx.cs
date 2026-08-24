@@ -3,7 +3,7 @@ using web_ban_hang2.DAL;
 
 namespace web_ban_hang2.Admin
 {
-    public partial class Admin_DanhMuc_Them : System.Web.UI.Page
+    public partial class Admin_DanhMuc_Them : AdminBasePage
     {
         private readonly DanhMucDAL danhMucDAL =
             new DanhMucDAL();

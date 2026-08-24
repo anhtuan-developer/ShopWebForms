@@ -3,7 +3,7 @@ using web_ban_hang2.DAL;
 
 namespace web_ban_hang2.Admin
 {
-    public partial class Admin_Default : System.Web.UI.Page
+    public partial class Admin_Default : AdminBasePage
     {
         protected void Page_Load(
             object sender,

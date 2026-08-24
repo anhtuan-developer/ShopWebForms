@@ -15,6 +15,7 @@
           content="width=device-width, initial-scale=1.0" />
 
     <title>
+
         <asp:ContentPlaceHolder
             ID="TitleContent"
             runat="server">
@@ -22,254 +23,541 @@
             Admin - SHOP 5 ANH EM
 
         </asp:ContentPlaceHolder>
+
     </title>
+
+
+    <!-- CSS -->
 
     <link href="../Content/bootstrap.min.css"
           rel="stylesheet" />
 
     <link href="../Content/Site.css"
           rel="stylesheet" />
-    <link href="../Content/admin.css" 
+
+    <link href="../Content/admin.css"
           rel="stylesheet" />
 
+
     <style>
+
+        /* ==========================================
+           BODY
+           ========================================== */
 
         body {
             background-color: #f5f6fa;
         }
 
+
+        /* ==========================================
+           HEADER
+           ========================================== */
+
         .admin-header {
+
             background-color: #212529;
+
             color: white;
+
             padding: 15px 0;
         }
 
+
         .admin-header-container {
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
         }
 
+
         .admin-logo {
+
             font-size: 24px;
+
             font-weight: bold;
         }
 
+
         .admin-logo a {
+
             color: white;
+
             text-decoration: none;
         }
 
-        .admin-layout {
+
+        /* ==========================================
+           HEADER RIGHT
+           ========================================== */
+
+        .admin-header-right {
+
             display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+
+            color: white;
+        }
+
+
+        .admin-welcome {
+
+            color: white;
+
+            font-size: 15px;
+        }
+
+
+        .admin-welcome strong {
+
+            font-weight: bold;
+
+            margin-left: 4px;
+        }
+
+
+        .admin-website {
+
+            color: white;
+
+            text-decoration: none;
+        }
+
+
+        .admin-website:hover {
+
+            color: #ddd;
+
+            text-decoration: none;
+        }
+
+
+        .admin-logout {
+
+            color: white;
+
+            text-decoration: none;
+
+            background-color: #dc3545;
+
+            padding: 7px 12px;
+
+            border-radius: 5px;
+
+            font-size: 14px;
+        }
+
+
+        .admin-logout:hover {
+
+            background-color: #bb2d3b;
+
+            color: white;
+
+            text-decoration: none;
+        }
+
+
+        /* ==========================================
+           LAYOUT
+           ========================================== */
+
+        .admin-layout {
+
+            display: flex;
+
             min-height: calc(100vh - 70px);
         }
 
+
+        /* ==========================================
+           SIDEBAR
+           ========================================== */
+
         .admin-sidebar {
+
             width: 240px;
+
             background-color: #343a40;
+
             padding-top: 20px;
         }
 
+
         .admin-sidebar a {
+
             display: block;
+
             color: white;
+
             padding: 14px 20px;
+
             text-decoration: none;
         }
 
+
         .admin-sidebar a:hover {
+
             background-color: #495057;
         }
 
+
+        /* ==========================================
+           CONTENT
+           ========================================== */
+
         .admin-content {
+
             flex: 1;
+
             padding: 30px;
         }
 
+
         .admin-title {
+
             margin-bottom: 25px;
         }
 
+
         .dashboard-card {
+
             background: white;
+
             padding: 25px;
+
             border-radius: 8px;
+
             margin-bottom: 20px;
+
             box-shadow: 0 2px 8px rgba(0,0,0,.08);
         }
+
+
         /* ==========================================
            QUẢN LÝ ĐƠN HÀNG
            ========================================== */
-        
+
         .order-statistics {
+
             display: grid;
+
             grid-template-columns: repeat(4, 1fr);
+
             gap: 20px;
+
             margin-bottom: 25px;
         }
-        
+
+
         .stat-box {
+
             background: white;
+
             padding: 20px;
+
             border-radius: 8px;
+
             box-shadow: 0 2px 8px rgba(0,0,0,.08);
         }
-        
+
+
         .stat-title {
+
             color: #6c757d;
+
             font-size: 14px;
+
             margin-bottom: 8px;
         }
-        
+
+
         .stat-value {
+
             font-size: 28px;
+
             font-weight: bold;
+
             color: #212529;
         }
-        
-        
+
+
         /* ==========================================
            TABLE
            ========================================== */
-        
+
         .table-container {
+
             width: 100%;
+
             overflow-x: auto;
         }
-        
+
+
         .admin-table {
+
             width: 100%;
+
             border-collapse: collapse;
+
             background-color: white;
         }
-        
+
+
         .admin-table th {
+
             background-color: #343a40;
+
             color: white;
+
             padding: 12px;
+
             text-align: left;
+
             white-space: nowrap;
         }
-        
+
+
         .admin-table td {
+
             padding: 12px;
+
             border-bottom: 1px solid #dee2e6;
+
             vertical-align: middle;
         }
-        
+
+
         .admin-table tr:hover {
+
             background-color: #f8f9fa;
         }
-        
-        
+
+
         /* ==========================================
            TRẠNG THÁI
            ========================================== */
-        
+
         .status-pending {
+
             display: inline-block;
+
             background-color: #fff3cd;
+
             color: #856404;
+
             padding: 5px 10px;
+
             border-radius: 4px;
+
             font-size: 13px;
+
             font-weight: bold;
         }
-        
+
+
         .status-confirmed {
+
             display: inline-block;
+
             background-color: #cfe2ff;
+
             color: #084298;
+
             padding: 5px 10px;
+
             border-radius: 4px;
+
             font-size: 13px;
+
             font-weight: bold;
         }
-        
+
+
         .status-shipping {
+
             display: inline-block;
+
             background-color: #cff4fc;
+
             color: #055160;
+
             padding: 5px 10px;
+
             border-radius: 4px;
+
             font-size: 13px;
+
             font-weight: bold;
         }
-        
+
+
         .status-completed {
+
             display: inline-block;
+
             background-color: #d1e7dd;
+
             color: #0f5132;
+
             padding: 5px 10px;
+
             border-radius: 4px;
+
             font-size: 13px;
+
             font-weight: bold;
         }
-        
+
+
         .status-cancelled {
+
             display: inline-block;
+
             background-color: #f8d7da;
+
             color: #842029;
+
             padding: 5px 10px;
+
             border-radius: 4px;
+
             font-size: 13px;
+
             font-weight: bold;
         }
-        
+
+
         .status-default {
+
             display: inline-block;
+
             background-color: #e9ecef;
+
             color: #495057;
+
             padding: 5px 10px;
+
             border-radius: 4px;
+
             font-size: 13px;
         }
-        
-        
+
+
         /* ==========================================
            NÚT CHI TIẾT
            ========================================== */
-        
+
         .btn-detail {
+
             display: inline-block;
+
             background-color: #0d6efd;
+
             color: white;
+
             padding: 6px 12px;
+
             border-radius: 4px;
+
             text-decoration: none;
+
             font-size: 14px;
         }
-        
+
+
         .btn-detail:hover {
+
             background-color: #0b5ed7;
+
             color: white;
+
             text-decoration: none;
         }
-        
-        
+
+
         /* ==========================================
            RESPONSIVE
            ========================================== */
-        
+
         @media (max-width: 1000px) {
-        
+
             .order-statistics {
+
                 grid-template-columns: repeat(2, 1fr);
             }
-        
+
+            .admin-header-right {
+
+                gap: 10px;
+
+                font-size: 13px;
+            }
+
         }
-        
-        
+
+
+        @media (max-width: 700px) {
+
+            .admin-header-container {
+
+                flex-direction: column;
+
+                gap: 10px;
+            }
+
+
+            .admin-header-right {
+
+                flex-wrap: wrap;
+
+                justify-content: center;
+            }
+
+
+            .admin-sidebar {
+
+                width: 190px;
+            }
+
+
+            .admin-content {
+
+                padding: 15px;
+            }
+
+        }
+
+
         @media (max-width: 600px) {
-        
+
             .order-statistics {
+
                 grid-template-columns: 1fr;
             }
-        
+
+
+            .admin-layout {
+
+                flex-direction: column;
+            }
+
+
+            .admin-sidebar {
+
+                width: 100%;
+            }
+
         }
 
     </style>
+
 
     <asp:ContentPlaceHolder
         ID="HeadContent"
@@ -285,30 +573,70 @@
     id="form1"
     runat="server">
 
-    <!-- HEADER -->
+
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
 
     <header class="admin-header">
 
         <div class="container admin-header-container">
 
+
+            <!-- LOGO -->
+
             <div class="admin-logo">
 
                 <a href="Admin_Default.aspx">
 
-                    SHOP MASTER - ADMIN
+                    SHOP 5 ANH EM
 
                 </a>
 
             </div>
 
-            <div>
 
-                <a href="../index.aspx"
-                   style="color:white;">
+            <!-- HEADER RIGHT -->
+
+            <div class="admin-header-right">
+
+
+                <!-- TÊN ADMIN -->
+
+                <span class="admin-welcome">
+
+                    Xin chào,
+
+                    <strong>
+
+                        <%= Session["AdminHoTen"] %>
+
+                    </strong>
+
+                </span>
+
+
+                <!-- XEM WEBSITE -->
+
+                <a
+                    href="../index.aspx"
+                    class="admin-website">
 
                     Xem website
 
                 </a>
+
+
+                <!-- ĐĂNG XUẤT -->
+
+                <asp:HyperLink
+                    ID="lnkDangXuat"
+                    runat="server"
+                    NavigateUrl="~/Admin/Admin_DangXuat.aspx"
+                    Text="Đăng xuất"
+                    CssClass="admin-logout">
+                </asp:HyperLink>
+
 
             </div>
 
@@ -317,14 +645,19 @@
     </header>
 
 
-    <!-- LAYOUT -->
+    <!-- ==========================================
+         LAYOUT
+         ========================================== -->
 
     <div class="admin-layout">
 
 
-        <!-- SIDEBAR -->
+        <!-- ==========================================
+             SIDEBAR
+             ========================================== -->
 
         <aside class="admin-sidebar">
+
 
             <a href="Admin_Default.aspx">
 
@@ -367,10 +700,13 @@
 
             </a>
 
+
         </aside>
 
 
-        <!-- CONTENT -->
+        <!-- ==========================================
+             CONTENT
+             ========================================== -->
 
         <main class="admin-content">
 
@@ -381,7 +717,9 @@
 
         </main>
 
+
     </div>
+
 
 </form>
 

@@ -101,6 +101,7 @@
   <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="Admin\Admin_DangNhap.aspx" />
+    <Content Include="Admin\Admin_DangXuat.aspx" />
     <Content Include="Admin\Admin_DanhMuc.aspx" />
     <Content Include="Admin\Admin_DanhMuc_Sua.aspx" />
     <Content Include="Admin\Admin_DanhMuc_Them.aspx" />
@@ -253,12 +254,22 @@
     <Content Include="Site.Mobile.Master" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\AdminBasePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Admin\Admin_DangNhap.aspx.cs">
       <DependentUpon>Admin_DangNhap.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\Admin_DangNhap.aspx.designer.cs">
       <DependentUpon>Admin_DangNhap.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Admin_DangXuat.aspx.cs">
+      <DependentUpon>Admin_DangXuat.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Admin_DangXuat.aspx.designer.cs">
+      <DependentUpon>Admin_DangXuat.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\Admin_DanhMuc.aspx.cs">
       <DependentUpon>Admin_DanhMuc.aspx</DependentUpon>

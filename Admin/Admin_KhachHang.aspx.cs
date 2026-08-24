@@ -5,7 +5,7 @@ using web_ban_hang2.DAL;
 
 namespace web_ban_hang2.Admin
 {
-    public partial class Admin_KhachHang : Page
+    public partial class Admin_KhachHang : AdminBasePage
     {
         private readonly KhachHangDAL khachHangDAL =
             new KhachHangDAL();
