@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace web_ban_hang2.DAL
@@ -32,7 +33,7 @@ namespace web_ban_hang2.DAL
                     Email,
                     MatKhau,
                     TrangThai
-                FROM Admin
+                FROM dbo.Admin
                 WHERE Email = @Email
                   AND MatKhau = @MatKhau
             ";
@@ -46,14 +47,14 @@ namespace web_ban_hang2.DAL
                 {
                     cmd.Parameters.Add(
                         "@Email",
-                        System.Data.SqlDbType.VarChar,
+                        SqlDbType.VarChar,
                         150
                     ).Value = email;
 
 
                     cmd.Parameters.Add(
                         "@MatKhau",
-                        System.Data.SqlDbType.VarChar,
+                        SqlDbType.VarChar,
                         255
                     ).Value = matKhau;
 
@@ -66,7 +67,9 @@ namespace web_ban_hang2.DAL
                     {
                         if (reader.Read())
                         {
-                            // Kiểm tra trạng thái tài khoản
+                            // =================================
+                            // KIỂM TRA TRẠNG THÁI
+                            // =================================
 
                             bool trangThai =
                                 Convert.ToBoolean(
@@ -118,9 +121,9 @@ namespace web_ban_hang2.DAL
             }
 
 
-            // =============================================
+            // =================================
             // ĐĂNG NHẬP THẤT BẠI
-            // =============================================
+            // =================================
 
             result.Success = false;
 
@@ -132,9 +135,9 @@ namespace web_ban_hang2.DAL
     }
 
 
-    // =========================================================
+    // =====================================================
     // KẾT QUẢ ĐĂNG NHẬP
-    // =========================================================
+    // =====================================================
 
     public class AdminLoginResult
     {

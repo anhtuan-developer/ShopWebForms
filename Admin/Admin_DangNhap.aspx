@@ -7,6 +7,7 @@
     Inherits="web_ban_hang2.Admin.Admin_DangNhap"
 %>
 
+
 <asp:Content
     ID="HeadContent"
     ContentPlaceHolderID="HeadContent"
@@ -20,11 +21,11 @@
     ContentPlaceHolderID="MainContent"
     runat="server">
 
+
     <div class="admin-login-wrapper">
 
         <div class="admin-login">
 
-            <!-- TIÊU ĐỀ -->
 
             <h1>
                 Đăng nhập Admin
@@ -40,9 +41,13 @@
 
             <div class="form-group">
 
-                <label for="<%= txtEmail.ClientID %>">
+                <label
+                    for="<%= txtEmail.ClientID %>">
+
                     Email
+
                 </label>
+
 
                 <asp:TextBox
                     ID="txtEmail"
@@ -59,9 +64,13 @@
 
             <div class="form-group">
 
-                <label for="<%= txtMatKhau.ClientID %>">
+                <label
+                    for="<%= txtMatKhau.ClientID %>">
+
                     Mật khẩu
+
                 </label>
+
 
                 <asp:TextBox
                     ID="txtMatKhau"
@@ -84,6 +93,9 @@
                 OnClick="btnDangNhap_Click" />
 
 
+            <br />
+
+
             <!-- THÔNG BÁO -->
 
             <asp:Label
@@ -92,8 +104,10 @@
                 CssClass="error-message">
             </asp:Label>
 
+
         </div>
 
     </div>
+
 
 </asp:Content>

@@ -10,16 +10,12 @@ namespace web_ban_hang2.Admin
             new AdminAccountDAL();
 
 
-        // =====================================================
-        // PAGE LOAD
-        // =====================================================
-
         protected void Page_Load(
             object sender,
             EventArgs e)
         {
-            // Nếu Admin đã đăng nhập
-            // thì chuyển thẳng về Dashboard
+            // Nếu đã đăng nhập Admin
+            // thì chuyển về Dashboard
 
             if (Session["AdminMa"] != null)
             {
@@ -32,25 +28,13 @@ namespace web_ban_hang2.Admin
         }
 
 
-        // =====================================================
-        // ĐĂNG NHẬP
-        // =====================================================
-
         protected void btnDangNhap_Click(
             object sender,
             EventArgs e)
         {
-            // ================================================
-            // LẤY EMAIL
-            // ================================================
-
             string email =
                 txtEmail.Text.Trim();
 
-
-            // ================================================
-            // LẤY MẬT KHẨU
-            // ================================================
 
             string matKhau =
                 txtMatKhau.Text.Trim();
@@ -61,9 +45,9 @@ namespace web_ban_hang2.Admin
             lblThongBao.Text = "";
 
 
-            // ================================================
+            // =================================
             // KIỂM TRA EMAIL
-            // ================================================
+            // =================================
 
             if (string.IsNullOrEmpty(email))
             {
@@ -74,9 +58,9 @@ namespace web_ban_hang2.Admin
             }
 
 
-            // ================================================
+            // =================================
             // KIỂM TRA MẬT KHẨU
-            // ================================================
+            // =================================
 
             if (string.IsNullOrEmpty(matKhau))
             {
@@ -87,10 +71,6 @@ namespace web_ban_hang2.Admin
             }
 
 
-            // ================================================
-            // GỌI DAL
-            // ================================================
-
             try
             {
                 AdminLoginResult result =
@@ -100,33 +80,23 @@ namespace web_ban_hang2.Admin
                     );
 
 
-                // ============================================
+                // =================================
                 // ĐĂNG NHẬP THÀNH CÔNG
-                // ============================================
+                // =================================
 
                 if (result.Success)
                 {
-                    // Mã Admin
-
                     Session["AdminMa"] =
                         result.MaAdmin;
 
-
-                    // Email Admin
 
                     Session["AdminEmail"] =
                         result.Email;
 
 
-                    // Họ tên Admin
-
                     Session["AdminHoTen"] =
                         result.HoTen;
 
-
-                    // ========================================
-                    // CHUYỂN ĐẾN DASHBOARD
-                    // ========================================
 
                     Response.Redirect(
                         "Admin_Default.aspx"
@@ -136,9 +106,9 @@ namespace web_ban_hang2.Admin
                 }
 
 
-                // ============================================
+                // =================================
                 // ĐĂNG NHẬP THẤT BẠI
-                // ============================================
+                // =================================
 
                 lblThongBao.Text =
                     result.Message;
