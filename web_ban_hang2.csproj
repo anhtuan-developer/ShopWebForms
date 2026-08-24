@@ -107,6 +107,7 @@
     <Content Include="Admin\Admin_DanhMuc_Them.aspx" />
     <Content Include="Admin\Admin_Default.aspx" />
     <Content Include="Admin\Admin_DonHang.aspx" />
+    <Content Include="Admin\Admin_DonHang_ChiTiet.aspx" />
     <Content Include="Admin\Admin_KhachHang.aspx" />
     <Content Include="Admin\Admin_SanPham.aspx" />
     <Content Include="Admin\Admin_SanPham_Sua.aspx" />
@@ -305,6 +306,13 @@
     </Compile>
     <Compile Include="Admin\Admin_DonHang.aspx.designer.cs">
       <DependentUpon>Admin_DonHang.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Admin_DonHang_ChiTiet.aspx.cs">
+      <DependentUpon>Admin_DonHang_ChiTiet.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Admin_DonHang_ChiTiet.aspx.designer.cs">
+      <DependentUpon>Admin_DonHang_ChiTiet.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\Admin_KhachHang.aspx.cs">
       <DependentUpon>Admin_KhachHang.aspx</DependentUpon>
