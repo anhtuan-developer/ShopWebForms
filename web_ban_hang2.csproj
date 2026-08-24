@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Content Include="Admin\Admin_DangNhap.aspx" />
     <Content Include="Admin\Admin_DanhMuc.aspx" />
     <Content Include="Admin\Admin_DanhMuc_Sua.aspx" />
     <Content Include="Admin\Admin_DanhMuc_Them.aspx" />
@@ -112,6 +113,7 @@
     <Content Include="Cart.aspx" />
     <Content Include="Checkout.aspx" />
     <Content Include="Contact.aspx" />
+    <Content Include="Content\admin.css" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -250,6 +252,13 @@
     <Content Include="Site.Mobile.Master" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\Admin_DangNhap.aspx.cs">
+      <DependentUpon>Admin_DangNhap.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Admin_DangNhap.aspx.designer.cs">
+      <DependentUpon>Admin_DangNhap.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\Admin_DanhMuc.aspx.cs">
       <DependentUpon>Admin_DanhMuc.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -343,6 +352,7 @@
     <Compile Include="Contact.aspx.designer.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
+    <Compile Include="DAL\AdminAccountDAL.cs" />
     <Compile Include="DAL\DanhMucDAL.cs" />
     <Compile Include="DAL\DashboardDAL.cs" />
     <Compile Include="DAL\Database.cs" />
@@ -387,6 +397,7 @@
     <Compile Include="index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Models\AdminAccount.cs" />
     <Compile Include="Models\CartItem.cs" />
     <Compile Include="Models\ChiTietDonHang.cs" />
     <Compile Include="Models\DonHang.cs" />

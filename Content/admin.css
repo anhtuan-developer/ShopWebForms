@@ -1,0 +1,245 @@
+﻿/* ==========================================
+   ADMIN LOGIN
+   ========================================== */
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f6fa;
+}
+
+
+.login-box {
+    width: 400px;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+    .login-box h1 {
+        margin: 0 0 8px 0;
+        text-align: center;
+        font-size: 28px;
+        color: #333333;
+    }
+
+
+.login-description {
+    text-align: center;
+    color: #777777;
+    margin-bottom: 30px;
+}
+
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-weight: 600;
+        color: #333333;
+    }
+
+
+.form-control {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 12px;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+
+    .form-control:focus {
+        outline: none;
+        border-color: #333333;
+    }
+
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background: #222222;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+    .btn-login:hover {
+        background: #000000;
+    }
+
+
+.login-error {
+    display: block;
+    margin-bottom: 15px;
+    color: #dc3545;
+    text-align: center;
+}
+/* =========================================================
+   ADMIN - ĐĂNG NHẬP
+   ========================================================= */
+
+.admin-login-wrapper {
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+
+/* =========================================================
+   BOX ĐĂNG NHẬP
+   ========================================================= */
+
+.admin-login {
+    width: 100%;
+    max-width: 450px;
+    background: #ffffff;
+    padding: 35px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e5e5;
+}
+
+
+    /* =========================================================
+   TIÊU ĐỀ
+   ========================================================= */
+
+    .admin-login h1 {
+        margin: 0 0 10px 0;
+        font-size: 28px;
+        font-weight: 600;
+        color: #222;
+        text-align: center;
+    }
+
+
+.admin-login-description {
+    margin-bottom: 30px;
+    color: #777;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.admin-login .form-group {
+    margin-bottom: 20px;
+}
+
+
+    .admin-login .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+    }
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.admin-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    font-size: 15px;
+    color: #333;
+    background: #fff;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+
+    .admin-input:focus {
+        border-color: #333;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+    }
+
+
+/* =========================================================
+   NÚT ĐĂNG NHẬP
+   ========================================================= */
+
+.btn-admin-login {
+    width: 100%;
+    padding: 12px 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+    background: #222;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+
+    .btn-admin-login:hover {
+        background: #000;
+    }
+
+
+    .btn-admin-login:active {
+        transform: translateY(1px);
+    }
+
+
+/* =========================================================
+   THÔNG BÁO LỖI
+   ========================================================= */
+
+.error-message {
+    display: block;
+    margin-top: 18px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: #fff1f1;
+    border: 1px solid #f0caca;
+    color: #c62828;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .admin-login-wrapper {
+        padding: 25px 15px;
+    }
+
+    .admin-login {
+        padding: 25px 20px;
+    }
+
+        .admin-login h1 {
+            font-size: 24px;
+        }
+}

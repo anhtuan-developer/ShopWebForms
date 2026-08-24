@@ -29,6 +29,8 @@
 
     <link href="../Content/Site.css"
           rel="stylesheet" />
+    <link href="../Content/admin.css" 
+          rel="stylesheet" />
 
     <style>
 
