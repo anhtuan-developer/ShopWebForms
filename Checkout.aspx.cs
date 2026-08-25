@@ -12,13 +12,30 @@ namespace web_ban_hang2
     public partial class Checkout : System.Web.UI.Page
     {
         private CartService cartService;
- 
+
         protected void Page_Load(
-            object sender,
-            EventArgs e)
+    object sender,
+    EventArgs e)
         {
             cartService =
                 new CartService();
+
+
+            // KIỂM TRA ĐĂNG NHẬP
+            
+            if (Session["UserId"] == null)
+            {
+                Response.Redirect(
+                    "Dang_nhap.aspx?returnUrl=Checkout.aspx",
+                    false
+                );
+
+                Context.ApplicationInstance
+                    .CompleteRequest();
+
+                return;
+            }
+
 
             if (!IsPostBack)
             {
@@ -28,7 +45,7 @@ namespace web_ban_hang2
 
 
         // HIỂN THỊ CHECKOUT
-        
+
         private void LoadCheckout()
         {
             List<CartItem> cart =
@@ -95,30 +112,36 @@ namespace web_ban_hang2
 
 
         // ĐẶT HÀNG
-        
+
         protected void btnDatHang_Click(
-            object sender,
-            EventArgs e)
+    object sender,
+    EventArgs e)
         {
-             // LẤY GIỎ HÀNG
+            // KIỂM TRA ĐĂNG NHẬP LẠI
             
-            List<CartItem> cart =
-                Session["Cart"]
-                as List<CartItem>;
-
-
-            if (cart == null ||
-                cart.Count == 0)
+            if (Session["UserId"] == null)
             {
-                lblMessage.Text =
-                    "Giỏ hàng đang trống.";
+                Response.Redirect(
+                    "Dang_nhap.aspx?returnUrl=Checkout.aspx",
+                    false
+                );
+
+                Context.ApplicationInstance
+                    .CompleteRequest();
 
                 return;
             }
 
 
+            // LẤY GIỎ HÀNG
+           
+            List<CartItem> cart =
+                Session["Cart"]
+                as List<CartItem>;
+
+
             // KIỂM TRA GIỎ HÀNG VỚI DATABASE
-            
+
             string validationMessage;
 
             bool cartValid =
@@ -275,14 +298,30 @@ namespace web_ban_hang2
 
 
             //LẤY MÃ KHÁCH HÀNG
-            
+
+            int? maKhachHang =
+    GetMaKhachHang();
+
+
+            if (!maKhachHang.HasValue)
+            {
+                Response.Redirect(
+                    "Dang_nhap.aspx?returnUrl=Checkout.aspx",
+                    false
+                );
+
+                Context.ApplicationInstance
+                    .CompleteRequest();
+
+                return;
+            }
+
 
             donHang.MaKhachHang =
-                GetMaKhachHang();
-
+                maKhachHang.Value;
 
             // THÔNG TIN NGƯỜI NHẬN
-            
+
             donHang.HoTenNguoiNhan =
                 hoTen;
 
@@ -418,11 +457,10 @@ namespace web_ban_hang2
         }
 
 
-         // LẤY MÃ KHÁCH HÀNG
-        
+        // LẤY MÃ KHÁCH HÀNG
+
         private int? GetMaKhachHang()
         {
-            
             object sessionValue =
                 Session["UserId"];
 
@@ -433,29 +471,27 @@ namespace web_ban_hang2
             }
 
 
-         
-            if (sessionValue is int)
-            {
-                return (int)sessionValue;
-            }
-
-
-        
             int maKhachHang;
 
 
-            if (int.TryParse(
+            if (!int.TryParse(
                 sessionValue.ToString(),
                 out maKhachHang))
             {
-                return maKhachHang;
+                return null;
             }
 
 
-            return null;
+            if (maKhachHang <= 0)
+            {
+                return null;
+            }
+
+
+            return maKhachHang;
         }
         // KIỂM TRA SỐ ĐIỆN THOẠI
-        
+
         private bool IsValidPhoneNumber(string phone)
         {
             if (string.IsNullOrWhiteSpace(phone))

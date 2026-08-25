@@ -8,13 +8,26 @@ namespace web_ban_hang2
             object sender,
             EventArgs e)
         {
+            // ==========================================
+            // XÓA TOÀN BỘ SESSION
+            // ==========================================
+
             Session.Clear();
 
             Session.Abandon();
 
+
+            // ==========================================
+            // QUAY VỀ TRANG CHỦ
+            // ==========================================
+
             Response.Redirect(
-                "index.aspx"
+                "index.aspx",
+                false
             );
+
+            Context.ApplicationInstance
+                .CompleteRequest();
         }
     }
 }
