@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Text.RegularExpressions;
 using web_ban_hang2.DAL;
 using web_ban_hang2.Models;
 using web_ban_hang2.Services;
@@ -11,11 +12,7 @@ namespace web_ban_hang2
     public partial class Checkout : System.Web.UI.Page
     {
         private CartService cartService;
-
-        // ==========================================
-        // PAGE LOAD
-        // ==========================================
-
+ 
         protected void Page_Load(
             object sender,
             EventArgs e)
@@ -30,20 +27,16 @@ namespace web_ban_hang2
         }
 
 
-        // ==========================================
         // HIỂN THỊ CHECKOUT
-        // ==========================================
-
+        
         private void LoadCheckout()
         {
             List<CartItem> cart =
                 Session["Cart"]
                 as List<CartItem>;
 
-            // --------------------------------------
             // Kiểm tra giỏ hàng
-            // --------------------------------------
-
+            
             if (cart == null ||
                 cart.Count == 0)
             {
@@ -54,10 +47,8 @@ namespace web_ban_hang2
             }
 
 
-            // --------------------------------------
             // Kiểm tra lại giỏ hàng với Database
-            // --------------------------------------
-
+            
             string validationMessage;
 
             bool valid =
@@ -78,10 +69,8 @@ namespace web_ban_hang2
             }
 
 
-            // --------------------------------------
             // Nếu có thay đổi tồn kho
-            // --------------------------------------
-
+            
             if (!valid &&
                 !string.IsNullOrEmpty(
                     validationMessage))
@@ -91,10 +80,8 @@ namespace web_ban_hang2
             }
 
 
-            // --------------------------------------
             // Tính tổng tiền từ giỏ
-            // --------------------------------------
-
+            
             decimal tongTien =
                 cart.Sum(
                     x => x.ThanhTien);
@@ -107,18 +94,14 @@ namespace web_ban_hang2
         }
 
 
-        // ==========================================
         // ĐẶT HÀNG
-        // ==========================================
-
+        
         protected void btnDatHang_Click(
             object sender,
             EventArgs e)
         {
-            // ======================================
-            // 1. LẤY GIỎ HÀNG
-            // ======================================
-
+             // LẤY GIỎ HÀNG
+            
             List<CartItem> cart =
                 Session["Cart"]
                 as List<CartItem>;
@@ -134,10 +117,8 @@ namespace web_ban_hang2
             }
 
 
-            // ======================================
-            // 2. KIỂM TRA GIỎ HÀNG VỚI DATABASE
-            // ======================================
-
+            // KIỂM TRA GIỎ HÀNG VỚI DATABASE
+            
             string validationMessage;
 
             bool cartValid =
@@ -160,10 +141,8 @@ namespace web_ban_hang2
             }
 
 
-            // ======================================
             // Nếu CartService phát hiện thay đổi
-            // ======================================
-
+            
             if (!cartValid)
             {
                 lblMessage.Text =
@@ -178,10 +157,8 @@ namespace web_ban_hang2
             }
 
 
-            // ======================================
-            // 3. LẤY THÔNG TIN NGƯỜI NHẬN
-            // ======================================
-
+            // LẤY THÔNG TIN NGƯỜI NHẬN
+            
             string hoTen =
                 txtHoTen.Text.Trim();
 
@@ -192,15 +169,22 @@ namespace web_ban_hang2
                 txtDiaChi.Text.Trim();
 
 
-            // ======================================
-            // 4. VALIDATION HỌ TÊN
-            // ======================================
-
+            // VALIDATION HỌ TÊN
+            
             if (string.IsNullOrWhiteSpace(
                 hoTen))
             {
                 lblMessage.Text =
                     "Vui lòng nhập họ tên người nhận.";
+
+                return;
+            }
+
+
+            if (hoTen.Length < 2)
+            {
+                lblMessage.Text =
+                    "Họ tên phải có ít nhất 2 ký tự.";
 
                 return;
             }
@@ -215,10 +199,8 @@ namespace web_ban_hang2
             }
 
 
-            // ======================================
-            // 5. VALIDATION SỐ ĐIỆN THOẠI
-            // ======================================
-
+            // VALIDATION SỐ ĐIỆN THOẠI
+           
             if (string.IsNullOrWhiteSpace(
                 soDienThoai))
             {
@@ -229,24 +211,32 @@ namespace web_ban_hang2
             }
 
 
-            if (soDienThoai.Length > 20)
+            if (!IsValidPhoneNumber(
+                soDienThoai))
             {
                 lblMessage.Text =
-                    "Số điện thoại không hợp lệ.";
+                    "Số điện thoại phải gồm 10 hoặc 11 chữ số.";
 
                 return;
             }
 
 
-            // ======================================
-            // 6. VALIDATION ĐỊA CHỈ
-            // ======================================
-
+            // VALIDATION ĐỊA CHỈ
+            
             if (string.IsNullOrWhiteSpace(
                 diaChi))
             {
                 lblMessage.Text =
                     "Vui lòng nhập địa chỉ giao hàng.";
+
+                return;
+            }
+
+
+            if (diaChi.Length < 5)
+            {
+                lblMessage.Text =
+                    "Địa chỉ phải có ít nhất 5 ký tự.";
 
                 return;
             }
@@ -261,10 +251,9 @@ namespace web_ban_hang2
             }
 
 
-            // ======================================
-            // 7. TÍNH TỔNG TIỀN
-            // ======================================
 
+            // TÍNH TỔNG TIỀN
+           
             decimal tongTien =
                 cart.Sum(
                     x => x.ThanhTien);
@@ -279,33 +268,21 @@ namespace web_ban_hang2
             }
 
 
-            // ======================================
-            // 8. TẠO ĐƠN HÀNG
-            // ======================================
-
+            //TẠO ĐƠN HÀNG
+            
             DonHang donHang =
                 new DonHang();
 
 
-            // ======================================
-            // 9. LẤY MÃ KHÁCH HÀNG
-            // ======================================
-            //
-            // Đăng nhập đang lưu:
-            //
-            // Session["UserId"]
-            //
-            // UserId chính là MaKhachHang.
-            //
+            //LẤY MÃ KHÁCH HÀNG
+            
 
             donHang.MaKhachHang =
                 GetMaKhachHang();
 
 
-            // ======================================
-            // 10. THÔNG TIN NGƯỜI NHẬN
-            // ======================================
-
+            // THÔNG TIN NGƯỜI NHẬN
+            
             donHang.HoTenNguoiNhan =
                 hoTen;
 
@@ -316,26 +293,20 @@ namespace web_ban_hang2
                 diaChi;
 
 
-            // ======================================
-            // 11. TỔNG TIỀN
-            // ======================================
-
+            // TỔNG TIỀN
+            
             donHang.TongTien =
                 tongTien;
 
 
-            // ======================================
-            // 12. TRẠNG THÁI
-            // ======================================
-
+             // TRẠNG THÁI
+            
             donHang.TrangThai =
                 "Chờ xử lý";
 
 
-            // ======================================
-            // 13. CHI TIẾT ĐƠN HÀNG
-            // ======================================
-
+           // CHI TIẾT ĐƠN HÀNG
+            
             foreach (CartItem item in cart)
             {
                 if (item == null)
@@ -383,10 +354,8 @@ namespace web_ban_hang2
             }
 
 
-            // ======================================
-            // 14. LƯU ĐƠN HÀNG
-            // ======================================
-
+            //  LƯU ĐƠN HÀNG
+            
             try
             {
                 DonHangDAL dal =
@@ -398,10 +367,8 @@ namespace web_ban_hang2
                         donHang);
 
 
-                // ==================================
                 // TẠO ĐƠN THẤT BẠI
-                // ==================================
-
+                
                 if (maDonHang <= 0)
                 {
                     lblMessage.Text =
@@ -410,19 +377,14 @@ namespace web_ban_hang2
                     return;
                 }
 
-
-                // ==================================
                 // XÓA GIỎ HÀNG
-                // ==================================
-
+              
                 Session.Remove(
                     "Cart");
 
 
-                // ==================================
-                // CHUYỂN TRANG THÀNH CÔNG
-                // ==================================
-
+               // CHUYỂN TRANG THÀNH CÔNG
+                
                 Response.Redirect(
                     "Dat_hang_thanh_cong.aspx?maDonHang="
                     + maDonHang,
@@ -456,24 +418,11 @@ namespace web_ban_hang2
         }
 
 
-        // ==========================================
-        // LẤY MÃ KHÁCH HÀNG
-        // ==========================================
-
+         // LẤY MÃ KHÁCH HÀNG
+        
         private int? GetMaKhachHang()
         {
-            // ======================================
-            // QUAN TRỌNG:
-            //
-            // Dang_nhap.aspx.cs đang lưu:
-            //
-            // Session["UserId"]
-            //
-            // Không phải:
-            //
-            // Session["MaKhachHang"]
-            // ======================================
-
+            
             object sessionValue =
                 Session["UserId"];
 
@@ -484,20 +433,14 @@ namespace web_ban_hang2
             }
 
 
-            // ======================================
-            // SESSION LÀ INT
-            // ======================================
-
+         
             if (sessionValue is int)
             {
                 return (int)sessionValue;
             }
 
 
-            // ======================================
-            // SESSION LÀ STRING
-            // ======================================
-
+        
             int maKhachHang;
 
 
@@ -510,6 +453,20 @@ namespace web_ban_hang2
 
 
             return null;
+        }
+        // KIỂM TRA SỐ ĐIỆN THOẠI
+        
+        private bool IsValidPhoneNumber(string phone)
+        {
+            if (string.IsNullOrWhiteSpace(phone))
+            {
+                return false;
+            }
+
+            return Regex.IsMatch(
+                phone,
+                @"^\d{10,11}$"
+            );
         }
     }
 }
