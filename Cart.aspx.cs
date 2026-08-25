@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.UI.WebControls;
 using web_ban_hang2.Models;
+using web_ban_hang2.Services;
 
 namespace web_ban_hang2
 {
     public partial class Cart : System.Web.UI.Page
     {
+        private CartService cartService;
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            cartService = new CartService();
+
             if (!IsPostBack)
             {
                 LoadCart();
@@ -18,10 +22,22 @@ namespace web_ban_hang2
 
         private void LoadCart()
         {
-            List<CartItem> cart =
-                Session["Cart"] as List<CartItem>;
+            string validationMessage;
 
-            // Nếu giỏ hàng chưa tồn tại
+            cartService.ValidateCart(
+                out validationMessage);
+
+            if (!string.IsNullOrEmpty(validationMessage))
+            {
+                // Nếu Cart.aspx có lblMessage thì có thể
+                // hiển thị tại đây.
+                // Không giả định control này tồn tại
+                // để tránh lỗi Designer.
+            }
+
+            List<CartItem> cart =
+                cartService.GetItems();
+
             if (cart == null || cart.Count == 0)
             {
                 pnlCart.Visible = false;
@@ -33,140 +49,158 @@ namespace web_ban_hang2
                 return;
             }
 
-            // Có sản phẩm
             pnlCart.Visible = true;
             pnlEmpty.Visible = false;
 
-            // Hiển thị danh sách
             rptCart.DataSource = cart;
             rptCart.DataBind();
 
-            // Tổng số lượng
-            int totalQuantity =
-                cart.Sum(x => x.SoLuong);
-
-            // Tổng tiền
-            decimal total =
-                cart.Sum(x => x.ThanhTien);
-
             lblTotalQuantity.Text =
-                totalQuantity.ToString();
+                cartService
+                    .GetTotalQuantity()
+                    .ToString();
 
             lblTotal.Text =
-                total.ToString("N0") + " ₫";
+                cartService
+                    .GetTotal()
+                    .ToString("N0")
+                    + " ₫";
         }
 
         protected void rptCart_ItemCommand(
             object source,
             RepeaterCommandEventArgs e)
         {
-            List<CartItem> cart =
-                Session["Cart"] as List<CartItem>;
-
-            if (cart == null)
+            if (!int.TryParse(
+                Convert.ToString(
+                    e.CommandArgument),
+                out int maSanPham))
             {
+                LoadCart();
                 return;
             }
 
-            int maSanPham =
-                Convert.ToInt32(e.CommandArgument);
-
-            // =========================
-            // XÓA SẢN PHẨM
-            // =========================
-
             if (e.CommandName == "RemoveCart")
             {
-                CartItem item =
-                    cart.FirstOrDefault(
-                        x => x.MaSanPham == maSanPham
-                    );
-
-                if (item != null)
-                {
-                    cart.Remove(item);
-                }
-
-                Session["Cart"] = cart;
+                cartService.Remove(
+                    maSanPham);
 
                 LoadCart();
+
+                return;
             }
 
-            // =========================
-            // CẬP NHẬT SỐ LƯỢNG
-            // =========================
-
-            else if (e.CommandName == "UpdateCart")
+            if (e.CommandName == "UpdateCart")
             {
                 TextBox txtQuantity =
-                    e.Item.FindControl("txtQuantity")
+                    e.Item.FindControl(
+                        "txtQuantity")
                     as TextBox;
 
-                if (txtQuantity == null)
+                if (txtQuantity == null ||
+                    !int.TryParse(
+                        txtQuantity.Text,
+                        out int quantity))
                 {
+                    LoadCart();
                     return;
                 }
 
-                int quantity;
+                string message;
 
-                if (!int.TryParse(
-                    txtQuantity.Text,
-                    out quantity))
+                bool success =
+                    cartService.UpdateQuantity(
+                        maSanPham,
+                        quantity,
+                        out message);
+
+                if (!success &&
+                    !string.IsNullOrEmpty(message))
                 {
-                    return;
+                    ClientScript.RegisterStartupScript(
+                        GetType(),
+                        "CartMessage",
+                        "alert(" +
+                        ToJavaScriptString(message) +
+                        ");",
+                        true);
                 }
-
-                if (quantity <= 0)
-                {
-                    CartItem item =
-                        cart.FirstOrDefault(
-                            x => x.MaSanPham == maSanPham
-                        );
-
-                    if (item != null)
-                    {
-                        cart.Remove(item);
-                    }
-                }
-                else
-                {
-                    CartItem item =
-                        cart.FirstOrDefault(
-                            x => x.MaSanPham == maSanPham
-                        );
-
-                    if (item != null)
-                    {
-                        item.SoLuong = quantity;
-                    }
-                }
-
-                Session["Cart"] = cart;
 
                 LoadCart();
             }
         }
-
-        // =========================
-        // THANH TOÁN
-        // =========================
 
         protected void btnCheckout_Click(
             object sender,
             EventArgs e)
         {
             List<CartItem> cart =
-                Session["Cart"] as List<CartItem>;
+                cartService.GetItems();
 
-            // Kiểm tra giỏ hàng
-            if (cart == null || cart.Count == 0)
+            if (cart == null ||
+                cart.Count == 0)
             {
-                Response.Redirect("Cart.aspx");
+                Response.Redirect(
+                    "Cart.aspx");
+
                 return;
             }
 
-            // Chuyển sang trang thanh toán
-            Response.Redirect("Checkout.aspx");
+            string message;
+
+            bool valid =
+                cartService.ValidateCart(
+                    out message);
+
+            cart =
+                cartService.GetItems();
+
+            if (!valid ||
+                cart.Count == 0)
+            {
+                if (!string.IsNullOrEmpty(message))
+                {
+                    ClientScript.RegisterStartupScript(
+                        GetType(),
+                        "CheckoutCartMessage",
+                        "alert(" +
+                        ToJavaScriptString(message) +
+                        ");",
+                        true);
+                }
+
+                LoadCart();
+
+                return;
+            }
+
+            Response.Redirect(
+                "Checkout.aspx");
+        }
+
+        private string ToJavaScriptString(
+            string value)
+        {
+            if (value == null)
+            {
+                return "''";
+            }
+
+            return "'" +
+                value
+                    .Replace(
+                        "\\",
+                        "\\\\")
+                    .Replace(
+                        "'",
+                        "\\'")
+                    .Replace(
+                        "\r",
+                        "\\r")
+                    .Replace(
+                        "\n",
+                        "\\n")
+                + "'";
         }
     }
 }

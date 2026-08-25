@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using web_ban_hang2.Models;
 
 namespace web_ban_hang2.DAL
@@ -14,10 +15,6 @@ namespace web_ban_hang2.DAL
             database = new Database();
         }
 
-
-        // ==========================================
-        // LẤY TẤT CẢ ĐƠN HÀNG
-        // ==========================================
 
         public DataTable GetAll()
         {
@@ -59,10 +56,6 @@ namespace web_ban_hang2.DAL
             }
         }
 
-
-        // ==========================================
-        // LẤY ĐƠN HÀNG THEO MÃ
-        // ==========================================
 
         public DataTable GetById(
             int maDonHang)
@@ -112,10 +105,6 @@ namespace web_ban_hang2.DAL
         }
 
 
-        // ==========================================
-        // LẤY CHI TIẾT ĐƠN HÀNG
-        // ==========================================
-
         public DataTable GetChiTietByDonHang(
             int maDonHang)
         {
@@ -163,55 +152,73 @@ namespace web_ban_hang2.DAL
         }
 
 
-        // ==========================================
-        // TẠO ĐƠN HÀNG
-        // ==========================================
-
+        
         public int TaoDonHang(
-            DonHang donHang)
+    DonHang donHang)
         {
             string insertOrderSql = @"
-                INSERT INTO DonHang
-                (
-                    MaKhachHang,
-                    HoTenNguoiNhan,
-                    SoDienThoai,
-                    DiaChiGiaoHang,
-                    TongTien,
-                    TrangThai,
-                    NgayDat
-                )
-                VALUES
-                (
-                    @MaKhachHang,
-                    @HoTenNguoiNhan,
-                    @SoDienThoai,
-                    @DiaChiGiaoHang,
-                    @TongTien,
-                    @TrangThai,
-                    GETDATE()
-                );
+        INSERT INTO DonHang
+        (
+            MaKhachHang,
+            HoTenNguoiNhan,
+            SoDienThoai,
+            DiaChiGiaoHang,
+            TongTien,
+            TrangThai,
+            NgayDat
+        )
+        VALUES
+        (
+            @MaKhachHang,
+            @HoTenNguoiNhan,
+            @SoDienThoai,
+            @DiaChiGiaoHang,
+            @TongTien,
+            @TrangThai,
+            GETDATE()
+        );
 
-                SELECT CAST(SCOPE_IDENTITY() AS INT);
-            ";
+        SELECT CAST(SCOPE_IDENTITY() AS INT);
+    ";
+
+
+            string checkProductSql = @"
+        SELECT
+            SoLuong,
+            TrangThai,
+            Gia,
+            TenSanPham
+        FROM SanPham WITH (UPDLOCK, HOLDLOCK)
+        WHERE MaSanPham = @MaSanPham;
+    ";
+
+
+            string updateStockSql = @"
+        UPDATE SanPham
+        SET SoLuong = SoLuong - @SoLuong
+        WHERE
+            MaSanPham = @MaSanPham
+            AND TrangThai = 1
+            AND SoLuong >= @SoLuong;
+    ";
 
 
             string insertDetailSql = @"
-                INSERT INTO ChiTietDonHang
-                (
-                    MaDonHang,
-                    MaSanPham,
-                    SoLuong,
-                    DonGia
-                )
-                VALUES
-                (
-                    @MaDonHang,
-                    @MaSanPham,
-                    @SoLuong,
-                    @DonGia
-                );
-            ";
+        INSERT INTO ChiTietDonHang
+        (
+            MaDonHang,
+            MaSanPham,
+            SoLuong,
+            DonGia
+        )
+        VALUES
+        (
+            @MaDonHang,
+            @MaSanPham,
+            @SoLuong,
+            @DonGia
+        );
+    ";
 
 
             using (SqlConnection conn =
@@ -221,16 +228,146 @@ namespace web_ban_hang2.DAL
 
 
                 using (SqlTransaction transaction =
-                    conn.BeginTransaction())
+                    conn.BeginTransaction(
+                        System.Data.IsolationLevel.Serializable))
                 {
                     try
                     {
+                        
+                        if (donHang == null)
+                        {
+                            throw new InvalidOperationException(
+                                "Đơn hàng không hợp lệ.");
+                        }
+
+
+                        if (donHang.ChiTiet == null ||
+                            donHang.ChiTiet.Count == 0)
+                        {
+                            throw new InvalidOperationException(
+                                "Đơn hàng không có sản phẩm.");
+                        }
+
+
+                        foreach (
+                            ChiTietDonHang chiTiet
+                            in donHang.ChiTiet)
+                        {
+                            if (chiTiet == null)
+                            {
+                                throw new InvalidOperationException(
+                                    "Chi tiết đơn hàng không hợp lệ.");
+                            }
+
+
+                            if (chiTiet.MaSanPham <= 0)
+                            {
+                                throw new InvalidOperationException(
+                                    "Mã sản phẩm không hợp lệ.");
+                            }
+
+
+                            if (chiTiet.SoLuong <= 0)
+                            {
+                                throw new InvalidOperationException(
+                                    "Số lượng sản phẩm phải lớn hơn 0.");
+                            }
+
+
+                            using (SqlCommand cmd =
+                                new SqlCommand(
+                                    checkProductSql,
+                                    conn,
+                                    transaction))
+                            {
+                                cmd.Parameters.Add(
+                                    "@MaSanPham",
+                                    SqlDbType.Int)
+                                    .Value =
+                                    chiTiet.MaSanPham;
+
+
+                                using (SqlDataReader reader =
+                                    cmd.ExecuteReader())
+                                {
+                                    if (!reader.Read())
+                                    {
+                                        throw new InvalidOperationException(
+                                            "Sản phẩm mã "
+                                            + chiTiet.MaSanPham
+                                            + " không tồn tại.");
+                                    }
+
+
+                                    int tonKho =
+                                        Convert.ToInt32(
+                                            reader["SoLuong"]);
+
+
+                                    bool trangThai =
+                                        Convert.ToBoolean(
+                                            reader["TrangThai"]);
+
+
+                                    string tenSanPham =
+                                        reader["TenSanPham"]
+                                            .ToString();
+
+
+                                    decimal giaDatabase =
+                                        Convert.ToDecimal(
+                                            reader["Gia"]);
+
+
+                                    if (!trangThai)
+                                    {
+                                        throw new InvalidOperationException(
+                                            "Sản phẩm \""
+                                            + tenSanPham
+                                            + "\" hiện không còn được bán.");
+                                    }
+
+
+                                    if (tonKho <= 0)
+                                    {
+                                        throw new InvalidOperationException(
+                                            "Sản phẩm \""
+                                            + tenSanPham
+                                            + "\" đã hết hàng.");
+                                    }
+
+
+                                    if (chiTiet.SoLuong > tonKho)
+                                    {
+                                        throw new InvalidOperationException(
+                                            "Sản phẩm \""
+                                            + tenSanPham
+                                            + "\" chỉ còn "
+                                            + tonKho
+                                            + " sản phẩm.");
+                                    }
+
+
+                                    chiTiet.DonGia =
+                                        giaDatabase;
+                                }
+                            }
+                        }
+
+
+                        decimal tongTienThucTe =
+                            donHang.ChiTiet.Sum(
+                                x =>
+                                    x.SoLuong
+                                    * x.DonGia);
+
+
+                        donHang.TongTien =
+                            tongTienThucTe;
+
+
                         int maDonHang;
 
-
-                        // ==================================
-                        // TẠO ĐƠN HÀNG
-                        // ==================================
 
                         using (SqlCommand cmd =
                             new SqlCommand(
@@ -241,8 +378,7 @@ namespace web_ban_hang2.DAL
                             SqlParameter pMaKhachHang =
                                 cmd.Parameters.Add(
                                     "@MaKhachHang",
-                                    SqlDbType.Int
-                                );
+                                    SqlDbType.Int);
 
 
                             if (donHang.MaKhachHang.HasValue)
@@ -260,32 +396,32 @@ namespace web_ban_hang2.DAL
                             cmd.Parameters.Add(
                                 "@HoTenNguoiNhan",
                                 SqlDbType.NVarChar,
-                                100
-                            ).Value =
+                                100)
+                                .Value =
                                 donHang.HoTenNguoiNhan;
 
 
                             cmd.Parameters.Add(
                                 "@SoDienThoai",
                                 SqlDbType.VarChar,
-                                20
-                            ).Value =
+                                20)
+                                .Value =
                                 donHang.SoDienThoai;
 
 
                             cmd.Parameters.Add(
                                 "@DiaChiGiaoHang",
                                 SqlDbType.NVarChar,
-                                255
-                            ).Value =
+                                255)
+                                .Value =
                                 donHang.DiaChiGiaoHang;
 
 
                             SqlParameter pTongTien =
                                 cmd.Parameters.Add(
                                     "@TongTien",
-                                    SqlDbType.Decimal
-                                );
+                                    SqlDbType.Decimal);
+
 
                             pTongTien.Precision = 18;
                             pTongTien.Scale = 2;
@@ -296,8 +432,8 @@ namespace web_ban_hang2.DAL
                             cmd.Parameters.Add(
                                 "@TrangThai",
                                 SqlDbType.NVarChar,
-                                50
-                            ).Value =
+                                50)
+                                .Value =
                                 string.IsNullOrWhiteSpace(
                                     donHang.TrangThai)
                                     ? "Chờ xử lý"
@@ -311,77 +447,107 @@ namespace web_ban_hang2.DAL
                             if (result == null ||
                                 result == DBNull.Value)
                             {
-                                transaction.Rollback();
-
-                                return 0;
+                                throw new InvalidOperationException(
+                                    "Không thể tạo đơn hàng.");
                             }
 
 
                             maDonHang =
                                 Convert.ToInt32(
-                                    result
-                                );
+                                    result);
                         }
 
 
-                        // ==================================
-                        // LƯU CHI TIẾT ĐƠN HÀNG
-                        // ==================================
-
-                        if (donHang.ChiTiet != null)
+                        foreach (
+                            ChiTietDonHang chiTiet
+                            in donHang.ChiTiet)
                         {
-                            foreach (
-                                ChiTietDonHang chiTiet
-                                in donHang.ChiTiet)
+                           
+                            using (SqlCommand cmd =
+                                new SqlCommand(
+                                    updateStockSql,
+                                    conn,
+                                    transaction))
                             {
-                                using (SqlCommand cmd =
-                                    new SqlCommand(
-                                        insertDetailSql,
-                                        conn,
-                                        transaction))
-                                {
-                                    cmd.Parameters.Add(
-                                        "@MaDonHang",
-                                        SqlDbType.Int
-                                    ).Value =
-                                        maDonHang;
+                                cmd.Parameters.Add(
+                                    "@MaSanPham",
+                                    SqlDbType.Int)
+                                    .Value =
+                                    chiTiet.MaSanPham;
 
 
-                                    cmd.Parameters.Add(
-                                        "@MaSanPham",
-                                        SqlDbType.Int
-                                    ).Value =
-                                        chiTiet.MaSanPham;
+                                cmd.Parameters.Add(
+                                    "@SoLuong",
+                                    SqlDbType.Int)
+                                    .Value =
+                                    chiTiet.SoLuong;
 
 
-                                    cmd.Parameters.Add(
-                                        "@SoLuong",
-                                        SqlDbType.Int
-                                    ).Value =
-                                        chiTiet.SoLuong;
-
-
-                                    SqlParameter pDonGia =
-                                        cmd.Parameters.Add(
-                                            "@DonGia",
-                                            SqlDbType.Decimal
-                                        );
-
-                                    pDonGia.Precision = 18;
-                                    pDonGia.Scale = 2;
-                                    pDonGia.Value =
-                                        chiTiet.DonGia;
-
-
+                                int affectedRows =
                                     cmd.ExecuteNonQuery();
+
+
+                                if (affectedRows != 1)
+                                {
+                                    throw new InvalidOperationException(
+                                        "Không đủ tồn kho cho sản phẩm mã "
+                                        + chiTiet.MaSanPham
+                                        + ".");
+                                }
+                            }
+
+
+                            using (SqlCommand cmd =
+                                new SqlCommand(
+                                    insertDetailSql,
+                                    conn,
+                                    transaction))
+                            {
+                                cmd.Parameters.Add(
+                                    "@MaDonHang",
+                                    SqlDbType.Int)
+                                    .Value =
+                                    maDonHang;
+
+
+                                cmd.Parameters.Add(
+                                    "@MaSanPham",
+                                    SqlDbType.Int)
+                                    .Value =
+                                    chiTiet.MaSanPham;
+
+
+                                cmd.Parameters.Add(
+                                    "@SoLuong",
+                                    SqlDbType.Int)
+                                    .Value =
+                                    chiTiet.SoLuong;
+
+
+                                SqlParameter pDonGia =
+                                    cmd.Parameters.Add(
+                                        "@DonGia",
+                                        SqlDbType.Decimal);
+
+
+                                pDonGia.Precision = 18;
+                                pDonGia.Scale = 2;
+                                pDonGia.Value =
+                                    chiTiet.DonGia;
+
+
+                                int result =
+                                    cmd.ExecuteNonQuery();
+
+
+                                if (result != 1)
+                                {
+                                    throw new InvalidOperationException(
+                                        "Không thể lưu chi tiết đơn hàng.");
                                 }
                             }
                         }
 
-
-                        // ==================================
-                        // HOÀN TẤT TRANSACTION
-                        // ==================================
 
                         transaction.Commit();
 
@@ -390,6 +556,7 @@ namespace web_ban_hang2.DAL
                     }
                     catch
                     {
+                        
                         transaction.Rollback();
 
                         throw;
@@ -397,11 +564,6 @@ namespace web_ban_hang2.DAL
                 }
             }
         }
-
-
-        // ==========================================
-        // ĐẾM TỔNG ĐƠN HÀNG
-        // ==========================================
 
         public int CountAll()
         {
@@ -426,10 +588,6 @@ namespace web_ban_hang2.DAL
             }
         }
 
-
-        // ==========================================
-        // ĐẾM THEO TRẠNG THÁI
-        // ==========================================
 
         public int CountByStatus(
             string trangThai)
@@ -464,10 +622,6 @@ namespace web_ban_hang2.DAL
             }
         }
 
-
-        // ==========================================
-        // CẬP NHẬT TRẠNG THÁI
-        // ==========================================
 
         public bool UpdateTrangThai(
             int maDonHang,
