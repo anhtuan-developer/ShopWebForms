@@ -10,10 +10,8 @@ namespace web_ban_hang2.Admin
             new SanPhamDAL();
 
 
-        // ==========================================
         // PAGE LOAD
-        // ==========================================
-
+       
         protected void Page_Load(
             object sender,
             EventArgs e)
@@ -24,11 +22,8 @@ namespace web_ban_hang2.Admin
             }
         }
 
-
-        // ==========================================
         // LOAD SẢN PHẨM
-        // ==========================================
-
+        
         private void LoadSanPham()
         {
             gvSanPham.DataSource =
@@ -38,10 +33,8 @@ namespace web_ban_hang2.Admin
         }
 
 
-        // ==========================================
         // THÊM SẢN PHẨM
-        // ==========================================
-
+       
         protected void btnThemSanPham_Click(
             object sender,
             EventArgs e)
@@ -52,10 +45,8 @@ namespace web_ban_hang2.Admin
         }
 
 
-        // ==========================================
         // GRIDVIEW ROW COMMAND
-        // ==========================================
-
+        
         protected void gvSanPham_RowCommand(
             object sender,
             GridViewCommandEventArgs e)
@@ -87,78 +78,88 @@ namespace web_ban_hang2.Admin
         }
 
 
-        // ==========================================
-        // XÓA SẢN PHẨM
-        // ==========================================
-
+        // XÓA / NGỪNG BÁN SẢN PHẨM
+       
         private void DeleteSanPham(
             int maSanPham)
         {
             try
             {
-                // ----------------------------------
-                // Kiểm tra sản phẩm đã có trong đơn hàng
-                // ----------------------------------
-
+                 // Kiểm tra sản phẩm đã xuất hiện
+                // trong đơn hàng hay chưa
+               
                 int soLuongDonHang =
                     sanPhamDAL.CountOrderDetails(
                         maSanPham
                     );
 
 
+                // SẢN PHẨM ĐÃ CÓ TRONG ĐƠN HÀNG
+               
                 if (soLuongDonHang > 0)
                 {
+                    bool result =
+                        sanPhamDAL.NgungBan(
+                            maSanPham
+                        );
+
+
+                    if (result)
+                    {
+                        LoadSanPham();
+
+                        ShowMessage(
+                            "Đã ngừng bán",
+                            "Sản phẩm này đã xuất hiện trong "
+                            + soLuongDonHang
+                            + " chi tiết đơn hàng nên không thể xóa. "
+                            + "Sản phẩm đã được chuyển sang trạng thái Ngừng bán.",
+                            "⚠️"
+                        );
+                    }
+                    else
+                    {
+                        ShowMessage(
+                            "Thất bại",
+                            "Không thể chuyển sản phẩm sang trạng thái Ngừng bán.",
+                            "❌"
+                        );
+                    }
+
+
+                    return;
+                }
+
+
+               // SẢN PHẨM CHƯA CÓ TRONG ĐƠN HÀNG
+               
+                bool deleteResult =
+                    sanPhamDAL.Delete(
+                        maSanPham
+                    );
+
+
+                if (deleteResult)
+                {
+                    LoadSanPham();
+
                     ShowMessage(
-                        "Không thể xóa",
-                        "Sản phẩm này đã xuất hiện trong "
-                        + soLuongDonHang
-                        + " chi tiết đơn hàng. "
-                        + "Không thể xóa sản phẩm.",
-                        "⚠️"
+                        "Xóa thành công",
+                        "Sản phẩm đã được xóa khỏi hệ thống.",
+                        "✅"
                     );
 
                     return;
                 }
 
 
-                // ----------------------------------
-                // Thực hiện xóa
-                // ----------------------------------
-
-                bool result =
-                    sanPhamDAL.Delete(
-                        maSanPham
-                    );
-
-
-                // ----------------------------------
-                // Xóa thành công
-                // ----------------------------------
-
-                if (result)
-                {
-                    LoadSanPham();
-
-                    ShowMessage(
-                        "Xóa thành công",
-                        "Sản phẩm đã được xóa thành công.",
-                        "✅"
-                    );
-                }
-
-
-                // ----------------------------------
-                // Không tìm thấy sản phẩm
-                // ----------------------------------
-
-                else
-                {
-                    ShowMessage(
-                        "Xóa thất bại",
-                        "Không tìm thấy sản phẩm cần xóa.",
-                        "❌"
-                    );
-                }
+                // KHÔNG TÌM THẤY SẢN PHẨM
+                
+                ShowMessage(
+                    "Xóa thất bại",
+                    "Không tìm thấy sản phẩm cần xóa.",
+                    "❌"
+                );
             }
             catch (Exception ex)
             {
@@ -171,9 +172,7 @@ namespace web_ban_hang2.Admin
         }
 
 
-        // ==========================================
         // HIỂN THỊ THÔNG BÁO
-        // ==========================================
 
         private void ShowMessage(
             string title,

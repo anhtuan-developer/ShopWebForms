@@ -304,18 +304,52 @@ namespace web_ban_hang2.DAL
         }
 
 
-        // ==========================================
-        // XÓA SẢN PHẨM
-        // ==========================================
-
+         // XÓA SẢN PHẨM
+        
         public bool Delete(int maSanPham)
         {
             string sql = @"
-                DELETE FROM SanPham
+        DELETE FROM SanPham
 
-                WHERE
-                    MaSanPham = @MaSanPham
-            ";
+        WHERE
+            MaSanPham = @MaSanPham
+    ";
+
+            using (SqlConnection conn =
+                database.GetConnection())
+            {
+                using (SqlCommand cmd =
+                    new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.Add(
+                        "@MaSanPham",
+                        SqlDbType.Int
+                    ).Value = maSanPham;
+
+                    conn.Open();
+
+                    int result =
+                        cmd.ExecuteNonQuery();
+
+                    return result > 0;
+                }
+            }
+        }
+
+
+        // NGỪNG BÁN SẢN PHẨM
+        
+        public bool NgungBan(int maSanPham)
+        {
+            string sql = @"
+        UPDATE SanPham
+
+        SET
+            TrangThai = 0
+
+        WHERE
+            MaSanPham = @MaSanPham
+    ";
 
             using (SqlConnection conn =
                 database.GetConnection())

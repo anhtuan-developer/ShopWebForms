@@ -14,10 +14,8 @@ namespace web_ban_hang2.DAL
             .ConnectionString;
 
 
-        // ==========================================
-        // LẤY TẤT CẢ KHÁCH HÀNG
-        // ==========================================
-
+         // LẤY TẤT CẢ KHÁCH HÀNG
+        
         public List<KhachHang> GetAll()
         {
             List<KhachHang> danhSach =
@@ -87,10 +85,8 @@ namespace web_ban_hang2.DAL
         }
 
 
-        // ==========================================
-        // LẤY KHÁCH HÀNG THEO MÃ
-        // ==========================================
-
+         // LẤY KHÁCH HÀNG THEO MÃ
+      
         public KhachHang GetById(int maKhachHang)
         {
             string sql = @"
@@ -162,10 +158,8 @@ namespace web_ban_hang2.DAL
         }
 
 
-        // ==========================================
         // ĐĂNG NHẬP
-        // ==========================================
-
+      
         public KhachHang Login(
             string email,
             string matKhau)
@@ -251,40 +245,122 @@ namespace web_ban_hang2.DAL
         }
 
 
-        // ==========================================
         // XÓA KHÁCH HÀNG
-        // ==========================================
-
-        public bool Delete(int maKhachHang)
+       
+        public bool Delete(
+            int maKhachHang,
+            out string message)
         {
-            string sql = @"
-                DELETE FROM KhachHang
-                WHERE MaKhachHang = @MaKhachHang
-            ";
+            message = "";
+
+            string checkOrderSql = @"
+        SELECT COUNT(*)
+        FROM DonHang
+        WHERE MaKhachHang = @MaKhachHang
+    ";
+
+            string deleteSql = @"
+        DELETE FROM KhachHang
+        WHERE MaKhachHang = @MaKhachHang
+    ";
 
             using (SqlConnection conn =
                 new SqlConnection(connectionString))
             {
-                using (SqlCommand cmd =
-                    new SqlCommand(sql, conn))
+                conn.Open();
+
+                 // KIỂM TRA KHÁCH HÀNG CÓ TỒN TẠI
+                
+                string checkCustomerSql = @"
+                   SELECT COUNT(*)
+                   FROM KhachHang
+                   WHERE MaKhachHang = @MaKhachHang";
+
+                using (SqlCommand checkCustomerCmd =
+                    new SqlCommand(
+                        checkCustomerSql,
+                        conn))
                 {
-                    cmd.Parameters.Add(
+                    checkCustomerCmd.Parameters.Add(
                         "@MaKhachHang",
                         SqlDbType.Int
                     ).Value = maKhachHang;
 
-                    conn.Open();
+                    int customerCount =
+                        Convert.ToInt32(
+                            checkCustomerCmd.ExecuteScalar());
 
-                    return cmd.ExecuteNonQuery() > 0;
+                    if (customerCount == 0)
+                    {
+                        message =
+                            "Khách hàng không tồn tại.";
+
+                        return false;
+                    }
                 }
+
+
+                //  KIỂM TRA KHÁCH HÀNG ĐÃ CÓ ĐƠN HÀNG
+                
+                using (SqlCommand checkOrderCmd =
+                    new SqlCommand(
+                        checkOrderSql,
+                        conn))
+                {
+                    checkOrderCmd.Parameters.Add(
+                        "@MaKhachHang",
+                        SqlDbType.Int
+                    ).Value = maKhachHang;
+
+                    int orderCount =
+                        Convert.ToInt32(
+                            checkOrderCmd.ExecuteScalar());
+
+                    if (orderCount > 0)
+                    {
+                        message =
+                            "Không thể xóa khách hàng này vì khách hàng đã có đơn hàng.";
+
+                        return false;
+                    }
+                }
+
+
+                //  XÓA KHÁCH HÀNG
+                
+                using (SqlCommand deleteCmd =
+                    new SqlCommand(
+                        deleteSql,
+                        conn))
+                {
+                    deleteCmd.Parameters.Add(
+                        "@MaKhachHang",
+                        SqlDbType.Int
+                    ).Value = maKhachHang;
+
+                    int result =
+                        deleteCmd.ExecuteNonQuery();
+
+                    if (result > 0)
+                    {
+                        message =
+                            "Xóa khách hàng thành công.";
+
+                        return true;
+                    }
+                }
+
+
+                message =
+                    "Không thể xóa khách hàng.";
+
+                return false;
             }
         }
 
 
-        // ==========================================
         // ĐẾM KHÁCH HÀNG
-        // ==========================================
-
+       
         public int CountAll()
         {
             string sql =
@@ -304,10 +380,8 @@ namespace web_ban_hang2.DAL
                 }
             }
         }
-        // ==========================================
         // KIỂM TRA EMAIL ĐÃ TỒN TẠI
-        // ==========================================
-
+        
         public bool EmailExists(string email)
         {
             string sql = @"
@@ -339,10 +413,8 @@ namespace web_ban_hang2.DAL
                 }
             }
         }
-        // ==========================================
         // ĐĂNG KÝ KHÁCH HÀNG
-        // ==========================================
-
+      
         public bool Register(KhachHang khachHang)
         {
             string sql = @"

@@ -11,10 +11,8 @@ namespace web_ban_hang2.Admin
             new KhachHangDAL();
 
 
-        // ==========================================
         // PAGE LOAD
-        // ==========================================
-
+        
         protected void Page_Load(
             object sender,
             EventArgs e)
@@ -28,10 +26,8 @@ namespace web_ban_hang2.Admin
         }
 
 
-        // ==========================================
         // LOAD DANH SÁCH KHÁCH HÀNG
-        // ==========================================
-
+        
         private void LoadKhachHang()
         {
             gvKhachHang.DataSource =
@@ -41,10 +37,8 @@ namespace web_ban_hang2.Admin
         }
 
 
-        // ==========================================
         // LOAD THỐNG KÊ
-        // ==========================================
-
+        
         private void LoadStatistics()
         {
             lblTongKhachHang.Text =
@@ -54,10 +48,8 @@ namespace web_ban_hang2.Admin
         }
 
 
-        // ==========================================
         // XỬ LÝ ROW COMMAND
-        // ==========================================
-
+        
         protected void gvKhachHang_RowCommand(
             object sender,
             GridViewCommandEventArgs e)
@@ -83,44 +75,71 @@ namespace web_ban_hang2.Admin
         }
 
 
-        // ==========================================
         // XÓA KHÁCH HÀNG
-        // ==========================================
-
+        
         private void DeleteKhachHang(
             int maKhachHang)
         {
             try
             {
+                string message;
+
                 bool result =
                     khachHangDAL.Delete(
-                        maKhachHang
-                    );
+                        maKhachHang,
+                        out message);
 
 
+                // XÓA THÀNH CÔNG
+                
                 if (result)
                 {
                     LoadKhachHang();
 
                     LoadStatistics();
+
+                    ShowMessage(
+                        message,
+                        false);
+
+                    return;
                 }
+
+
+                // KHÔNG THỂ XÓA
+                
+                ShowMessage(
+                    message,
+                    true);
             }
             catch (Exception ex)
             {
-                string message =
-                    System.Web.HttpUtility
-                    .JavaScriptStringEncode(
-                        ex.Message
-                    );
-
-
-                ClientScript.RegisterStartupScript(
-                    GetType(),
-                    "deleteCustomerError",
-                    "alert('" + message + "');",
-                    true
-                );
+                ShowMessage(
+                    "Có lỗi xảy ra khi xóa khách hàng: "
+                    + ex.Message,
+                    true);
             }
+        }
+
+
+        // HIỂN THỊ THÔNG BÁO
+        
+        private void ShowMessage(
+            string message,
+            bool isError)
+        {
+            string safeMessage =
+                System.Web.HttpUtility
+                .JavaScriptStringEncode(
+                    message ?? "");
+
+            ClientScript.RegisterStartupScript(
+                GetType(),
+                "customerMessage",
+                "alert('" +
+                safeMessage +
+                "');",
+                true);
         }
     }
 }
