@@ -223,10 +223,11 @@
 
 
                     <asp:Button
-                        ID="btnCheckout"
-                        runat="server"
-                        Text="Thanh toán"
-                        OnClick="btnCheckout_Click" />
+                         ID="btnCheckout"
+                         runat="server"
+                         Text="Tiến hành đặt hàng"
+                         CssClass="btn btn-primary"
+                         OnClick="btnCheckout_Click" />
 
                 </div>
 

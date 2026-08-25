@@ -1,5 +1,5 @@
 ﻿<%@ Page
-    Title="Thanh toán"
+    Title="Đặt hàng"
     Language="C#"
     MasterPageFile="~/Site.Master"
     AutoEventWireup="true"
@@ -15,7 +15,15 @@
     <div class="checkout-page">
 
         <!-- TIÊU ĐỀ -->
-        <h2>Thanh toán đơn hàng</h2>
+        <h2>Đặt hàng</h2>
+
+        <!-- THÔNG BÁO -->
+        <div class="alert alert-info" role="alert">
+            <strong>Lưu ý:</strong>
+            Đây là bước đặt hàng.
+            Website hiện chưa tích hợp thanh toán online qua
+            VNPay, MoMo, ZaloPay, Stripe hoặc PayPal.
+        </div>
 
         <hr />
 

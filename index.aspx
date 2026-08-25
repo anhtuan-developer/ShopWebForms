@@ -311,11 +311,11 @@
 
             <div>
                 <h3>
-                    Thanh toán an toàn
+                    Đặt hàng an toàn
                 </h3>
 
                 <p>
-                    Bảo mật thông tin
+                    Bảo mật thông tin đặt hàng
                 </p>
             </div>
 
