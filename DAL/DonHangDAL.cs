@@ -1005,5 +1005,388 @@ namespace web_ban_hang2.DAL
                 }
             }
         }
+
+        // ==========================================
+        // HỦY ĐƠN HÀNG KHÁCH HÀNG
+        // ==========================================
+
+        public bool HuyDonHang(
+            int maDonHang,
+            int maKhachHang,
+            out string message)
+        {
+            message = "";
+
+            // ------------------------------------------
+            // KIỂM TRA THAM SỐ
+            // ------------------------------------------
+
+            if (maDonHang <= 0 ||
+                maKhachHang <= 0)
+            {
+                message =
+                    "Thông tin đơn hàng không hợp lệ.";
+
+                return false;
+            }
+
+
+            using (SqlConnection conn =
+                database.GetConnection())
+            {
+                conn.Open();
+
+
+                // ------------------------------------------
+                // TRANSACTION
+                // ------------------------------------------
+
+                using (SqlTransaction transaction =
+                    conn.BeginTransaction(
+                        System.Data.IsolationLevel.Serializable))
+                {
+                    try
+                    {
+                        // ------------------------------------------
+                        // LẤY TRẠNG THÁI ĐƠN HÀNG
+                        // ------------------------------------------
+
+                        string getOrderSql = @"
+                    SELECT TrangThai
+                    FROM DonHang WITH (UPDLOCK, HOLDLOCK)
+
+                    WHERE
+                        MaDonHang = @MaDonHang
+
+                        AND
+
+                        MaKhachHang = @MaKhachHang;
+                ";
+
+
+                        string trangThai;
+
+
+                        using (SqlCommand cmd =
+                            new SqlCommand(
+                                getOrderSql,
+                                conn,
+                                transaction))
+                        {
+                            cmd.Parameters.Add(
+                                "@MaDonHang",
+                                SqlDbType.Int
+                            ).Value = maDonHang;
+
+
+                            cmd.Parameters.Add(
+                                "@MaKhachHang",
+                                SqlDbType.Int
+                            ).Value = maKhachHang;
+
+
+                            object result =
+                                cmd.ExecuteScalar();
+
+
+                            // --------------------------------------
+                            // KHÔNG TÌM THẤY ĐƠN
+                            // --------------------------------------
+
+                            if (result == null ||
+                                result == DBNull.Value)
+                            {
+                                message =
+                                    "Không tìm thấy đơn hàng "
+                                    + "hoặc bạn không có quyền "
+                                    + "hủy đơn hàng này.";
+
+                                transaction.Rollback();
+
+                                return false;
+                            }
+
+
+                            trangThai =
+                                result.ToString();
+                        }
+
+
+                        // ------------------------------------------
+                        // CHỈ CHO PHÉP HỦY "CHỜ XỬ LÝ"
+                        // ------------------------------------------
+
+                        if (!string.Equals(
+                            trangThai,
+                            "Chờ xử lý",
+                            StringComparison.OrdinalIgnoreCase))
+                        {
+                            switch (trangThai)
+                            {
+                                case "Đã xác nhận":
+
+                                    message =
+                                        "Đơn hàng đã được xác nhận "
+                                        + "nên không thể hủy.";
+
+                                    break;
+
+
+                                case "Đang giao":
+
+                                    message =
+                                        "Đơn hàng đang giao "
+                                        + "nên không thể hủy.";
+
+                                    break;
+
+
+                                case "Đã giao":
+
+                                    message =
+                                        "Đơn hàng đã giao "
+                                        + "nên không thể hủy.";
+
+                                    break;
+
+
+                                case "Đã hủy":
+
+                                    message =
+                                        "Đơn hàng này đã được "
+                                        + "hủy trước đó.";
+
+                                    break;
+
+
+                                default:
+
+                                    message =
+                                        "Trạng thái đơn hàng hiện tại "
+                                        + "không cho phép hủy.";
+
+                                    break;
+                            }
+
+
+                            transaction.Rollback();
+
+                            return false;
+                        }
+
+
+                        // ------------------------------------------
+                        // LẤY CHI TIẾT ĐƠN HÀNG
+                        // ------------------------------------------
+
+                        string restoreStockSql = @"
+                    SELECT
+                        MaSanPham,
+                        SoLuong
+
+                    FROM ChiTietDonHang
+                    WITH (UPDLOCK, HOLDLOCK)
+
+                    WHERE
+                        MaDonHang = @MaDonHang;
+                ";
+
+
+                        var items =
+                            new System.Collections.Generic
+                            .List<ChiTietDonHang>();
+
+
+                        using (SqlCommand cmd =
+                            new SqlCommand(
+                                restoreStockSql,
+                                conn,
+                                transaction))
+                        {
+                            cmd.Parameters.Add(
+                                "@MaDonHang",
+                                SqlDbType.Int
+                            ).Value = maDonHang;
+
+
+                            using (SqlDataReader reader =
+                                cmd.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    items.Add(
+                                        new ChiTietDonHang
+                                        {
+                                            MaSanPham =
+                                                Convert.ToInt32(
+                                                    reader["MaSanPham"]),
+
+                                            SoLuong =
+                                                Convert.ToInt32(
+                                                    reader["SoLuong"])
+                                        });
+                                }
+                            }
+                        }
+
+
+                        // ------------------------------------------
+                        // ĐƠN KHÔNG CÓ SẢN PHẨM
+                        // ------------------------------------------
+
+                        if (items.Count == 0)
+                        {
+                            message =
+                                "Đơn hàng không có sản phẩm "
+                                + "để hoàn tồn kho.";
+
+                            transaction.Rollback();
+
+                            return false;
+                        }
+
+
+                        // ------------------------------------------
+                        // HOÀN TỒN KHO
+                        // ------------------------------------------
+
+                        string updateStockSql = @"
+                    UPDATE SanPham
+
+                    SET
+                        SoLuong =
+                            SoLuong + @SoLuong
+
+                    WHERE
+                        MaSanPham = @MaSanPham;
+                ";
+
+
+                        foreach (
+                            ChiTietDonHang item
+                            in items)
+                        {
+                            using (SqlCommand cmd =
+                                new SqlCommand(
+                                    updateStockSql,
+                                    conn,
+                                    transaction))
+                            {
+                                cmd.Parameters.Add(
+                                    "@MaSanPham",
+                                    SqlDbType.Int
+                                ).Value =
+                                    item.MaSanPham;
+
+
+                                cmd.Parameters.Add(
+                                    "@SoLuong",
+                                    SqlDbType.Int
+                                ).Value =
+                                    item.SoLuong;
+
+
+                                if (
+                                    cmd.ExecuteNonQuery()
+                                    != 1)
+                                {
+                                    throw new InvalidOperationException(
+                                        "Không thể hoàn tồn kho "
+                                        + "cho sản phẩm mã "
+                                        + item.MaSanPham
+                                        + ".");
+                                }
+                            }
+                        }
+
+
+                        // ------------------------------------------
+                        // ĐỔI TRẠNG THÁI ĐƠN
+                        // ------------------------------------------
+
+                        string cancelSql = @"
+                    UPDATE DonHang
+
+                    SET
+                        TrangThai = N'Đã hủy'
+
+                    WHERE
+                        MaDonHang = @MaDonHang
+
+                        AND
+
+                        MaKhachHang = @MaKhachHang
+
+                        AND
+
+                        TrangThai = N'Chờ xử lý';
+                ";
+
+
+                        using (SqlCommand cmd =
+                            new SqlCommand(
+                                cancelSql,
+                                conn,
+                                transaction))
+                        {
+                            cmd.Parameters.Add(
+                                "@MaDonHang",
+                                SqlDbType.Int
+                            ).Value = maDonHang;
+
+
+                            cmd.Parameters.Add(
+                                "@MaKhachHang",
+                                SqlDbType.Int
+                            ).Value = maKhachHang;
+
+
+                            if (
+                                cmd.ExecuteNonQuery()
+                                != 1)
+                            {
+                                throw new InvalidOperationException(
+                                    "Đơn hàng đã thay đổi trạng thái "
+                                    + "và không thể hủy.");
+                            }
+                        }
+
+
+                        // ------------------------------------------
+                        // COMMIT
+                        // ------------------------------------------
+
+                        transaction.Commit();
+
+
+                        message =
+                            "Đơn hàng đã được hủy thành công "
+                            + "và tồn kho đã được hoàn lại.";
+
+
+                        return true;
+                    }
+                    catch
+                    {
+                        // ------------------------------------------
+                        // ROLLBACK NẾU CÓ LỖI
+                        // ------------------------------------------
+
+                        try
+                        {
+                            transaction.Rollback();
+                        }
+                        catch
+                        {
+                            // Giữ nguyên lỗi ban đầu.
+                        }
+
+
+                        throw;
+                    }
+                }
+            }
+        }
+
     }
 }

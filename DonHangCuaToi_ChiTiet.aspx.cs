@@ -200,6 +200,11 @@ namespace web_ban_hang2
 
                 lblMessage.Visible =
                     false;
+                btnHuy.Visible =
+                    string.Equals(
+                        row["TrangThai"].ToString(),
+                        "Chờ xử lý",
+                        StringComparison.OrdinalIgnoreCase);
             }
             catch (Exception)
             {
@@ -207,6 +212,7 @@ namespace web_ban_hang2
                     "Không thể tải chi tiết đơn hàng. "
                     + "Vui lòng thử lại sau.");
             }
+
         }
 
 
@@ -228,6 +234,81 @@ namespace web_ban_hang2
 
             lblMessage.Visible =
                 true;
+        }
+        // ==========================================
+        // HỦY ĐƠN HÀNG
+        // ==========================================
+
+        protected void btnHuy_Click(
+            object sender,
+            EventArgs e)
+        {
+            try
+            {
+                int? maDonHang =
+                    GetMaDonHang();
+
+
+                if (!maDonHang.HasValue)
+                {
+                    ShowError(
+                        "Mã đơn hàng không hợp lệ.");
+
+                    return;
+                }
+
+
+                string message;
+
+
+                bool result =
+                    donHangDAL.HuyDonHang(
+                        maDonHang.Value,
+                        GetMaKhachHang(),
+                        out message);
+
+
+                string safeMessage =
+                    System.Web.HttpUtility
+                        .JavaScriptStringEncode(
+                            message);
+
+
+                if (result)
+                {
+                    ClientScript.RegisterStartupScript(
+                        GetType(),
+                        "cancelOrderSuccess",
+                        "alert('" +
+                        safeMessage +
+                        "');",
+                        true);
+
+
+                    // Load lại trạng thái đơn hàng
+                    LoadChiTiet();
+                }
+                else
+                {
+                    ClientScript.RegisterStartupScript(
+                        GetType(),
+                        "cancelOrderError",
+                        "alert('" +
+                        safeMessage +
+                        "');",
+                        true);
+
+
+                    // Load lại trạng thái
+                    LoadChiTiet();
+                }
+            }
+            catch (Exception)
+            {
+                ShowError(
+                    "Không thể hủy đơn hàng. " +
+                    "Vui lòng thử lại sau.");
+            }
         }
     }
 }

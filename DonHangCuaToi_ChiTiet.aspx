@@ -265,6 +265,24 @@
 
             </div>
 
+            <asp:Button
+                ID="btnHuy"
+                runat="server"
+            
+                Text="Hủy đơn hàng"
+            
+                CssClass="btn btn-danger"
+            
+                Visible="false"
+            
+                OnClick="btnHuy_Click"
+            
+                OnClientClick="
+                    return confirm(
+                        'Bạn có chắc chắn muốn hủy đơn hàng này không?'
+                    );
+                " />
+
 
             <asp:HyperLink
                 ID="lnkQuayLai"
