@@ -396,5 +396,171 @@ namespace web_ban_hang2.DAL
                 }
             }
         }
+        
+        // TÌM KIẾM + PHÂN TRANG SẢN PHẨM
+        // Chỉ hiển thị sản phẩm đang bán
+        
+        public DataTable SearchPaged(
+            string keyword,
+            int pageNumber,
+            int pageSize,
+            out int totalRecords)
+        {
+            keyword =
+                (keyword ?? string.Empty)
+                .Trim();
+
+
+            if (pageNumber < 1)
+                pageNumber = 1;
+
+
+            if (pageSize < 1)
+                pageSize = 12;
+
+
+            int offset =
+                (pageNumber - 1)
+                * pageSize;
+
+
+            string sql = @"
+        SELECT
+            sp.MaSanPham,
+            sp.MaDanhMuc,
+            sp.TenSanPham,
+            sp.MoTa,
+            sp.Gia,
+            sp.SoLuong,
+            sp.HinhAnh,
+            sp.TrangThai,
+            sp.NgayTao,
+
+            dm.TenDanhMuc
+
+        FROM SanPham sp
+
+        INNER JOIN DanhMuc dm
+            ON sp.MaDanhMuc = dm.MaDanhMuc
+
+        WHERE sp.TrangThai = 1
+
+        AND
+        (
+            @Keyword = ''
+
+            OR sp.TenSanPham
+                LIKE N'%' + @Keyword + N'%'
+
+            OR ISNULL(
+                sp.MoTa,
+                N''
+            )
+                LIKE N'%' + @Keyword + N'%'
+
+            OR dm.TenDanhMuc
+                LIKE N'%' + @Keyword + N'%'
+        )
+
+        ORDER BY
+            sp.MaSanPham DESC
+
+        OFFSET @Offset ROWS
+
+        FETCH NEXT @PageSize ROWS ONLY;
+
+
+        SELECT COUNT(*)
+
+        FROM SanPham sp
+
+        INNER JOIN DanhMuc dm
+            ON sp.MaDanhMuc = dm.MaDanhMuc
+
+        WHERE sp.TrangThai = 1
+
+        AND
+        (
+            @Keyword = ''
+
+            OR sp.TenSanPham
+                LIKE N'%' + @Keyword + N'%'
+
+            OR ISNULL(
+                sp.MoTa,
+                N''
+            )
+                LIKE N'%' + @Keyword + N'%'
+
+            OR dm.TenDanhMuc
+                LIKE N'%' + @Keyword + N'%'
+        );
+    ";
+
+
+            using (
+                SqlConnection conn =
+                    database.GetConnection())
+            using (
+                SqlCommand cmd =
+                    new SqlCommand(
+                        sql,
+                        conn))
+            {
+                cmd.Parameters.Add(
+                    "@Keyword",
+                    SqlDbType.NVarChar,
+                    200)
+                    .Value = keyword;
+
+
+                cmd.Parameters.Add(
+                    "@Offset",
+                    SqlDbType.Int)
+                    .Value = offset;
+
+
+                cmd.Parameters.Add(
+                    "@PageSize",
+                    SqlDbType.Int)
+                    .Value = pageSize;
+
+
+                using (
+                    SqlDataAdapter adapter =
+                        new SqlDataAdapter(cmd))
+                {
+                    DataSet dataSet =
+                        new DataSet();
+
+
+                    adapter.Fill(dataSet);
+
+
+                    totalRecords = 0;
+
+
+                    if (
+                        dataSet.Tables.Count > 1
+                        &&
+                        dataSet.Tables[1].Rows.Count > 0)
+                    {
+                        totalRecords =
+                            Convert.ToInt32(
+                                dataSet.Tables[1]
+                                .Rows[0][0]);
+                    }
+
+
+                    if (dataSet.Tables.Count > 0)
+                    {
+                        return dataSet.Tables[0];
+                    }
+
+
+                    return new DataTable();
+                }
+            }
+        }
     }
 }

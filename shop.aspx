@@ -1,15 +1,16 @@
-﻿<%@ Page Title="Sản phẩm"
+﻿<%@ Page
+    Title="Sản phẩm"
     Language="C#"
     MasterPageFile="~/Site.Master"
     AutoEventWireup="true"
     CodeBehind="shop.aspx.cs"
-    Inherits="web_ban_hang2.shop" %>
+    Inherits="web_ban_hang2.shop"
+%>
 
 <asp:Content
     ID="HeadContent"
     ContentPlaceHolderID="HeadContent"
     runat="server">
-
 </asp:Content>
 
 
@@ -20,21 +21,58 @@
 
     <section class="shop-page">
 
-        <!-- TIÊU ĐỀ -->
+
+        <!-- ======================================
+             TIÊU ĐỀ
+             ====================================== -->
+
         <div class="shop-header">
 
             <div>
-                <h1>Sản phẩm</h1>
+
+                <h1>
+                    Sản phẩm
+                </h1>
 
                 <p>
                     Khám phá các sản phẩm của chúng tôi
                 </p>
+
             </div>
 
         </div>
 
 
-        <!-- DANH SÁCH SẢN PHẨM -->
+        <!-- ======================================
+             KẾT QUẢ TÌM KIẾM
+             ====================================== -->
+
+        <div class="shop-toolbar">
+
+            <div class="shop-result-info">
+
+                <asp:Label
+                    ID="lblSearchResult"
+                    runat="server">
+                </asp:Label>
+
+            </div>
+
+
+            <div class="shop-page-size">
+
+                <span>
+                    Hiển thị 12 sản phẩm / trang
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             DANH SÁCH SẢN PHẨM
+             ====================================== -->
 
         <div class="product-grid">
 
@@ -44,7 +82,9 @@
 
                 <ItemTemplate>
 
+
                     <div class="product-card">
+
 
                         <!-- HÌNH ẢNH -->
 
@@ -60,6 +100,7 @@
                         <!-- THÔNG TIN -->
 
                         <div class="product-info">
+
 
                             <span class="product-category">
 
@@ -84,7 +125,9 @@
 
                             <div class="product-price">
 
-                                <%# String.Format("{0:N0} ₫", Eval("Gia")) %>
+                                <%# String.Format(
+                                    "{0:N0} ₫",
+                                    Eval("Gia")) %>
 
                             </div>
 
@@ -92,14 +135,19 @@
                             <div class="product-stock">
 
                                 Còn lại:
+
                                 <%# Eval("SoLuong") %>
+
                                 sản phẩm
 
                             </div>
 
 
                             <a
-                                href='<%# "ProductDetail.aspx?id=" + Eval("MaSanPham") %>'
+                                href='<%#
+                                    "ProductDetail.aspx?id="
+                                    + Eval("MaSanPham")
+                                %>'
                                 class="product-button">
 
                                 Xem sản phẩm
@@ -117,7 +165,71 @@
         </div>
 
 
-        <!-- KHÔNG CÓ SẢN PHẨM -->
+        <!-- ======================================
+             PHÂN TRANG
+             ====================================== -->
+
+        <asp:Panel
+            ID="pnlPager"
+            runat="server"
+            CssClass="shop-pagination">
+
+
+            <asp:LinkButton
+                ID="btnPrevious"
+                runat="server"
+                CssClass="page-link page-prev"
+                OnClick="btnPrevious_Click">
+
+                ← Trước
+
+            </asp:LinkButton>
+
+
+            <asp:Repeater
+                ID="rptPager"
+                runat="server"
+                OnItemCommand="rptPager_ItemCommand">
+
+                <ItemTemplate>
+
+                    <asp:LinkButton
+                        ID="btnPage"
+                        runat="server"
+                        CommandName="PageNumber"
+                        CommandArgument='<%# Eval("Page") %>'
+                        CssClass='<%#
+                            Convert.ToBoolean(
+                                Eval("IsCurrent"))
+                            ? "page-link active"
+                            : "page-link"
+                        %>'>
+
+                        <%# Eval("Page") %>
+
+                    </asp:LinkButton>
+
+                </ItemTemplate>
+
+            </asp:Repeater>
+
+
+            <asp:LinkButton
+                ID="btnNext"
+                runat="server"
+                CssClass="page-link page-next"
+                OnClick="btnNext_Click">
+
+                Sau →
+
+            </asp:LinkButton>
+
+        </asp:Panel>
+
+
+        <!-- ======================================
+             KHÔNG CÓ SẢN PHẨM
+             ====================================== -->
 
         <asp:Panel
             ID="pnlNoProduct"

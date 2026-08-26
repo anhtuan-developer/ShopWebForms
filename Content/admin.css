@@ -1,245 +1,430 @@
 ﻿/* ==========================================
-   ADMIN LOGIN
+   ADMIN LAYOUT
    ========================================== */
 
-.login-container {
+body {
+    margin: 0;
+    padding: 0;
+    background: #f5f6f8;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333;
+}
+
+
+/* ==========================================
+   SIDEBAR
+   ========================================== */
+
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 240px;
+    background: #212529;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.admin-logo {
+    display: flex;
+    align-items: center;
+    min-height: 70px;
+    padding: 0 22px;
+    color: #fff;
+    font-size: 21px;
+    font-weight: bold;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+    .admin-logo:hover {
+        color: #fff;
+        text-decoration: none;
+    }
+
+
+/* MENU */
+
+.admin-menu {
+    margin: 0;
+    padding: 15px 10px;
+    list-style: none;
+}
+
+    .admin-menu li {
+        margin-bottom: 4px;
+    }
+
+        .admin-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 14px;
+            color: #ced4da;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: .2s;
+        }
+
+            .admin-menu li a:hover,
+            .admin-menu li a.active {
+                color: #fff;
+                background: #e53935;
+            }
+
+
+/* ==========================================
+   MAIN
+   ========================================== */
+
+.admin-main {
+    margin-left: 240px;
     min-height: 100vh;
+}
+
+
+/* ==========================================
+   TOP BAR
+   ========================================== */
+
+.admin-topbar {
+    min-height: 70px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    background: #f5f6fa;
+    justify-content: space-between;
+    padding: 0 25px;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
 }
 
-
-.login-box {
-    width: 400px;
-    background: #ffffff;
-    padding: 35px;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+.admin-topbar-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: #222;
 }
 
-
-    .login-box h1 {
-        margin: 0 0 8px 0;
-        text-align: center;
-        font-size: 28px;
-        color: #333333;
-    }
-
-
-.login-description {
-    text-align: center;
-    color: #777777;
-    margin-bottom: 30px;
+.admin-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #555;
 }
 
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-
-    .form-group label {
-        display: block;
-        margin-bottom: 7px;
+    .admin-user a {
+        color: #e53935;
+        text-decoration: none;
         font-weight: 600;
-        color: #333333;
     }
 
+        .admin-user a:hover {
+            text-decoration: underline;
+        }
 
-.form-control {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 11px 12px;
-    border: 1px solid #dddddd;
-    border-radius: 5px;
-    font-size: 15px;
+
+/* ==========================================
+   CONTENT
+   ========================================== */
+
+.admin-content {
+    padding: 30px 25px;
 }
 
 
-    .form-control:focus {
-        outline: none;
-        border-color: #333333;
-    }
+/* ==========================================
+   CARDS
+   ========================================== */
 
-
-.btn-login {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    background: #222222;
-    color: #ffffff;
-    font-size: 16px;
-    cursor: pointer;
+.admin-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    margin-bottom: 25px;
 }
 
-
-    .btn-login:hover {
-        background: #000000;
-    }
-
-
-.login-error {
-    display: block;
-    margin-bottom: 15px;
-    color: #dc3545;
-    text-align: center;
-}
-/* =========================================================
-   ADMIN - ĐĂNG NHẬP
-   ========================================================= */
-
-.admin-login-wrapper {
-    min-height: 70vh;
+.admin-card-header {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 40px 20px;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+    .admin-card-header h2,
+    .admin-card-header h3 {
+        margin: 0;
+        font-size: 19px;
+        color: #222;
+    }
+
+.admin-card-body {
+    padding: 20px;
 }
 
 
-/* =========================================================
-   BOX ĐĂNG NHẬP
-   ========================================================= */
+/* ==========================================
+   DASHBOARD
+   ========================================== */
 
-.admin-login {
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.dashboard-card {
+    padding: 22px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+
+.dashboard-card-title {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.dashboard-card-value {
+    color: #222;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+
+/* ==========================================
+   BUTTON
+   ========================================== */
+
+.admin-btn {
+    display: inline-block;
+    padding: 9px 16px;
+    border: 0;
+    border-radius: 5px;
+    background: #e53935;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    transition: .2s;
+}
+
+    .admin-btn:hover {
+        background: #c62828;
+        color: #fff;
+        text-decoration: none;
+    }
+
+.admin-btn-secondary {
+    background: #6c757d;
+}
+
+    .admin-btn-secondary:hover {
+        background: #5a6268;
+    }
+
+.admin-btn-success {
+    background: #198754;
+}
+
+    .admin-btn-success:hover {
+        background: #157347;
+    }
+
+
+/* ==========================================
+   TABLE
+   ========================================== */
+
+.admin-table {
     width: 100%;
-    max-width: 450px;
-    background: #ffffff;
-    padding: 35px 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-collapse: collapse;
+    background: #fff;
+}
+
+    .admin-table th {
+        padding: 13px 12px;
+        background: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+        color: #333;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    .admin-table td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        vertical-align: middle;
+        font-size: 14px;
+    }
+
+    .admin-table tbody tr:hover {
+        background: #fafafa;
+    }
+
+
+/* ==========================================
+   FORM
+   ========================================== */
+
+.admin-form {
+    max-width: 800px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
     border: 1px solid #e5e5e5;
 }
 
-
-    /* =========================================================
-   TIÊU ĐỀ
-   ========================================================= */
-
-    .admin-login h1 {
-        margin: 0 0 10px 0;
-        font-size: 28px;
-        font-weight: 600;
-        color: #222;
-        text-align: center;
-    }
-
-
-.admin-login-description {
-    margin-bottom: 30px;
-    color: #777;
-    font-size: 14px;
-    text-align: center;
-    line-height: 1.6;
+.admin-form-group {
+    margin-bottom: 18px;
 }
 
-
-/* =========================================================
-   FORM
-   ========================================================= */
-
-.admin-login .form-group {
-    margin-bottom: 20px;
-}
-
-
-    .admin-login .form-group label {
+    .admin-form-group label {
         display: block;
-        margin-bottom: 8px;
-        font-size: 14px;
+        margin-bottom: 7px;
         font-weight: 600;
         color: #333;
     }
 
-
-/* =========================================================
-   INPUT
-   ========================================================= */
-
-.admin-input {
+.admin-form-control {
     width: 100%;
-    box-sizing: border-box;
-    padding: 12px 14px;
-    font-size: 15px;
-    color: #333;
-    background: #fff;
-    border: 1px solid #dcdcdc;
-    border-radius: 6px;
+    min-height: 42px;
+    padding: 9px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-
-    .admin-input:focus {
-        border-color: #333;
-        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+    .admin-form-control:focus {
+        border-color: #e53935;
+        box-shadow: 0 0 0 2px rgba(229,57,53,.08);
     }
 
 
-/* =========================================================
-   NÚT ĐĂNG NHẬP
-   ========================================================= */
+/* ==========================================
+   BADGE
+   ========================================== */
 
-.btn-admin-login {
-    width: 100%;
-    padding: 12px 15px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 6px;
-    background: #222;
-    color: #fff;
-    font-size: 15px;
+.admin-badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 12px;
     font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
+}
+
+.admin-badge-success {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.admin-badge-danger {
+    background: #f8d7da;
+    color: #842029;
+}
+
+.admin-badge-warning {
+    background: #fff3cd;
+    color: #664d03;
+}
+
+.admin-badge-info {
+    background: #cff4fc;
+    color: #055160;
 }
 
 
-    .btn-admin-login:hover {
-        background: #000;
-    }
+/* ==========================================
+   LOGIN
+   ========================================== */
 
-
-    .btn-admin-login:active {
-        transform: translateY(1px);
-    }
-
-
-/* =========================================================
-   THÔNG BÁO LỖI
-   ========================================================= */
-
-.error-message {
-    display: block;
-    margin-top: 18px;
-    padding: 10px 12px;
-    border-radius: 6px;
-    background: #fff1f1;
-    border: 1px solid #f0caca;
-    color: #c62828;
-    font-size: 14px;
-    line-height: 1.5;
+.admin-login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    background: #f5f6f8;
 }
 
+.admin-login-box {
+    width: 100%;
+    max-width: 420px;
+    padding: 35px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+}
 
-/* =========================================================
+    .admin-login-box h1 {
+        margin: 0 0 8px;
+        text-align: center;
+        color: #222;
+        font-size: 25px;
+    }
+
+    .admin-login-box p {
+        margin-bottom: 25px;
+        text-align: center;
+        color: #777;
+    }
+
+
+/* ==========================================
    RESPONSIVE
-   ========================================================= */
+   ========================================== */
 
-@media (max-width: 576px) {
+@media (max-width: 1000px) {
 
-    .admin-login-wrapper {
-        padding: 25px 15px;
+    .dashboard-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .admin-login {
-        padding: 25px 20px;
+    .admin-sidebar {
+        width: 210px;
     }
 
-        .admin-login h1 {
-            font-size: 24px;
-        }
+    .admin-main {
+        margin-left: 210px;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .admin-sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .admin-main {
+        margin-left: 0;
+    }
+
+    .admin-topbar {
+        padding: 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .admin-content {
+        padding: 20px 15px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-table {
+        min-width: 700px;
+    }
+
+    .admin-card {
+        overflow-x: auto;
+    }
 }
