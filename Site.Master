@@ -15,11 +15,11 @@
 
     <title><%: Page.Title %></title>
 
-    <link href="Content/bootstrap.min.css"
-        rel="stylesheet" />
+    <link href="<%= ResolveUrl("~/Content/bootstrap.min.css") %>"
+      rel="stylesheet" />
 
-    <link href="Content/Site.css"
-        rel="stylesheet" />
+    <link href="<%= ResolveUrl("~/Content/Site.css") %>"
+      rel="stylesheet" />
 
     <asp:ContentPlaceHolder
         ID="HeadContent"
@@ -36,7 +36,7 @@
 
     <header class="main-header">
 
-        <div class="container header-container">
+        <div class="site-container header-container">
 
 
             <!-- LOGO -->
@@ -135,7 +135,7 @@
 
     <nav class="main-menu">
 
-        <div class="container">
+        <div class="site-container">
 
             <ul class="menu-list">
 
@@ -174,7 +174,7 @@
 
     <main class="main-content">
 
-        <div class="container">
+        <div class="site-container">
 
             <asp:ContentPlaceHolder
                 ID="MainContent"
@@ -190,7 +190,7 @@
 
     <footer class="main-footer">
 
-        <div class="container footer-container">
+        <div class="site-container footer-container">
 
             <div class="footer-column">
 

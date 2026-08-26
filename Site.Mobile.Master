@@ -4,9 +4,24 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <meta name="viewport" content="width=device-width" />
-    <title></title>
-    <asp:ContentPlaceHolder runat="server" ID="HeadContent" />
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title><%: Page.Title %></title>
+
+    <link href="<%= ResolveUrl("~/Content/bootstrap.min.css") %>"
+          rel="stylesheet" />
+
+    <link href="<%= ResolveUrl("~/Content/Site.css") %>"
+          rel="stylesheet" />
+
+    <asp:ContentPlaceHolder
+        runat="server"
+        ID="HeadContent" />
+
 </head>
 <body>
     <form id="form1" runat="server">
