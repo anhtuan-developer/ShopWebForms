@@ -131,10 +131,7 @@ namespace web_ban_hang2.Admin
             object sender,
             GridViewRowEventArgs e)
         {
-            /*
-             * Chỉ xử lý các dòng dữ liệu
-             */
-
+            // Chỉ xử lý dòng dữ liệu
             if (e.Row.RowType !=
                 DataControlRowType.DataRow)
             {
@@ -142,9 +139,9 @@ namespace web_ban_hang2.Admin
             }
 
 
-            /*
-             * Tìm DropDownList trạng thái
-             */
+            // ======================================
+            // LẤY DROPDOWNLIST
+            // ======================================
 
             DropDownList ddlTrangThai =
                 (DropDownList)e.Row.FindControl(
@@ -158,10 +155,9 @@ namespace web_ban_hang2.Admin
             }
 
 
-            /*
-             * Lấy mã đơn hàng
-             * trực tiếp từ DataItem
-             */
+            // ======================================
+            // LẤY MÃ ĐƠN HÀNG TỪ DỮ LIỆU GRIDVIEW
+            // ======================================
 
             object maDonHangObject =
                 DataBinder.Eval(
@@ -178,6 +174,7 @@ namespace web_ban_hang2.Admin
 
             int maDonHang;
 
+
             if (!int.TryParse(
                 maDonHangObject.ToString(),
                 out maDonHang))
@@ -186,9 +183,9 @@ namespace web_ban_hang2.Admin
             }
 
 
-            /*
-             * Lấy trạng thái hiện tại
-             */
+            // ======================================
+            // LẤY TRẠNG THÁI HIỆN TẠI
+            // ======================================
 
             object trangThaiObject =
                 DataBinder.Eval(
@@ -207,10 +204,9 @@ namespace web_ban_hang2.Admin
                 trangThaiObject.ToString();
 
 
-            /*
-             * Tìm trạng thái tương ứng
-             * trong DropDownList
-             */
+            // ======================================
+            // CHỌN TRẠNG THÁI HIỆN TẠI
+            // ======================================
 
             ListItem item =
                 ddlTrangThai.Items.FindByValue(
@@ -226,10 +222,9 @@ namespace web_ban_hang2.Admin
             }
 
 
-            /*
-             * Lưu mã đơn hàng vào
-             * HiddenField của dòng
-             */
+            // ======================================
+            // LƯU MÃ ĐƠN HÀNG VÀO HIDDENFIELD
+            // ======================================
 
             HiddenField hfMaDonHang =
                 (HiddenField)e.Row.FindControl(
@@ -253,27 +248,26 @@ namespace web_ban_hang2.Admin
             object sender,
             EventArgs e)
         {
-            /*
-             * Lấy DropDownList vừa thay đổi
-             */
+            // ======================================
+            // LẤY DROPDOWNLIST
+            // ======================================
 
             DropDownList ddlTrangThai =
                 (DropDownList)sender;
 
 
-            /*
-             * Lấy GridViewRow chứa DropDownList
-             */
+            // ======================================
+            // LẤY DÒNG GRIDVIEW
+            // ======================================
 
             GridViewRow row =
                 (GridViewRow)
                 ddlTrangThai.NamingContainer;
 
 
-            /*
-             * Tìm HiddenField chứa
-             * mã đơn hàng
-             */
+            // ======================================
+            // TÌM HIDDENFIELD
+            // ======================================
 
             HiddenField hfMaDonHang =
                 (HiddenField)
@@ -282,9 +276,9 @@ namespace web_ban_hang2.Admin
                 );
 
 
-            /*
-             * Kiểm tra HiddenField
-             */
+            // ======================================
+            // KIỂM TRA HIDDENFIELD
+            // ======================================
 
             if (hfMaDonHang == null)
             {
@@ -296,11 +290,12 @@ namespace web_ban_hang2.Admin
             }
 
 
-            /*
-             * Chuyển mã đơn hàng sang int
-             */
+            // ======================================
+            // CHUYỂN MÃ ĐƠN HÀNG SANG INT
+            // ======================================
 
             int maDonHang;
+
 
             if (!int.TryParse(
                 hfMaDonHang.Value,
@@ -314,9 +309,9 @@ namespace web_ban_hang2.Admin
             }
 
 
-            /*
-             * Lấy trạng thái mới
-             */
+            // ======================================
+            // LẤY TRẠNG THÁI MỚI
+            // ======================================
 
             string trangThai =
                 ddlTrangThai.SelectedValue;
@@ -324,9 +319,9 @@ namespace web_ban_hang2.Admin
 
             try
             {
-                /*
-                 * Cập nhật database
-                 */
+                // ==================================
+                // CẬP NHẬT DATABASE
+                // ==================================
 
                 bool result =
                     donHangDAL.UpdateTrangThai(
@@ -335,22 +330,13 @@ namespace web_ban_hang2.Admin
                     );
 
 
-                /*
-                 * Cập nhật thành công
-                 */
+                // ==================================
+                // CẬP NHẬT THÀNH CÔNG
+                // ==================================
 
                 if (result)
                 {
-                    /*
-                     * Load lại danh sách
-                     */
-
                     LoadDonHang();
-
-
-                    /*
-                     * Load lại thống kê
-                     */
 
                     LoadStatistics();
                 }
@@ -363,8 +349,12 @@ namespace web_ban_hang2.Admin
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(
+                    ex.ToString()
+                );
+
                 ShowError(
-                    ex.Message
+                    "Có lỗi xảy ra khi cập nhật trạng thái đơn hàng."
                 );
             }
         }

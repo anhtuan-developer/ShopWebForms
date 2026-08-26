@@ -21,10 +21,8 @@
     runat="server">
 
 
-    <!-- ====================================== -->
     <!-- TIÊU ĐỀ -->
-    <!-- ====================================== -->
-
+    
     <div class="admin-title">
 
         <h1>
@@ -38,10 +36,8 @@
     </div>
 
 
-    <!-- ====================================== -->
     <!-- THỐNG KÊ -->
-    <!-- ====================================== -->
-
+    
     <div class="order-statistics">
 
 
@@ -124,10 +120,8 @@
     </div>
 
 
-    <!-- ====================================== -->
     <!-- DANH SÁCH ĐƠN HÀNG -->
-    <!-- ====================================== -->
-
+    
     <div class="dashboard-card">
 
 
@@ -197,48 +191,49 @@
 
                     <asp:TemplateField
                         HeaderText="Trạng thái">
-
+                    
                         <ItemTemplate>
-
+                    
+                            <asp:HiddenField
+                                ID="hfMaDonHang"
+                                runat="server" />
+                    
                             <asp:DropDownList
                                 ID="ddlTrangThai"
                                 runat="server"
-
                                 CssClass="form-control"
-
                                 AutoPostBack="true"
-
                                 OnSelectedIndexChanged="ddlTrangThai_SelectedIndexChanged">
-
+                    
                                 <asp:ListItem
                                     Text="Chờ xử lý"
                                     Value="Chờ xử lý">
                                 </asp:ListItem>
-
+                    
                                 <asp:ListItem
                                     Text="Đã xác nhận"
                                     Value="Đã xác nhận">
                                 </asp:ListItem>
-
+                    
                                 <asp:ListItem
                                     Text="Đang giao"
                                     Value="Đang giao">
                                 </asp:ListItem>
-
+                    
                                 <asp:ListItem
                                     Text="Đã giao"
                                     Value="Đã giao">
                                 </asp:ListItem>
-
+                    
                                 <asp:ListItem
                                     Text="Đã hủy"
                                     Value="Đã hủy">
                                 </asp:ListItem>
-
+                    
                             </asp:DropDownList>
-
+                    
                         </ItemTemplate>
-
+                    
                     </asp:TemplateField>
 
 
