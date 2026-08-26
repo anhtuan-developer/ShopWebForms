@@ -1260,3 +1260,242 @@ body {
     font-weight: bold;
     margin-right: 10px;
 }
+
+
+/* ========================================
+   CONTACT PAGE
+   ======================================== */
+
+.contact-page {
+    padding: 45px 0 65px;
+}
+
+.contact-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.contact-label {
+    display: inline-block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #e53935;
+}
+
+.contact-header h1 {
+    margin: 0 0 10px;
+    font-size: 34px;
+    color: #222;
+}
+
+.contact-header p {
+    max-width: 650px;
+    margin: 0 auto;
+    color: #777;
+    line-height: 1.7;
+}
+
+
+/* ========================================
+   CONTACT GRID
+   ======================================== */
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.5fr;
+    gap: 28px;
+    align-items: start;
+}
+
+
+/* ========================================
+   CONTACT INFORMATION
+   ======================================== */
+
+.contact-info {
+    display: grid;
+    gap: 15px;
+}
+
+.contact-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.contact-icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff1f1;
+    font-size: 22px;
+}
+
+.contact-card h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+    color: #222;
+}
+
+.contact-card p {
+    margin: 0;
+    color: #777;
+    line-height: 1.5;
+}
+
+
+/* ========================================
+   CONTACT FORM
+   ======================================== */
+
+.contact-form-card {
+    padding: 30px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+}
+
+    .contact-form-card h2 {
+        margin: 0 0 7px;
+        color: #222;
+        font-size: 25px;
+    }
+
+.contact-form-description {
+    margin: 0 0 25px;
+    color: #777;
+}
+
+
+/* ========================================
+   FORM GRID
+   ======================================== */
+
+.contact-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.contact-form-card .form-group {
+    margin-bottom: 18px;
+}
+
+    .contact-form-card .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        color: #333;
+        font-weight: 600;
+    }
+
+
+/* ========================================
+   INPUT
+   ======================================== */
+
+.contact-form-card .form-control {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+    .contact-form-card .form-control:focus {
+        outline: none;
+        border-color: #e53935;
+        box-shadow: 0 0 0 3px rgba(229, 57, 53, .08);
+    }
+
+
+/* ========================================
+   MESSAGE
+   ======================================== */
+
+.contact-message {
+    resize: vertical;
+    min-height: 145px;
+}
+
+
+/* ========================================
+   BUTTON
+   ======================================== */
+
+.contact-button {
+    padding: 12px 25px;
+    border: 0;
+    border-radius: 6px;
+    background: #e53935;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+}
+
+    .contact-button:hover {
+        background: #c62828;
+        transform: translateY(-1px);
+    }
+
+
+/* ========================================
+   MESSAGE RESULT
+   ======================================== */
+
+.contact-message-result {
+    display: block;
+    margin-top: 15px;
+}
+
+
+/* ========================================
+   TABLET
+   ======================================== */
+
+@media (max-width: 900px) {
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ========================================
+   MOBILE
+   ======================================== */
+
+@media (max-width: 600px) {
+
+    .contact-page {
+        padding: 30px 0 45px;
+    }
+
+    .contact-header h1 {
+        font-size: 28px;
+    }
+
+    .contact-form-card {
+        padding: 22px;
+    }
+
+    .contact-form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
