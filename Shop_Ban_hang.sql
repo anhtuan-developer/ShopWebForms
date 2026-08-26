@@ -242,4 +242,39 @@ VALUES
 );
 GO
 
+CREATE TABLE DanhGia
+    (
+        MaDanhGia INT IDENTITY(1,1) NOT NULL,
+
+        MaSanPham INT NOT NULL,
+
+        MaKhachHang INT NOT NULL,
+
+        NoiDung NVARCHAR(2000) NOT NULL,
+
+        SoSao INT NOT NULL,
+
+        NgayDanhGia DATETIME NOT NULL
+            CONSTRAINT DF_DanhGia_NgayDanhGia
+            DEFAULT GETDATE(),
+
+        TrangThai BIT NOT NULL
+            CONSTRAINT DF_DanhGia_TrangThai
+            DEFAULT 1,
+
+        CONSTRAINT PK_DanhGia
+            PRIMARY KEY (MaDanhGia),
+
+        CONSTRAINT CK_DanhGia_SoSao
+            CHECK (SoSao BETWEEN 1 AND 5),
+
+        CONSTRAINT FK_DanhGia_SanPham
+            FOREIGN KEY (MaSanPham)
+            REFERENCES SanPham(MaSanPham),
+
+        CONSTRAINT FK_DanhGia_KhachHang
+            FOREIGN KEY (MaKhachHang)
+            REFERENCES KhachHang(MaKhachHang)
+    );
+GO
 SELECT *  FROM Admin

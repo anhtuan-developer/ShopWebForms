@@ -158,6 +158,12 @@
                 </li>
 
                 <li>
+                    <a href="TinTuc.aspx">
+                        Tin tức
+                    </a>
+                </li>
+
+                <li>
                     <a href="Contact.aspx">
                         Liên hệ
                     </a>
@@ -222,6 +228,10 @@
 
                 <a href="Cart.aspx">
                     Giỏ hàng
+                </a>
+                
+                <a href="TinTuc.aspx">
+                    Tin tức
                 </a>
 
                 <a href="Contact.aspx">
