@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text.RegularExpressions;
 using web_ban_hang2.Models;
 
 namespace web_ban_hang2.DAL
@@ -152,7 +153,7 @@ namespace web_ban_hang2.DAL
         }
 
 
-        
+
         public int TaoDonHang(
     DonHang donHang)
         {
@@ -182,6 +183,10 @@ namespace web_ban_hang2.DAL
     ";
 
 
+            // ==========================================
+            // LẤY SẢN PHẨM VÀ KHÓA DÒNG
+            // ==========================================
+
             string checkProductSql = @"
         SELECT
             SoLuong,
@@ -193,15 +198,24 @@ namespace web_ban_hang2.DAL
     ";
 
 
+            // ==========================================
+            // TRỪ TỒN KHO
+            // ==========================================
+
             string updateStockSql = @"
         UPDATE SanPham
-        SET SoLuong = SoLuong - @SoLuong
+        SET
+            SoLuong = SoLuong - @SoLuong
         WHERE
             MaSanPham = @MaSanPham
             AND TrangThai = 1
             AND SoLuong >= @SoLuong;
     ";
 
+
+            // ==========================================
+            // TẠO CHI TIẾT ĐƠN
+            // ==========================================
 
             string insertDetailSql = @"
         INSERT INTO ChiTietDonHang
@@ -227,19 +241,42 @@ namespace web_ban_hang2.DAL
                 conn.Open();
 
 
+                // ==========================================
+                // TRANSACTION SERIALIZABLE
+                // ==========================================
+
                 using (SqlTransaction transaction =
                     conn.BeginTransaction(
                         System.Data.IsolationLevel.Serializable))
                 {
                     try
                     {
-                        
+                        // ======================================
+                        // KIỂM TRA ĐƠN HÀNG
+                        // ======================================
+
                         if (donHang == null)
                         {
                             throw new InvalidOperationException(
                                 "Đơn hàng không hợp lệ.");
                         }
 
+
+                        // ======================================
+                        // KIỂM TRA KHÁCH HÀNG
+                        // ======================================
+
+                        if (!donHang.MaKhachHang.HasValue ||
+                            donHang.MaKhachHang.Value <= 0)
+                        {
+                            throw new InvalidOperationException(
+                                "Khách hàng chưa đăng nhập hoặc không hợp lệ.");
+                        }
+
+
+                        // ======================================
+                        // KIỂM TRA CHI TIẾT
+                        // ======================================
 
                         if (donHang.ChiTiet == null ||
                             donHang.ChiTiet.Count == 0)
@@ -248,6 +285,90 @@ namespace web_ban_hang2.DAL
                                 "Đơn hàng không có sản phẩm.");
                         }
 
+
+                        // ======================================
+                        // KIỂM TRA KHÁCH HÀNG TRONG DATABASE
+                        // ======================================
+
+                        const string checkCustomerSql = @"
+                    SELECT COUNT(*)
+                    FROM KhachHang
+                    WHERE MaKhachHang = @MaKhachHang;
+                ";
+
+
+                        using (SqlCommand customerCmd =
+                            new SqlCommand(
+                                checkCustomerSql,
+                                conn,
+                                transaction))
+                        {
+                            customerCmd.Parameters.Add(
+                                "@MaKhachHang",
+                                SqlDbType.Int)
+                                .Value =
+                                donHang.MaKhachHang.Value;
+
+
+                            int customerCount =
+                                Convert.ToInt32(
+                                    customerCmd.ExecuteScalar());
+
+
+                            if (customerCount != 1)
+                            {
+                                throw new InvalidOperationException(
+                                    "Khách hàng không tồn tại.");
+                            }
+                        }
+
+
+                        // ======================================
+                        // VALIDATION HỌ TÊN
+                        // ======================================
+
+                        if (string.IsNullOrWhiteSpace(
+                            donHang.HoTenNguoiNhan) ||
+                            donHang.HoTenNguoiNhan.Trim().Length < 2 ||
+                            donHang.HoTenNguoiNhan.Trim().Length > 100)
+                        {
+                            throw new InvalidOperationException(
+                                "Họ tên người nhận không hợp lệ.");
+                        }
+
+
+                        // ======================================
+                        // VALIDATION SỐ ĐIỆN THOẠI
+                        // ======================================
+
+                        if (string.IsNullOrWhiteSpace(
+                            donHang.SoDienThoai) ||
+                            !Regex.IsMatch(
+                                donHang.SoDienThoai.Trim(),
+                                @"^\d{10,11}$"))
+                        {
+                            throw new InvalidOperationException(
+                                "Số điện thoại phải gồm 10 hoặc 11 chữ số.");
+                        }
+
+
+                        // ======================================
+                        // VALIDATION ĐỊA CHỈ
+                        // ======================================
+
+                        if (string.IsNullOrWhiteSpace(
+                            donHang.DiaChiGiaoHang) ||
+                            donHang.DiaChiGiaoHang.Trim().Length < 5 ||
+                            donHang.DiaChiGiaoHang.Trim().Length > 255)
+                        {
+                            throw new InvalidOperationException(
+                                "Địa chỉ giao hàng không hợp lệ.");
+                        }
+
+
+                        // ======================================
+                        // KIỂM TRA TỪNG SẢN PHẨM
+                        // ======================================
 
                         foreach (
                             ChiTietDonHang chiTiet
@@ -319,6 +440,10 @@ namespace web_ban_hang2.DAL
                                             reader["Gia"]);
 
 
+                                    // ==============================
+                                    // KIỂM TRA TRẠNG THÁI
+                                    // ==============================
+
                                     if (!trangThai)
                                     {
                                         throw new InvalidOperationException(
@@ -328,6 +453,10 @@ namespace web_ban_hang2.DAL
                                     }
 
 
+                                    // ==============================
+                                    // KIỂM TRA HẾT HÀNG
+                                    // ==============================
+
                                     if (tonKho <= 0)
                                     {
                                         throw new InvalidOperationException(
@@ -336,6 +465,10 @@ namespace web_ban_hang2.DAL
                                             + "\" đã hết hàng.");
                                     }
 
+
+                                    // ==============================
+                                    // KIỂM TRA VƯỢT KHO
+                                    // ==============================
 
                                     if (chiTiet.SoLuong > tonKho)
                                     {
@@ -348,12 +481,20 @@ namespace web_ban_hang2.DAL
                                     }
 
 
+                                    // ==============================
+                                    // LẤY GIÁ MỚI NHẤT
+                                    // ==============================
+
                                     chiTiet.DonGia =
                                         giaDatabase;
                                 }
                             }
                         }
 
+
+                        // ======================================
+                        // TÍNH LẠI TỔNG TIỀN
+                        // ======================================
 
                         decimal tongTienThucTe =
                             donHang.ChiTiet.Sum(
@@ -369,6 +510,10 @@ namespace web_ban_hang2.DAL
                         int maDonHang;
 
 
+                        // ======================================
+                        // TẠO DONHANG
+                        // ======================================
+
                         using (SqlCommand cmd =
                             new SqlCommand(
                                 insertOrderSql,
@@ -381,16 +526,8 @@ namespace web_ban_hang2.DAL
                                     SqlDbType.Int);
 
 
-                            if (donHang.MaKhachHang.HasValue)
-                            {
-                                pMaKhachHang.Value =
-                                    donHang.MaKhachHang.Value;
-                            }
-                            else
-                            {
-                                pMaKhachHang.Value =
-                                    DBNull.Value;
-                            }
+                            pMaKhachHang.Value =
+                                donHang.MaKhachHang.Value;
 
 
                             cmd.Parameters.Add(
@@ -458,11 +595,18 @@ namespace web_ban_hang2.DAL
                         }
 
 
+                        // ======================================
+                        // TRỪ KHO + TẠO CHI TIẾT
+                        // ======================================
+
                         foreach (
                             ChiTietDonHang chiTiet
                             in donHang.ChiTiet)
                         {
-                           
+                            // ==================================
+                            // TRỪ TỒN KHO
+                            // ==================================
+
                             using (SqlCommand cmd =
                                 new SqlCommand(
                                     updateStockSql,
@@ -496,6 +640,10 @@ namespace web_ban_hang2.DAL
                                 }
                             }
 
+
+                            // ==================================
+                            // INSERT CHI TIẾT ĐƠN HÀNG
+                            // ==================================
 
                             using (SqlCommand cmd =
                                 new SqlCommand(
@@ -549,6 +697,10 @@ namespace web_ban_hang2.DAL
                         }
 
 
+                        // ======================================
+                        // COMMIT
+                        // ======================================
+
                         transaction.Commit();
 
 
@@ -556,8 +708,19 @@ namespace web_ban_hang2.DAL
                     }
                     catch
                     {
-                        
-                        transaction.Rollback();
+                        // ======================================
+                        // ROLLBACK
+                        // ======================================
+
+                        try
+                        {
+                            transaction.Rollback();
+                        }
+                        catch
+                        {
+                            // Giữ nguyên lỗi ban đầu.
+                        }
+
 
                         throw;
                     }

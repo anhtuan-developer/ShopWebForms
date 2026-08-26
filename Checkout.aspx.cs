@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Text.RegularExpressions;
 using web_ban_hang2.DAL;
 using web_ban_hang2.Models;
@@ -14,15 +13,16 @@ namespace web_ban_hang2
         private CartService cartService;
 
         protected void Page_Load(
-    object sender,
-    EventArgs e)
+            object sender,
+            EventArgs e)
         {
             cartService =
                 new CartService();
 
-
+            // ==========================================
             // KIỂM TRA ĐĂNG NHẬP
-            
+            // ==========================================
+
             if (Session["UserId"] == null)
             {
                 Response.Redirect(
@@ -36,7 +36,6 @@ namespace web_ban_hang2
                 return;
             }
 
-
             if (!IsPostBack)
             {
                 LoadCheckout();
@@ -44,7 +43,9 @@ namespace web_ban_hang2
         }
 
 
+        // ==========================================
         // HIỂN THỊ CHECKOUT
+        // ==========================================
 
         private void LoadCheckout()
         {
@@ -53,7 +54,7 @@ namespace web_ban_hang2
                 as List<CartItem>;
 
             // Kiểm tra giỏ hàng
-            
+
             if (cart == null ||
                 cart.Count == 0)
             {
@@ -65,7 +66,7 @@ namespace web_ban_hang2
 
 
             // Kiểm tra lại giỏ hàng với Database
-            
+
             string validationMessage;
 
             bool valid =
@@ -87,7 +88,7 @@ namespace web_ban_hang2
 
 
             // Nếu có thay đổi tồn kho
-            
+
             if (!valid &&
                 !string.IsNullOrEmpty(
                     validationMessage))
@@ -98,11 +99,10 @@ namespace web_ban_hang2
 
 
             // Tính tổng tiền từ giỏ
-            
+
             decimal tongTien =
                 cart.Sum(
                     x => x.ThanhTien);
-
 
             lblTongTien.Text =
                 "Tổng tiền: "
@@ -111,14 +111,18 @@ namespace web_ban_hang2
         }
 
 
+        // ==========================================
         // ĐẶT HÀNG
+        // ==========================================
 
         protected void btnDatHang_Click(
-    object sender,
-    EventArgs e)
+            object sender,
+            EventArgs e)
         {
+            // ==========================================
             // KIỂM TRA ĐĂNG NHẬP LẠI
-            
+            // ==========================================
+
             if (Session["UserId"] == null)
             {
                 Response.Redirect(
@@ -133,21 +137,24 @@ namespace web_ban_hang2
             }
 
 
+            // ==========================================
             // LẤY GIỎ HÀNG
-           
+            // ==========================================
+
             List<CartItem> cart =
                 Session["Cart"]
                 as List<CartItem>;
 
 
+            // ==========================================
             // KIỂM TRA GIỎ HÀNG VỚI DATABASE
+            // ==========================================
 
             string validationMessage;
 
             bool cartValid =
                 cartService.ValidateCart(
                     out validationMessage);
-
 
             cart =
                 Session["Cart"]
@@ -165,7 +172,7 @@ namespace web_ban_hang2
 
 
             // Nếu CartService phát hiện thay đổi
-            
+
             if (!cartValid)
             {
                 lblMessage.Text =
@@ -180,8 +187,10 @@ namespace web_ban_hang2
             }
 
 
+            // ==========================================
             // LẤY THÔNG TIN NGƯỜI NHẬN
-            
+            // ==========================================
+
             string hoTen =
                 txtHoTen.Text.Trim();
 
@@ -192,8 +201,10 @@ namespace web_ban_hang2
                 txtDiaChi.Text.Trim();
 
 
+            // ==========================================
             // VALIDATION HỌ TÊN
-            
+            // ==========================================
+
             if (string.IsNullOrWhiteSpace(
                 hoTen))
             {
@@ -203,7 +214,6 @@ namespace web_ban_hang2
                 return;
             }
 
-
             if (hoTen.Length < 2)
             {
                 lblMessage.Text =
@@ -211,7 +221,6 @@ namespace web_ban_hang2
 
                 return;
             }
-
 
             if (hoTen.Length > 100)
             {
@@ -222,8 +231,10 @@ namespace web_ban_hang2
             }
 
 
+            // ==========================================
             // VALIDATION SỐ ĐIỆN THOẠI
-           
+            // ==========================================
+
             if (string.IsNullOrWhiteSpace(
                 soDienThoai))
             {
@@ -232,7 +243,6 @@ namespace web_ban_hang2
 
                 return;
             }
-
 
             if (!IsValidPhoneNumber(
                 soDienThoai))
@@ -244,8 +254,10 @@ namespace web_ban_hang2
             }
 
 
+            // ==========================================
             // VALIDATION ĐỊA CHỈ
-            
+            // ==========================================
+
             if (string.IsNullOrWhiteSpace(
                 diaChi))
             {
@@ -255,7 +267,6 @@ namespace web_ban_hang2
                 return;
             }
 
-
             if (diaChi.Length < 5)
             {
                 lblMessage.Text =
@@ -263,7 +274,6 @@ namespace web_ban_hang2
 
                 return;
             }
-
 
             if (diaChi.Length > 255)
             {
@@ -274,13 +284,13 @@ namespace web_ban_hang2
             }
 
 
-
+            // ==========================================
             // TÍNH TỔNG TIỀN
-           
+            // ==========================================
+
             decimal tongTien =
                 cart.Sum(
                     x => x.ThanhTien);
-
 
             if (tongTien <= 0)
             {
@@ -291,16 +301,20 @@ namespace web_ban_hang2
             }
 
 
-            //TẠO ĐƠN HÀNG
-            
+            // ==========================================
+            // TẠO ĐƠN HÀNG
+            // ==========================================
+
             DonHang donHang =
                 new DonHang();
 
 
-            //LẤY MÃ KHÁCH HÀNG
+            // ==========================================
+            // LẤY MÃ KHÁCH HÀNG
+            // ==========================================
 
             int? maKhachHang =
-    GetMaKhachHang();
+                GetMaKhachHang();
 
 
             if (!maKhachHang.HasValue)
@@ -320,7 +334,10 @@ namespace web_ban_hang2
             donHang.MaKhachHang =
                 maKhachHang.Value;
 
+
+            // ==========================================
             // THÔNG TIN NGƯỜI NHẬN
+            // ==========================================
 
             donHang.HoTenNguoiNhan =
                 hoTen;
@@ -332,20 +349,26 @@ namespace web_ban_hang2
                 diaChi;
 
 
+            // ==========================================
             // TỔNG TIỀN
-            
+            // ==========================================
+
             donHang.TongTien =
                 tongTien;
 
 
-             // TRẠNG THÁI
-            
+            // ==========================================
+            // TRẠNG THÁI
+            // ==========================================
+
             donHang.TrangThai =
                 "Chờ xử lý";
 
 
-           // CHI TIẾT ĐƠN HÀNG
-            
+            // ==========================================
+            // CHI TIẾT ĐƠN HÀNG
+            // ==========================================
+
             foreach (CartItem item in cart)
             {
                 if (item == null)
@@ -393,8 +416,10 @@ namespace web_ban_hang2
             }
 
 
-            //  LƯU ĐƠN HÀNG
-            
+            // ==========================================
+            // LƯU ĐƠN HÀNG
+            // ==========================================
+
             try
             {
                 DonHangDAL dal =
@@ -406,8 +431,10 @@ namespace web_ban_hang2
                         donHang);
 
 
+                // ======================================
                 // TẠO ĐƠN THẤT BẠI
-                
+                // ======================================
+
                 if (maDonHang <= 0)
                 {
                     lblMessage.Text =
@@ -416,14 +443,19 @@ namespace web_ban_hang2
                     return;
                 }
 
+
+                // ======================================
                 // XÓA GIỎ HÀNG
-              
+                // ======================================
+
                 Session.Remove(
                     "Cart");
 
 
-               // CHUYỂN TRANG THÀNH CÔNG
-                
+                // ======================================
+                // CHUYỂN TRANG THÀNH CÔNG
+                // ======================================
+
                 Response.Redirect(
                     "Dat_hang_thanh_cong.aspx?maDonHang="
                     + maDonHang,
@@ -444,28 +476,39 @@ namespace web_ban_hang2
                         ex.Message);
 
                 // Không xóa Cart.
-                // Người dùng cần quay lại
-                // kiểm tra lại giỏ hàng.
+                // Người dùng cần kiểm tra lại giỏ hàng.
             }
-            catch (Exception ex)
+            catch (System.Data.SqlClient.SqlException)
             {
+                // Không hiển thị chi tiết SQL cho khách hàng.
+
                 lblMessage.Text =
-                    "Có lỗi xảy ra khi đặt hàng: "
-                    + Server.HtmlEncode(
-                        ex.Message);
+                    "Không thể hoàn tất đặt hàng lúc này. "
+                    + "Vui lòng thử lại sau.";
+            }
+            catch (Exception)
+            {
+                // Không để exception kỹ thuật
+                // hiển thị trực tiếp cho khách hàng.
+
+                lblMessage.Text =
+                    "Đã xảy ra lỗi khi đặt hàng. "
+                    + "Vui lòng thử lại sau.";
             }
         }
 
 
-        // LẤY MÃ KHÁCH HÀNG
+        // ==========================================
+        // LẤY MÃ KHÁCH HÀNG TỪ SESSION
+        // ==========================================
 
         private int? GetMaKhachHang()
         {
-            object sessionValue =
+            object userId =
                 Session["UserId"];
 
 
-            if (sessionValue == null)
+            if (userId == null)
             {
                 return null;
             }
@@ -473,9 +516,8 @@ namespace web_ban_hang2
 
             int maKhachHang;
 
-
             if (!int.TryParse(
-                sessionValue.ToString(),
+                userId.ToString(),
                 out maKhachHang))
             {
                 return null;
@@ -490,19 +532,25 @@ namespace web_ban_hang2
 
             return maKhachHang;
         }
-        // KIỂM TRA SỐ ĐIỆN THOẠI
 
-        private bool IsValidPhoneNumber(string phone)
+
+        // ==========================================
+        // KIỂM TRA SỐ ĐIỆN THOẠI
+        // ==========================================
+
+        private bool IsValidPhoneNumber(
+            string phone)
         {
-            if (string.IsNullOrWhiteSpace(phone))
+            if (string.IsNullOrWhiteSpace(
+                phone))
             {
                 return false;
             }
 
+
             return Regex.IsMatch(
-                phone,
-                @"^\d{10,11}$"
-            );
+                phone.Trim(),
+                @"^\d{10,11}$");
         }
     }
 }
