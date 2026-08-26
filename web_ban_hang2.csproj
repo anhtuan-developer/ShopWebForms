@@ -103,6 +103,7 @@
     <Content Include=".gitignore" />
     <Content Include="Admin\Admin_DangNhap.aspx" />
     <Content Include="Admin\Admin_DangXuat.aspx" />
+    <Content Include="Admin\Admin_DanhGia.aspx" />
     <Content Include="Admin\Admin_DanhMuc.aspx" />
     <Content Include="Admin\Admin_DanhMuc_Sua.aspx" />
     <Content Include="Admin\Admin_DanhMuc_Them.aspx" />
@@ -284,6 +285,13 @@
     <Compile Include="Admin\Admin_DangXuat.aspx.designer.cs">
       <DependentUpon>Admin_DangXuat.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\Admin_DanhGia.aspx.cs">
+      <DependentUpon>Admin_DanhGia.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Admin_DanhGia.aspx.designer.cs">
+      <DependentUpon>Admin_DanhGia.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\Admin_DanhMuc.aspx.cs">
       <DependentUpon>Admin_DanhMuc.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -385,6 +393,7 @@
       <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
     <Compile Include="DAL\AdminAccountDAL.cs" />
+    <Compile Include="DAL\DanhGiaDAL.cs" />
     <Compile Include="DAL\DanhMucDAL.cs" />
     <Compile Include="DAL\DashboardDAL.cs" />
     <Compile Include="DAL\Database.cs" />
@@ -446,6 +455,7 @@
     <Compile Include="Models\AdminAccount.cs" />
     <Compile Include="Models\CartItem.cs" />
     <Compile Include="Models\ChiTietDonHang.cs" />
+    <Compile Include="Models\DanhGia.cs" />
     <Compile Include="Models\DonHang.cs" />
     <Compile Include="Models\KhachHang.cs" />
     <Compile Include="Models\SanPham.cs" />
