@@ -151,7 +151,188 @@ namespace web_ban_hang2.DAL
                 }
             }
         }
+        public DataTable GetByCustomerId(
+    int maKhachHang)
+        {
+            string sql = @"
+        SELECT
+            dh.MaDonHang,
+            dh.MaKhachHang,
+            dh.HoTenNguoiNhan,
+            dh.SoDienThoai,
+            dh.DiaChiGiaoHang,
+            dh.TongTien,
+            dh.TrangThai,
+            dh.NgayDat
 
+        FROM DonHang dh
+
+        WHERE
+            dh.MaKhachHang = @MaKhachHang
+
+        ORDER BY
+            dh.MaDonHang DESC
+    ";
+
+
+            using (SqlConnection conn =
+                database.GetConnection())
+            {
+                using (SqlCommand cmd =
+                    new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.Add(
+                        "@MaKhachHang",
+                        SqlDbType.Int
+                    ).Value =
+                        maKhachHang;
+
+
+                    using (SqlDataAdapter adapter =
+                        new SqlDataAdapter(cmd))
+                    {
+                        DataTable table =
+                            new DataTable();
+
+
+                        adapter.Fill(table);
+
+
+                        return table;
+                    }
+                }
+            }
+        }
+
+        public DataTable GetChiTietByCustomerId(
+    int maDonHang,
+    int maKhachHang)
+        {
+            string sql = @"
+        SELECT
+            dh.MaDonHang,
+            dh.MaKhachHang,
+            dh.HoTenNguoiNhan,
+            dh.SoDienThoai,
+            dh.DiaChiGiaoHang,
+            dh.TongTien,
+            dh.TrangThai,
+            dh.NgayDat,
+
+            ctdh.MaSanPham,
+            sp.TenSanPham,
+            ctdh.SoLuong,
+            ctdh.DonGia,
+
+            (
+                ctdh.SoLuong
+                * ctdh.DonGia
+            ) AS ThanhTien
+
+        FROM DonHang dh
+
+        INNER JOIN ChiTietDonHang ctdh
+            ON dh.MaDonHang =
+               ctdh.MaDonHang
+
+        INNER JOIN SanPham sp
+            ON ctdh.MaSanPham =
+               sp.MaSanPham
+
+        WHERE
+            dh.MaDonHang = @MaDonHang
+
+            AND
+
+            dh.MaKhachHang = @MaKhachHang
+
+        ORDER BY
+            ctdh.MaSanPham
+    ";
+
+
+            using (SqlConnection conn =
+                database.GetConnection())
+            {
+                using (SqlCommand cmd =
+                    new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.Add(
+                        "@MaDonHang",
+                        SqlDbType.Int
+                    ).Value =
+                        maDonHang;
+
+
+                    cmd.Parameters.Add(
+                        "@MaKhachHang",
+                        SqlDbType.Int
+                    ).Value =
+                        maKhachHang;
+
+
+                    using (SqlDataAdapter adapter =
+                        new SqlDataAdapter(cmd))
+                    {
+                        DataTable table =
+                            new DataTable();
+
+
+                        adapter.Fill(table);
+
+
+                        return table;
+                    }
+                }
+            }
+        }
+
+        public bool IsOrderOwnedByCustomer(
+    int maDonHang,
+    int maKhachHang)
+        {
+            string sql = @"
+        SELECT COUNT(*)
+        FROM DonHang
+
+        WHERE
+            MaDonHang = @MaDonHang
+
+            AND
+
+            MaKhachHang = @MaKhachHang
+    ";
+
+
+            using (SqlConnection conn =
+                database.GetConnection())
+            {
+                using (SqlCommand cmd =
+                    new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.Add(
+                        "@MaDonHang",
+                        SqlDbType.Int
+                    ).Value =
+                        maDonHang;
+
+
+                    cmd.Parameters.Add(
+                        "@MaKhachHang",
+                        SqlDbType.Int
+                    ).Value =
+                        maKhachHang;
+
+
+                    conn.Open();
+
+
+                    return Convert.ToInt32(
+                        cmd.ExecuteScalar()
+                    ) > 0;
+                }
+            }
+        }
 
 
         public int TaoDonHang(

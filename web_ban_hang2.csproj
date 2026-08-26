@@ -138,6 +138,8 @@
     <Content Include="Dang_nhap.aspx" />
     <Content Include="Dang_xuat.aspx" />
     <Content Include="Dat_hang_thanh_cong.aspx" />
+    <Content Include="DonHangCuaToi.aspx" />
+    <Content Include="DonHangCuaToi_ChiTiet.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="img\about.jpg" />
@@ -406,6 +408,20 @@
     </Compile>
     <Compile Include="Dat_hang_thanh_cong.aspx.designer.cs">
       <DependentUpon>Dat_hang_thanh_cong.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DonHangCuaToi.aspx.cs">
+      <DependentUpon>DonHangCuaToi.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DonHangCuaToi.aspx.designer.cs">
+      <DependentUpon>DonHangCuaToi.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DonHangCuaToi_ChiTiet.aspx.cs">
+      <DependentUpon>DonHangCuaToi_ChiTiet.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DonHangCuaToi_ChiTiet.aspx.designer.cs">
+      <DependentUpon>DonHangCuaToi_ChiTiet.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
