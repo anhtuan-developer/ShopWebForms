@@ -14,28 +14,15 @@ namespace web_ban_hang2.Admin
             // ==========================================
 
             Session.Remove("AdminMa");
-
             Session.Remove("AdminEmail");
-
             Session.Remove("AdminHoTen");
 
-
-            // ==========================================
-            // HỦY SESSION
-            // ==========================================
-
-            Session.Clear();
-
-            Session.Abandon();
-
-
-            // ==========================================
-            // QUAY VỀ TRANG ĐĂNG NHẬP
-            // ==========================================
-
             Response.Redirect(
-                "~/Admin/Admin_DangNhap.aspx"
-            );
+                "~/Admin/Admin_DangNhap.aspx",
+                false);
+
+            Context.ApplicationInstance
+                .CompleteRequest();
         }
     }
 }

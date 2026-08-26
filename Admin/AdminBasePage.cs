@@ -9,16 +9,26 @@ namespace web_ban_hang2.Admin
         {
             base.OnInit(e);
 
-            // ==========================================
             // KIỂM TRA ĐĂNG NHẬP ADMIN
-            // ==========================================
 
-            if (Session["AdminMa"] == null)
+            int maAdmin;
+
+            bool isAdmin =
+                Session != null
+                && Session["AdminMa"] != null
+                && int.TryParse(
+                    Session["AdminMa"].ToString(),
+                    out maAdmin)
+                && maAdmin > 0;
+
+            if (!isAdmin)
             {
                 Response.Redirect(
                     "~/Admin/Admin_DangNhap.aspx",
-                    true
-                );
+                    false);
+
+                Context.ApplicationInstance
+                    .CompleteRequest();
 
                 return;
             }
