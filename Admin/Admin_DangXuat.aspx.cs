@@ -9,9 +9,9 @@ namespace web_ban_hang2.Admin
             object sender,
             EventArgs e)
         {
-            // ==========================================
+
+
             // XÓA SESSION ADMIN
-            // ==========================================
 
             Session.Remove("AdminMa");
             Session.Remove("AdminEmail");

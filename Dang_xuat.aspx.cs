@@ -8,19 +8,16 @@ namespace web_ban_hang2
             object sender,
             EventArgs e)
         {
-            // ==========================================
-            // XÓA TOÀN BỘ SESSION
-            // ==========================================
+            // ĐĂNG XUẤT KHÁCH HÀNG
+            
+            Session.Remove("User");
+            Session.Remove("UserId");
+            Session.Remove("UserName");
+            Session.Remove("MaKhachHang");
 
-            Session.Clear();
 
-            Session.Abandon();
-
-
-            // ==========================================
             // QUAY VỀ TRANG CHỦ
-            // ==========================================
-
+           
             Response.Redirect(
                 "index.aspx",
                 false
