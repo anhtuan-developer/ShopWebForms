@@ -72,8 +72,6 @@ namespace web_ban_hang2
                     ConvertToSanPham(
                         table.Rows[0]);
 
-                // Không hiển thị sản phẩm
-                // đã ngừng bán.
                 if (!sanPham.TrangThai)
                 {
                     Response.Redirect(
@@ -85,11 +83,10 @@ namespace web_ban_hang2
                 DisplayProduct(
                     sanPham);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 lblMessage.Text =
-                    "Lỗi tải sản phẩm: "
-                    + ex.Message;
+                    "Không thể tải thông tin sản phẩm. Vui lòng thử lại sau.";
             }
         }
 
@@ -150,7 +147,7 @@ namespace web_ban_hang2
         }
 
         private void DisplayProduct(
-            SanPham sanPham)
+    SanPham sanPham)
         {
             lblProductName.InnerText =
                 sanPham.TenSanPham;
@@ -201,8 +198,8 @@ namespace web_ban_hang2
         }
 
         protected void btnAddToCart_Click(
-            object sender,
-            EventArgs e)
+    object sender,
+    EventArgs e)
         {
             string id =
                 Request.QueryString["id"];
@@ -235,12 +232,6 @@ namespace web_ban_hang2
 
             try
             {
-                // CartService tự kiểm tra:
-                // - sản phẩm tồn tại
-                // - trạng thái bán
-                // - tồn kho
-                // - số lượng hiện tại trong giỏ
-                // - số lượng thêm vào
                 string message;
 
                 bool success =
@@ -263,11 +254,10 @@ namespace web_ban_hang2
                 Response.Redirect(
                     "Cart.aspx");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 lblMessage.Text =
-                    "Có lỗi xảy ra: "
-                    + ex.Message;
+                    "Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.";
             }
         }
     }

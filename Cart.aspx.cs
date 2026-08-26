@@ -10,9 +10,12 @@ namespace web_ban_hang2
     {
         private CartService cartService;
 
-        protected void Page_Load(object sender, EventArgs e)
+        protected void Page_Load(
+    object sender,
+    EventArgs e)
         {
-            cartService = new CartService();
+            cartService =
+                new CartService();
 
             if (!IsPostBack)
             {
@@ -22,54 +25,28 @@ namespace web_ban_hang2
 
         private void LoadCart()
         {
-            string validationMessage;
+            string message;
 
             cartService.ValidateCart(
-                out validationMessage);
-
-            if (!string.IsNullOrEmpty(validationMessage))
-            {
-                // Nếu Cart.aspx có lblMessage thì có thể
-                // hiển thị tại đây.
-                // Không giả định control này tồn tại
-                // để tránh lỗi Designer.
-            }
+                out message);
 
             List<CartItem> cart =
                 cartService.GetItems();
 
-            if (cart == null || cart.Count == 0)
-            {
-                pnlCart.Visible = false;
-                pnlEmpty.Visible = true;
+            rptCart.DataSource =
+                cart;
 
-                lblTotalQuantity.Text = "0";
-                lblTotal.Text = "0 ₫";
-
-                return;
-            }
-
-            pnlCart.Visible = true;
-            pnlEmpty.Visible = false;
-
-            rptCart.DataSource = cart;
             rptCart.DataBind();
 
-            lblTotalQuantity.Text =
-                cartService
-                    .GetTotalQuantity()
-                    .ToString();
-
             lblTotal.Text =
-                cartService
-                    .GetTotal()
-                    .ToString("N0")
-                    + " ₫";
+                string.Format(
+                    "{0:N0} ₫",
+                    cartService.GetTotal());
         }
 
         protected void rptCart_ItemCommand(
-            object source,
-            RepeaterCommandEventArgs e)
+    object source,
+    RepeaterCommandEventArgs e)
         {
             if (!int.TryParse(
                 Convert.ToString(
@@ -80,7 +57,8 @@ namespace web_ban_hang2
                 return;
             }
 
-            if (e.CommandName == "RemoveCart")
+            if (e.CommandName ==
+                "RemoveCart")
             {
                 cartService.Remove(
                     maSanPham);
@@ -90,7 +68,8 @@ namespace web_ban_hang2
                 return;
             }
 
-            if (e.CommandName == "UpdateCart")
+            if (e.CommandName ==
+                "UpdateCart")
             {
                 TextBox txtQuantity =
                     e.Item.FindControl(
@@ -131,8 +110,8 @@ namespace web_ban_hang2
         }
 
         protected void btnCheckout_Click(
-            object sender,
-            EventArgs e)
+    object sender,
+    EventArgs e)
         {
             List<CartItem> cart =
                 cartService.GetItems();
@@ -158,7 +137,8 @@ namespace web_ban_hang2
             if (!valid ||
                 cart.Count == 0)
             {
-                if (!string.IsNullOrEmpty(message))
+                if (!string.IsNullOrEmpty(
+                    message))
                 {
                     ClientScript.RegisterStartupScript(
                         GetType(),
@@ -179,7 +159,7 @@ namespace web_ban_hang2
         }
 
         private string ToJavaScriptString(
-            string value)
+    string value)
         {
             if (value == null)
             {

@@ -11,12 +11,18 @@ namespace web_ban_hang2.Services
     public class CartService
     {
         private const string CartSessionKey = "Cart";
+
         private readonly SanPhamDAL sanPhamDAL;
 
         public CartService()
         {
             sanPhamDAL = new SanPhamDAL();
         }
+
+
+        // ==========================================
+        // LẤY GIỎ HÀNG
+        // ==========================================
 
         private List<CartItem> GetCart()
         {
@@ -27,78 +33,166 @@ namespace web_ban_hang2.Services
             if (cart == null)
             {
                 cart = new List<CartItem>();
-                HttpContext.Current.Session[CartSessionKey] = cart;
+
+                HttpContext.Current.Session[
+                    CartSessionKey] = cart;
             }
 
             return cart;
         }
+
+
+        // ==========================================
+        // LẤY DANH SÁCH SẢN PHẨM TRONG GIỎ
+        // ==========================================
 
         public List<CartItem> GetItems()
         {
             return GetCart();
         }
 
-        // Kiểm tra lại toàn bộ giỏ hàng với Database.
-        // Dùng trước khi hiển thị giỏ và trước Checkout.
-        public bool ValidateCart(out string message)
+
+        // ==========================================
+        // KIỂM TRA TOÀN BỘ GIỎ HÀNG
+        // ==========================================
+
+        public bool ValidateCart(
+            out string message)
         {
             message = "";
-            List<CartItem> cart = GetCart();
+
+            List<CartItem> cart =
+                GetCart();
+
             bool valid = true;
 
-            for (int i = cart.Count - 1; i >= 0; i--)
-            {
-                CartItem item = cart[i];
-                DataTable table = sanPhamDAL.GetById(item.MaSanPham);
 
-                if (table == null || table.Rows.Count == 0)
+            for (int i = cart.Count - 1;
+                 i >= 0;
+                 i--)
+            {
+                CartItem item =
+                    cart[i];
+
+
+                DataTable table =
+                    sanPhamDAL.GetById(
+                        item.MaSanPham);
+
+
+                // ----------------------------------
+                // SẢN PHẨM KHÔNG TỒN TẠI
+                // ----------------------------------
+
+                if (table == null ||
+                    table.Rows.Count == 0)
                 {
                     cart.RemoveAt(i);
-                    message = "Một sản phẩm trong giỏ không còn tồn tại.";
+
+                    message =
+                        "Một sản phẩm trong giỏ không còn tồn tại.";
+
                     valid = false;
+
                     continue;
                 }
 
-                DataRow row = table.Rows[0];
-                bool trangThai = Convert.ToBoolean(row["TrangThai"]);
-                int tonKho = Convert.ToInt32(row["SoLuong"]);
+
+                DataRow row =
+                    table.Rows[0];
+
+
+                bool trangThai =
+                    Convert.ToBoolean(
+                        row["TrangThai"]);
+
+
+                int tonKho =
+                    Convert.ToInt32(
+                        row["SoLuong"]);
+
+
+                // ----------------------------------
+                // SẢN PHẨM NGỪNG BÁN
+                // ----------------------------------
 
                 if (!trangThai)
                 {
                     cart.RemoveAt(i);
-                    message = "Một sản phẩm trong giỏ hiện không còn được bán.";
+
+                    message =
+                        "Một sản phẩm trong giỏ hiện không còn được bán.";
+
                     valid = false;
+
                     continue;
                 }
+
+
+                // ----------------------------------
+                // HẾT HÀNG
+                // ----------------------------------
 
                 if (tonKho <= 0)
                 {
                     cart.RemoveAt(i);
-                    message = "Một sản phẩm trong giỏ đã hết hàng.";
+
+                    message =
+                        "Một sản phẩm trong giỏ đã hết hàng.";
+
                     valid = false;
+
                     continue;
                 }
 
+
+                // ----------------------------------
+                // SỐ LƯỢNG VƯỢT KHO
+                // ----------------------------------
+
                 if (item.SoLuong > tonKho)
                 {
-                    item.SoLuong = tonKho;
-                    message = "Một sản phẩm trong giỏ đã được giảm về số lượng tồn kho hiện tại.";
+                    item.SoLuong =
+                        tonKho;
+
+                    message =
+                        "Một sản phẩm trong giỏ đã được giảm về số lượng tồn kho hiện tại.";
+
+                    valid = false;
                 }
 
-                // Đồng bộ dữ liệu có thể thay đổi trong Database.
-                item.TenSanPham = row["TenSanPham"].ToString();
-                item.Gia = Convert.ToDecimal(row["Gia"]);
-                item.HinhAnh = row["HinhAnh"] == DBNull.Value
-                    ? ""
-                    : row["HinhAnh"].ToString();
+
+                // ----------------------------------
+                // ĐỒNG BỘ DỮ LIỆU
+                // ----------------------------------
+
+                item.TenSanPham =
+                    row["TenSanPham"]
+                    .ToString();
+
+
+                item.Gia =
+                    Convert.ToDecimal(
+                        row["Gia"]);
+
+
+                item.HinhAnh =
+                    row["HinhAnh"] == DBNull.Value
+                        ? ""
+                        : row["HinhAnh"].ToString();
             }
 
+
             SaveCart(cart);
+
             return valid;
         }
 
-        // Thêm sản phẩm. Không cho thêm sản phẩm không tồn tại,
-        // ngừng bán, hết hàng hoặc vượt tồn kho.
+
+        // ==========================================
+        // THÊM SẢN PHẨM
+        // ==========================================
+
         public bool Add(
             int maSanPham,
             string tenSanPham,
@@ -109,77 +203,196 @@ namespace web_ban_hang2.Services
         {
             message = "";
 
+
+            // ----------------------------------
+            // KIỂM TRA SỐ LƯỢNG
+            // ----------------------------------
+
             if (soLuong <= 0)
             {
-                message = "Số lượng phải lớn hơn 0.";
+                message =
+                    "Số lượng phải lớn hơn 0.";
+
                 return false;
             }
 
-            DataTable table = sanPhamDAL.GetById(maSanPham);
 
-            if (table == null || table.Rows.Count == 0)
+            // ----------------------------------
+            // KIỂM TRA SẢN PHẨM
+            // ----------------------------------
+
+            DataTable table =
+                sanPhamDAL.GetById(
+                    maSanPham);
+
+
+            if (table == null ||
+                table.Rows.Count == 0)
             {
-                message = "Sản phẩm không tồn tại.";
+                message =
+                    "Sản phẩm không tồn tại.";
+
                 return false;
             }
 
-            DataRow row = table.Rows[0];
-            bool trangThai = Convert.ToBoolean(row["TrangThai"]);
-            int tonKho = Convert.ToInt32(row["SoLuong"]);
+
+            DataRow row =
+                table.Rows[0];
+
+
+            bool trangThai =
+                Convert.ToBoolean(
+                    row["TrangThai"]);
+
+
+            int tonKho =
+                Convert.ToInt32(
+                    row["SoLuong"]);
+
+
+            // ----------------------------------
+            // SẢN PHẨM NGỪNG BÁN
+            // ----------------------------------
 
             if (!trangThai)
             {
-                message = "Sản phẩm hiện không còn được bán.";
+                message =
+                    "Sản phẩm hiện không còn được bán.";
+
                 return false;
             }
+
+
+            // ----------------------------------
+            // HẾT HÀNG
+            // ----------------------------------
 
             if (tonKho <= 0)
             {
-                message = "Sản phẩm đã hết hàng.";
+                message =
+                    "Sản phẩm đã hết hàng.";
+
                 return false;
             }
 
-            List<CartItem> cart = GetCart();
-            CartItem item = cart.FirstOrDefault(x => x.MaSanPham == maSanPham);
-            int soLuongHienTai = item == null ? 0 : item.SoLuong;
 
-            if (soLuongHienTai > tonKho - soLuong)
+            List<CartItem> cart =
+                GetCart();
+
+
+            CartItem item =
+                cart.FirstOrDefault(
+                    x =>
+                        x.MaSanPham ==
+                        maSanPham);
+
+
+            int soLuongHienTai =
+                item == null
+                    ? 0
+                    : item.SoLuong;
+
+
+            // ----------------------------------
+            // KIỂM TRA TỔNG SỐ LƯỢNG
+            // ----------------------------------
+
+            if (soLuong >
+                tonKho - soLuongHienTai)
             {
-                message = "Số lượng trong giỏ vượt quá tồn kho. Hiện chỉ còn " + tonKho + " sản phẩm.";
+                message =
+                    "Không thể thêm số lượng này. Trong giỏ đã có "
+                    + soLuongHienTai
+                    + " sản phẩm và kho chỉ còn "
+                    + tonKho
+                    + " sản phẩm.";
+
                 return false;
             }
 
-            // Luôn lấy dữ liệu mới nhất từ DB thay vì tin giá/tên gửi từ client.
-            tenSanPham = row["TenSanPham"].ToString();
-            gia = Convert.ToDecimal(row["Gia"]);
-            hinhAnh = row["HinhAnh"] == DBNull.Value ? "" : row["HinhAnh"].ToString();
+
+            // ----------------------------------
+            // LẤY DỮ LIỆU MỚI NHẤT TỪ DATABASE
+            // ----------------------------------
+
+            tenSanPham =
+                row["TenSanPham"]
+                .ToString();
+
+
+            gia =
+                Convert.ToDecimal(
+                    row["Gia"]);
+
+
+            hinhAnh =
+                row["HinhAnh"] == DBNull.Value
+                    ? ""
+                    : row["HinhAnh"]
+                        .ToString();
+
+
+            // ----------------------------------
+            // THÊM MỚI
+            // ----------------------------------
 
             if (item == null)
             {
-                item = new CartItem
-                {
-                    MaSanPham = maSanPham,
-                    TenSanPham = tenSanPham,
-                    HinhAnh = hinhAnh,
-                    Gia = gia,
-                    SoLuong = soLuong
-                };
+                item =
+                    new CartItem
+                    {
+                        MaSanPham =
+                            maSanPham,
+
+                        TenSanPham =
+                            tenSanPham,
+
+                        HinhAnh =
+                            hinhAnh,
+
+                        Gia =
+                            gia,
+
+                        SoLuong =
+                            soLuong
+                    };
+
 
                 cart.Add(item);
             }
             else
             {
-                item.SoLuong += soLuong;
-                item.TenSanPham = tenSanPham;
-                item.HinhAnh = hinhAnh;
-                item.Gia = gia;
+                // ----------------------------------
+                // CỘNG VÀO SỐ LƯỢNG CŨ
+                // ----------------------------------
+
+                item.SoLuong +=
+                    soLuong;
+
+
+                item.TenSanPham =
+                    tenSanPham;
+
+
+                item.HinhAnh =
+                    hinhAnh;
+
+
+                item.Gia =
+                    gia;
             }
 
+
             SaveCart(cart);
+
             return true;
         }
 
-        // Giữ API cũ để các nơi khác không bị lỗi compile.
+
+        // ==========================================
+        // API CŨ - GIỮ TƯƠNG THÍCH
+        // ==========================================
+
         public void Add(
             int maSanPham,
             string tenSanPham,
@@ -188,6 +401,8 @@ namespace web_ban_hang2.Services
             int soLuong)
         {
             string message;
+
+
             Add(
                 maSanPham,
                 tenSanPham,
@@ -197,6 +412,11 @@ namespace web_ban_hang2.Services
                 out message);
         }
 
+
+        // ==========================================
+        // CẬP NHẬT SỐ LƯỢNG
+        // ==========================================
+
         public bool UpdateQuantity(
             int maSanPham,
             int soLuong,
@@ -204,30 +424,55 @@ namespace web_ban_hang2.Services
         {
             message = "";
 
-            List<CartItem> cart = GetCart();
 
-            CartItem item = cart.FirstOrDefault(
-                x => x.MaSanPham == maSanPham);
+            List<CartItem> cart =
+                GetCart();
+
+
+            CartItem item =
+                cart.FirstOrDefault(
+                    x =>
+                        x.MaSanPham ==
+                        maSanPham);
+
 
             if (item == null)
             {
-                message = "Sản phẩm không có trong giỏ hàng.";
+                message =
+                    "Sản phẩm không có trong giỏ hàng.";
+
                 return false;
             }
+
+
+            // ----------------------------------
+            // SỐ LƯỢNG <= 0 → XÓA
+            // ----------------------------------
 
             if (soLuong <= 0)
             {
                 cart.Remove(item);
+
                 SaveCart(cart);
+
                 return true;
             }
 
-            DataTable table =
-                sanPhamDAL.GetById(maSanPham);
 
-            if (table == null || table.Rows.Count == 0)
+            DataTable table =
+                sanPhamDAL.GetById(
+                    maSanPham);
+
+
+            // ----------------------------------
+            // SẢN PHẨM KHÔNG CÒN
+            // ----------------------------------
+
+            if (table == null ||
+                table.Rows.Count == 0)
             {
                 cart.Remove(item);
+
                 SaveCart(cart);
 
                 message =
@@ -236,17 +481,29 @@ namespace web_ban_hang2.Services
                 return false;
             }
 
-            DataRow row = table.Rows[0];
+
+            DataRow row =
+                table.Rows[0];
+
 
             bool trangThai =
-                Convert.ToBoolean(row["TrangThai"]);
+                Convert.ToBoolean(
+                    row["TrangThai"]);
+
 
             int tonKho =
-                Convert.ToInt32(row["SoLuong"]);
+                Convert.ToInt32(
+                    row["SoLuong"]);
+
+
+            // ----------------------------------
+            // NGỪNG BÁN
+            // ----------------------------------
 
             if (!trangThai)
             {
                 cart.Remove(item);
+
                 SaveCart(cart);
 
                 message =
@@ -255,9 +512,15 @@ namespace web_ban_hang2.Services
                 return false;
             }
 
+
+            // ----------------------------------
+            // HẾT HÀNG
+            // ----------------------------------
+
             if (tonKho <= 0)
             {
                 cart.Remove(item);
+
                 SaveCart(cart);
 
                 message =
@@ -265,6 +528,11 @@ namespace web_ban_hang2.Services
 
                 return false;
             }
+
+
+            // ----------------------------------
+            // VƯỢT TỒN KHO
+            // ----------------------------------
 
             if (soLuong > tonKho)
             {
@@ -276,23 +544,41 @@ namespace web_ban_hang2.Services
                 return false;
             }
 
-            item.SoLuong = soLuong;
+
+            // ----------------------------------
+            // CẬP NHẬT
+            // ----------------------------------
+
+            item.SoLuong =
+                soLuong;
+
 
             item.TenSanPham =
-                row["TenSanPham"].ToString();
+                row["TenSanPham"]
+                .ToString();
+
 
             item.Gia =
-                Convert.ToDecimal(row["Gia"]);
+                Convert.ToDecimal(
+                    row["Gia"]);
+
 
             item.HinhAnh =
                 row["HinhAnh"] == DBNull.Value
                     ? ""
-                    : row["HinhAnh"].ToString();
+                    : row["HinhAnh"]
+                        .ToString();
+
 
             SaveCart(cart);
 
             return true;
         }
+
+
+        // ==========================================
+        // API CŨ - GIỮ TƯƠNG THÍCH
+        // ==========================================
 
         public void UpdateQuantity(
             int maSanPham,
@@ -300,27 +586,45 @@ namespace web_ban_hang2.Services
         {
             string message;
 
+
             UpdateQuantity(
                 maSanPham,
                 soLuong,
                 out message);
         }
 
-        public void Remove(int maSanPham)
+
+        // ==========================================
+        // XÓA SẢN PHẨM
+        // ==========================================
+
+        public void Remove(
+            int maSanPham)
         {
-            List<CartItem> cart = GetCart();
+            List<CartItem> cart =
+                GetCart();
+
 
             CartItem item =
                 cart.FirstOrDefault(
-                    x => x.MaSanPham == maSanPham);
+                    x =>
+                        x.MaSanPham ==
+                        maSanPham);
+
 
             if (item != null)
             {
                 cart.Remove(item);
             }
 
+
             SaveCart(cart);
         }
+
+
+        // ==========================================
+        // XÓA TOÀN BỘ GIỎ
+        // ==========================================
 
         public void Clear()
         {
@@ -328,11 +632,21 @@ namespace web_ban_hang2.Services
                 CartSessionKey);
         }
 
+
+        // ==========================================
+        // TỔNG TIỀN
+        // ==========================================
+
         public decimal GetTotal()
         {
             return GetCart()
                 .Sum(x => x.ThanhTien);
         }
+
+
+        // ==========================================
+        // TỔNG SỐ LƯỢNG
+        // ==========================================
 
         public int GetTotalQuantity()
         {
@@ -340,10 +654,17 @@ namespace web_ban_hang2.Services
                 .Sum(x => x.SoLuong);
         }
 
-        private void SaveCart(List<CartItem> cart)
+
+        // ==========================================
+        // LƯU GIỎ
+        // ==========================================
+
+        private void SaveCart(
+            List<CartItem> cart)
         {
             HttpContext.Current.Session[
-                CartSessionKey] = cart;
+                CartSessionKey] =
+                cart;
         }
     }
 }
