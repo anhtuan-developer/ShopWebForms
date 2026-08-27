@@ -10,41 +10,60 @@
     ContentPlaceHolderID="MainContent"
     runat="server">
 
-    <!-- BANNER -->
+
+    <!-- ================================================= -->
+    <!-- HERO -->
+    <!-- ================================================= -->
+
     <section class="home-banner">
 
         <div class="banner-content">
 
             <span class="banner-label">
-                SẢN PHẨM MỚI
+                🔥 SẢN PHẨM MỚI
             </span>
 
+
             <h1>
-                Mua sắm dễ dàng<br />
+                Mua sắm dễ dàng
+                <br />
                 Giá tốt mỗi ngày
             </h1>
 
+
             <p>
-                Khám phá hàng nghìn sản phẩm chất lượng
-                với mức giá hấp dẫn.
+                Khám phá các sản phẩm công nghệ,
+                điện thoại, laptop và phụ kiện
+                chất lượng với mức giá hấp dẫn.
             </p>
 
-            <a href="shop.aspx" class="banner-button">
-                Mua sắm ngay
+
+            <a
+                href="shop.aspx"
+                class="banner-button">
+
+                Khám phá sản phẩm
+
             </a>
 
         </div>
 
+
         <div class="banner-image">
+
             <div class="banner-product">
                 🛍️
             </div>
+
         </div>
 
     </section>
 
 
-    <!-- DANH MỤC -->
+    <!-- ================================================= -->
+    <!-- CATEGORY -->
+    <!-- ================================================= -->
+
     <section class="category-section">
 
         <div class="section-header">
@@ -62,7 +81,10 @@
 
         <div class="category-grid">
 
-            <a href="shop.aspx" class="category-card">
+
+            <a
+                href="shop.aspx"
+                class="category-card">
 
                 <div class="category-icon">
                     📱
@@ -73,13 +95,15 @@
                 </h3>
 
                 <p>
-                    Sản phẩm điện thoại
+                    Smartphone chính hãng
                 </p>
 
             </a>
 
 
-            <a href="shop.aspx" class="category-card">
+            <a
+                href="shop.aspx"
+                class="category-card">
 
                 <div class="category-icon">
                     💻
@@ -90,13 +114,15 @@
                 </h3>
 
                 <p>
-                    Laptop chính hãng
+                    Laptop học tập và làm việc
                 </p>
 
             </a>
 
 
-            <a href="shop.aspx" class="category-card">
+            <a
+                href="shop.aspx"
+                class="category-card">
 
                 <div class="category-icon">
                     🎧
@@ -113,7 +139,9 @@
             </a>
 
 
-            <a href="shop.aspx" class="category-card">
+            <a
+                href="shop.aspx"
+                class="category-card">
 
                 <div class="category-icon">
                     ⌚
@@ -124,7 +152,7 @@
                 </h3>
 
                 <p>
-                    Đồng hồ thời trang
+                    Đồng hồ thông minh
                 </p>
 
             </a>
@@ -134,14 +162,21 @@
     </section>
 
 
-    <!-- SẢN PHẨM NỔI BẬT -->
+    <!-- ================================================= -->
+    <!-- FEATURED PRODUCTS -->
+    <!-- ================================================= -->
+
     <section class="product-section">
 
         <div class="section-header">
 
-            <h2>
-                Sản phẩm nổi bật
-            </h2>
+            <div>
+
+                <h2>
+                    Sản phẩm nổi bật
+                </h2>
+
+            </div>
 
             <a href="shop.aspx">
                 Xem tất cả →
@@ -154,11 +189,17 @@
 
 
             <!-- PRODUCT 1 -->
+
             <div class="product-card">
 
                 <div class="product-image">
-                    📱
+
+                    <div style="font-size:75px;">
+                        📱
+                    </div>
+
                 </div>
+
 
                 <div class="product-info">
 
@@ -174,9 +215,12 @@
                         12.990.000 ₫
                     </div>
 
-                    <a href="shop.aspx"
-                       class="product-button">
+                    <a
+                        href="shop.aspx"
+                        class="product-button">
+
                         Xem sản phẩm
+
                     </a>
 
                 </div>
@@ -185,11 +229,17 @@
 
 
             <!-- PRODUCT 2 -->
+
             <div class="product-card">
 
                 <div class="product-image">
-                    💻
+
+                    <div style="font-size:75px;">
+                        💻
+                    </div>
+
                 </div>
+
 
                 <div class="product-info">
 
@@ -205,9 +255,12 @@
                         18.990.000 ₫
                     </div>
 
-                    <a href="shop.aspx"
-                       class="product-button">
+                    <a
+                        href="shop.aspx"
+                        class="product-button">
+
                         Xem sản phẩm
+
                     </a>
 
                 </div>
@@ -216,11 +269,17 @@
 
 
             <!-- PRODUCT 3 -->
+
             <div class="product-card">
 
                 <div class="product-image">
-                    🎧
+
+                    <div style="font-size:75px;">
+                        🎧
+                    </div>
+
                 </div>
+
 
                 <div class="product-info">
 
@@ -236,9 +295,12 @@
                         1.290.000 ₫
                     </div>
 
-                    <a href="shop.aspx"
-                       class="product-button">
+                    <a
+                        href="shop.aspx"
+                        class="product-button">
+
                         Xem sản phẩm
+
                     </a>
 
                 </div>
@@ -247,11 +309,17 @@
 
 
             <!-- PRODUCT 4 -->
+
             <div class="product-card">
 
                 <div class="product-image">
-                    ⌚
+
+                    <div style="font-size:75px;">
+                        ⌚
+                    </div>
+
                 </div>
+
 
                 <div class="product-info">
 
@@ -267,9 +335,12 @@
                         2.490.000 ₫
                     </div>
 
-                    <a href="shop.aspx"
-                       class="product-button">
+                    <a
+                        href="shop.aspx"
+                        class="product-button">
+
                         Xem sản phẩm
+
                     </a>
 
                 </div>
@@ -281,8 +352,12 @@
     </section>
 
 
-    <!-- CAM KẾT -->
+    <!-- ================================================= -->
+    <!-- SERVICE -->
+    <!-- ================================================= -->
+
     <section class="service-section">
+
 
         <div class="service-item">
 
@@ -291,6 +366,7 @@
             </div>
 
             <div>
+
                 <h3>
                     Giao hàng nhanh
                 </h3>
@@ -298,6 +374,7 @@
                 <p>
                     Giao hàng toàn quốc
                 </p>
+
             </div>
 
         </div>
@@ -310,13 +387,15 @@
             </div>
 
             <div>
+
                 <h3>
-                    Đặt hàng an toàn
+                    Mua hàng an toàn
                 </h3>
 
                 <p>
-                    Bảo mật thông tin đặt hàng
+                    Bảo mật thông tin
                 </p>
+
             </div>
 
         </div>
@@ -329,13 +408,15 @@
             </div>
 
             <div>
+
                 <h3>
-                    Sản phẩm chất lượng
+                    Hàng chính hãng
                 </h3>
 
                 <p>
-                    Cam kết chính hãng
+                    Chất lượng đảm bảo
                 </p>
+
             </div>
 
         </div>
@@ -348,17 +429,20 @@
             </div>
 
             <div>
+
                 <h3>
-                    Hỗ trợ 24/7
+                    Hỗ trợ khách hàng
                 </h3>
 
                 <p>
                     Luôn sẵn sàng hỗ trợ
                 </p>
+
             </div>
 
         </div>
 
     </section>
+
 
 </asp:Content>

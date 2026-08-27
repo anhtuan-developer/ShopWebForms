@@ -11,15 +11,22 @@
     <meta charset="utf-8" />
 
     <meta name="viewport"
-        content="width=device-width, initial-scale=1.0" />
+          content="width=device-width, initial-scale=1.0" />
 
-    <title><%: Page.Title %></title>
+    <meta name="description"
+          content="SHOP 5 ANH EM - Website bán hàng trực tuyến" />
 
+    <title>
+        <%: Page.Title %> - SHOP 5 ANH EM
+    </title>
+
+    <!-- BOOTSTRAP -->
     <link href="<%= ResolveUrl("~/Content/bootstrap.min.css") %>"
-      rel="stylesheet" />
+          rel="stylesheet" />
 
+    <!-- CSS WEBSITE -->
     <link href="<%= ResolveUrl("~/Content/Site.css") %>"
-      rel="stylesheet" />
+          rel="stylesheet" />
 
     <asp:ContentPlaceHolder
         ID="HeadContent"
@@ -28,11 +35,51 @@
 
 </head>
 
+
 <body>
 
-<form id="form1" runat="server">
+<form
+    id="form1"
+    runat="server">
 
+
+    <!-- ================================================= -->
+    <!-- TOP BAR -->
+    <!-- ================================================= -->
+
+    <div class="top-bar">
+
+        <div class="site-container top-bar-container">
+
+            <div class="top-bar-left">
+
+                <span>
+                    🚚 Giao hàng toàn quốc
+                </span>
+
+                <span>
+                    🔒 Thanh toán an toàn
+                </span>
+
+            </div>
+
+
+            <div class="top-bar-right">
+
+                <span>
+                    📞 Hotline: 0123 456 789
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
     <!-- HEADER -->
+    <!-- ================================================= -->
 
     <header class="main-header">
 
@@ -43,8 +90,16 @@
 
             <div class="logo">
 
-                <a href="index.aspx">
-                    SHOP 5 ANH EM
+                <a href="<%= ResolveUrl("~/index.aspx") %>">
+
+                    <span class="logo-main">
+                        SHOP
+                    </span>
+
+                    <span class="logo-sub">
+                        5 ANH EM
+                    </span>
+
                 </a>
 
             </div>
@@ -61,66 +116,115 @@
                     placeholder="Tìm kiếm sản phẩm...">
                 </asp:TextBox>
 
+
                 <asp:Button
                     ID="btnSearch"
                     runat="server"
-                    Text="Tìm kiếm"
+                    Text="🔍"
                     CssClass="search-button"
+                    ToolTip="Tìm kiếm"
                     OnClick="btnSearch_Click" />
 
             </div>
 
 
-            <!-- USER -->
+            <!-- HEADER ACTIONS -->
 
             <div class="header-actions">
 
+
+                <!-- KHÁCH -->
+
                 <asp:Panel
                     ID="pnlGuest"
-                    runat="server">
+                    runat="server"
+                    CssClass="user-actions">
 
-                    <a href="Dang_nhap.aspx">
-                        Đăng nhập
+                    <a href="<%= ResolveUrl("~/Dang_nhap.aspx") %>"
+                       class="header-link">
+
+                        <span class="header-icon">
+                            👤
+                        </span>
+
+                        <span>
+                            Đăng nhập
+                        </span>
+
                     </a>
 
-                    <a href="Dang_ky.aspx">
+
+                    <a href="<%= ResolveUrl("~/Dang_ky.aspx") %>"
+                       class="header-link header-register">
+
                         Đăng ký
+
                     </a>
 
                 </asp:Panel>
 
+
+                <!-- USER -->
 
                 <asp:Panel
                     ID="pnlUser"
                     runat="server"
-                    Visible="false">
+                    Visible="false"
+                    CssClass="user-actions">
 
-                    <span class="welcome-user">
 
-                        Xin chào,
+                    <div class="user-welcome">
 
-                        <asp:Label
-                            ID="lblUserName"
-                            runat="server">
-                        </asp:Label>
+                        <span class="header-icon">
+                            👤
+                        </span>
 
-                    </span>
+                        <span>
 
-                    <a href="DonHangCuaToi.aspx">
-                        Đơn hàng của tôi
+                            Xin chào,
+
+                            <strong>
+                                <asp:Label
+                                    ID="lblUserName"
+                                    runat="server">
+                                </asp:Label>
+                            </strong>
+
+                        </span>
+
+                    </div>
+
+
+                    <a href="<%= ResolveUrl("~/DonHangCuaToi.aspx") %>"
+                       class="header-link">
+
+                        Đơn hàng
+
                     </a>
 
-                    <a href="Dang_xuat.aspx">
+
+                    <a href="<%= ResolveUrl("~/Dang_xuat.aspx") %>"
+                       class="header-link logout-link">
+
                         Đăng xuất
+
                     </a>
 
                 </asp:Panel>
 
 
-                <a href="Cart.aspx"
+                <!-- CART -->
+
+                <a href="<%= ResolveUrl("~/Cart.aspx") %>"
                    class="cart-link">
 
-                    🛒 Giỏ hàng
+                    <span class="cart-icon">
+                        🛒
+                    </span>
+
+                    <span>
+                        Giỏ hàng
+                    </span>
 
                 </a>
 
@@ -131,7 +235,9 @@
     </header>
 
 
-    <!-- MENU -->
+    <!-- ================================================= -->
+    <!-- NAVIGATION -->
+    <!-- ================================================= -->
 
     <nav class="main-menu">
 
@@ -140,32 +246,36 @@
             <ul class="menu-list">
 
                 <li>
-                    <a href="index.aspx">
-                        Trang chủ
+                    <a href="<%= ResolveUrl("~/index.aspx") %>">
+                        🏠 Trang chủ
                     </a>
                 </li>
 
+
                 <li>
-                    <a href="shop.aspx">
-                        Sản phẩm
+                    <a href="<%= ResolveUrl("~/shop.aspx") %>">
+                        🛍️ Sản phẩm
                     </a>
                 </li>
 
+
                 <li>
-                    <a href="#">
-                        Danh mục
+                    <a href="<%= ResolveUrl("~/shop.aspx") %>">
+                        📂 Danh mục
                     </a>
                 </li>
 
+
                 <li>
-                    <a href="TinTuc.aspx">
-                        Tin tức
+                    <a href="<%= ResolveUrl("~/TinTuc.aspx") %>">
+                        📰 Tin tức
                     </a>
                 </li>
 
+
                 <li>
-                    <a href="Contact.aspx">
-                        Liên hệ
+                    <a href="<%= ResolveUrl("~/Contact.aspx") %>">
+                        📞 Liên hệ
                     </a>
                 </li>
 
@@ -176,7 +286,9 @@
     </nav>
 
 
+    <!-- ================================================= -->
     <!-- MAIN CONTENT -->
+    <!-- ================================================= -->
 
     <main class="main-content">
 
@@ -192,80 +304,161 @@
     </main>
 
 
+    <!-- ================================================= -->
     <!-- FOOTER -->
+    <!-- ================================================= -->
 
     <footer class="main-footer">
 
         <div class="site-container footer-container">
 
-            <div class="footer-column">
 
-                <h3>SHOP MASTER</h3>
+            <!-- SHOP -->
+
+            <div class="footer-column footer-brand">
+
+                <div class="footer-logo">
+                    SHOP 5 ANH EM
+                </div>
 
                 <p>
-                    Website bán hàng trực tuyến.
+                    Website bán hàng trực tuyến
+                    cung cấp các sản phẩm công nghệ
+                    và phụ kiện chất lượng.
                 </p>
 
-                <p>
-                    Cung cấp sản phẩm chất lượng
-                    với giá tốt nhất.
-                </p>
+
+                <div class="footer-feature">
+                    🚚 Giao hàng toàn quốc
+                </div>
+
+                <div class="footer-feature">
+                    🔒 Thanh toán an toàn
+                </div>
+
+                <div class="footer-feature">
+                    ⭐ Sản phẩm chất lượng
+                </div>
 
             </div>
 
 
+            <!-- LIÊN KẾT -->
+
             <div class="footer-column">
 
-                <h3>Liên kết</h3>
+                <h3>
+                    Liên kết nhanh
+                </h3>
 
-                <a href="index.aspx">
+                <a href="<%= ResolveUrl("~/index.aspx") %>">
                     Trang chủ
                 </a>
 
-                <a href="shop.aspx">
+                <a href="<%= ResolveUrl("~/shop.aspx") %>">
                     Sản phẩm
                 </a>
 
-                <a href="Cart.aspx">
+                <a href="<%= ResolveUrl("~/Cart.aspx") %>">
                     Giỏ hàng
                 </a>
-                
-                <a href="TinTuc.aspx">
+
+                <a href="<%= ResolveUrl("~/DonHangCuaToi.aspx") %>">
+                    Đơn hàng của tôi
+                </a>
+
+                <a href="<%= ResolveUrl("~/TinTuc.aspx") %>">
                     Tin tức
                 </a>
 
-                <a href="Contact.aspx">
+                <a href="<%= ResolveUrl("~/Contact.aspx") %>">
                     Liên hệ
                 </a>
 
             </div>
 
 
+            <!-- HỖ TRỢ -->
+
             <div class="footer-column">
 
-                <h3>Liên hệ</h3>
+                <h3>
+                    Hỗ trợ khách hàng
+                </h3>
 
-                <p>Email: shop@gmail.com</p>
+                <a href="<%= ResolveUrl("~/Contact.aspx") %>">
+                    Trung tâm hỗ trợ
+                </a>
 
-                <p>Điện thoại: 0123 456 789</p>
+                <a href="<%= ResolveUrl("~/Contact.aspx") %>">
+                    Chính sách giao hàng
+                </a>
 
-                <p>Hà Nội, Việt Nam</p>
+                <a href="<%= ResolveUrl("~/Contact.aspx") %>">
+                    Chính sách đổi trả
+                </a>
+
+                <a href="<%= ResolveUrl("~/Contact.aspx") %>">
+                    Chính sách bảo mật
+                </a>
+
+            </div>
+
+
+            <!-- LIÊN HỆ -->
+
+            <div class="footer-column">
+
+                <h3>
+                    Liên hệ
+                </h3>
+
+                <p>
+                    📧 shop@gmail.com
+                </p>
+
+                <p>
+                    📞 0123 456 789
+                </p>
+
+                <p>
+                    📍 Hà Nội, Việt Nam
+                </p>
+
+                <div class="footer-social">
+                    Facebook &nbsp; | &nbsp; Zalo
+                </div>
 
             </div>
 
         </div>
 
 
+        <!-- FOOTER BOTTOM -->
+
         <div class="footer-bottom">
 
-            © 2026 SHOP MASTER - All Rights Reserved
+            <div class="site-container">
+
+                <span>
+                    © 2026 SHOP 5 ANH EM
+                </span>
+
+                <span>
+                    All Rights Reserved.
+                </span>
+
+            </div>
 
         </div>
 
     </footer>
 
+
 </form>
+
 
 </body>
 
 </html>
+
