@@ -33,6 +33,15 @@ namespace web_ban_hang2.Admin
         protected global::System.Web.UI.WebControls.Label lblDanhMuc;
 
         /// <summary>
+        /// lblKhachHang control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblKhachHang;
+
+        /// <summary>
         /// lblDonHang control.
         /// </summary>
         /// <remarks>
@@ -42,12 +51,57 @@ namespace web_ban_hang2.Admin
         protected global::System.Web.UI.WebControls.Label lblDonHang;
 
         /// <summary>
-        /// lblKhachHang control.
+        /// lblDoanhThuHomNay control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblKhachHang;
+        protected global::System.Web.UI.WebControls.Label lblDoanhThuHomNay;
+
+        /// <summary>
+        /// lblDoanhThuThang control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDoanhThuThang;
+
+        /// <summary>
+        /// lblDoanhThuNam control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDoanhThuNam;
+
+        /// <summary>
+        /// lblSoDonDaGiao control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSoDonDaGiao;
+
+        /// <summary>
+        /// lblSoDonDangGiao control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSoDonDangGiao;
+
+        /// <summary>
+        /// gvTopSanPham control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvTopSanPham;
     }
 }

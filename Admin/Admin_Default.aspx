@@ -7,42 +7,45 @@
     Inherits="web_ban_hang2.Admin.Admin_Default"
 %>
 
-
 <asp:Content
     ID="Content1"
     ContentPlaceHolderID="MainContent"
     runat="server">
 
-    <h1 class="admin-title">
-        Dashboard
-    </h1>
+    <div class="admin-title">
+
+        <h1>
+            Dashboard
+        </h1>
+
+        <p>
+            Tổng quan hoạt động của cửa hàng
+        </p>
+
+    </div>
 
 
-    <div class="row">
+    <!-- ====================================== -->
+    <!-- THỐNG KÊ TỔNG QUAN -->
+    <!-- ====================================== -->
+
+    <div class="dashboard-grid">
 
         <!-- SẢN PHẨM -->
 
-        <div class="col-md-3">
+        <div class="dashboard-card">
 
-            <div class="dashboard-card">
+            <div class="dashboard-card-title">
+                Tổng sản phẩm
+            </div>
 
-                <h4>
-                    Sản phẩm
-                </h4>
+            <div class="dashboard-card-value">
 
-                <h2>
-
-                    <asp:Label
-                        ID="lblSanPham"
-                        runat="server"
-                        Text="0">
-                    </asp:Label>
-
-                </h2>
-
-                <p>
-                    Tổng số sản phẩm
-                </p>
+                <asp:Label
+                    ID="lblSanPham"
+                    runat="server"
+                    Text="0">
+                </asp:Label>
 
             </div>
 
@@ -51,56 +54,19 @@
 
         <!-- DANH MỤC -->
 
-        <div class="col-md-3">
+        <div class="dashboard-card">
 
-            <div class="dashboard-card">
-
-                <h4>
-                    Danh mục
-                </h4>
-
-                <h2>
-
-                    <asp:Label
-                        ID="lblDanhMuc"
-                        runat="server"
-                        Text="0">
-                    </asp:Label>
-
-                </h2>
-
-                <p>
-                    Tổng số danh mục
-                </p>
-
+            <div class="dashboard-card-title">
+                Tổng danh mục
             </div>
 
-        </div>
+            <div class="dashboard-card-value">
 
-
-        <!-- ĐƠN HÀNG -->
-
-        <div class="col-md-3">
-
-            <div class="dashboard-card">
-
-                <h4>
-                    Đơn hàng
-                </h4>
-
-                <h2>
-
-                    <asp:Label
-                        ID="lblDonHang"
-                        runat="server"
-                        Text="0">
-                    </asp:Label>
-
-                </h2>
-
-                <p>
-                    Tổng số đơn hàng
-                </p>
+                <asp:Label
+                    ID="lblDanhMuc"
+                    runat="server"
+                    Text="0">
+                </asp:Label>
 
             </div>
 
@@ -109,27 +75,40 @@
 
         <!-- KHÁCH HÀNG -->
 
-        <div class="col-md-3">
+        <div class="dashboard-card">
 
-            <div class="dashboard-card">
+            <div class="dashboard-card-title">
+                Tổng khách hàng
+            </div>
 
-                <h4>
-                    Khách hàng
-                </h4>
+            <div class="dashboard-card-value">
 
-                <h2>
+                <asp:Label
+                    ID="lblKhachHang"
+                    runat="server"
+                    Text="0">
+                </asp:Label>
 
-                    <asp:Label
-                        ID="lblKhachHang"
-                        runat="server"
-                        Text="0">
-                    </asp:Label>
+            </div>
 
-                </h2>
+        </div>
 
-                <p>
-                    Tổng số khách hàng
-                </p>
+
+        <!-- ĐƠN HÀNG -->
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-title">
+                Tổng đơn hàng
+            </div>
+
+            <div class="dashboard-card-value">
+
+                <asp:Label
+                    ID="lblDonHang"
+                    runat="server"
+                    Text="0">
+                </asp:Label>
 
             </div>
 
@@ -138,18 +117,208 @@
     </div>
 
 
-    <div class="dashboard-card">
+    <!-- ====================================== -->
+    <!-- BÁO CÁO DOANH THU -->
+    <!-- ====================================== -->
 
-        <h3>
-            Chào mừng đến trang quản trị
-        </h3>
+    <div class="admin-card">
 
-        <p>
+        <div class="admin-card-header">
 
-            Tại đây bạn có thể quản lý sản phẩm,
-            danh mục, đơn hàng và khách hàng.
+            <h3>
+                Báo cáo doanh thu
+            </h3>
 
-        </p>
+        </div>
+
+
+        <div class="admin-card-body">
+
+            <div class="dashboard-grid">
+
+                <!-- DOANH THU HÔM NAY -->
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-card-title">
+                        Doanh thu hôm nay
+                    </div>
+
+                    <div class="dashboard-card-value">
+
+                        <asp:Label
+                            ID="lblDoanhThuHomNay"
+                            runat="server"
+                            Text="0 ₫">
+                        </asp:Label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DOANH THU THÁNG -->
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-card-title">
+                        Doanh thu tháng này
+                    </div>
+
+                    <div class="dashboard-card-value">
+
+                        <asp:Label
+                            ID="lblDoanhThuThang"
+                            runat="server"
+                            Text="0 ₫">
+                        </asp:Label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DOANH THU NĂM -->
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-card-title">
+                        Doanh thu năm nay
+                    </div>
+
+                    <div class="dashboard-card-value">
+
+                        <asp:Label
+                            ID="lblDoanhThuNam"
+                            runat="server"
+                            Text="0 ₫">
+                        </asp:Label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ĐÃ GIAO -->
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-card-title">
+                        Số đơn đã giao
+                    </div>
+
+                    <div class="dashboard-card-value">
+
+                        <asp:Label
+                            ID="lblSoDonDaGiao"
+                            runat="server"
+                            Text="0">
+                        </asp:Label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ĐANG GIAO -->
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-card-title">
+                        Số đơn đang giao
+                    </div>
+
+                    <div class="dashboard-card-value">
+
+                        <asp:Label
+                            ID="lblSoDonDangGiao"
+                            runat="server"
+                            Text="0">
+                        </asp:Label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================== -->
+    <!-- TOP SẢN PHẨM BÁN CHẠY -->
+    <!-- ====================================== -->
+
+    <div class="admin-card">
+
+        <div class="admin-card-header">
+
+            <h3>
+                Top 5 sản phẩm bán chạy
+            </h3>
+
+        </div>
+
+
+        <div class="admin-card-body">
+
+            <div class="table-container">
+
+                <asp:GridView
+                    ID="gvTopSanPham"
+                    runat="server"
+                    AutoGenerateColumns="False"
+                    CssClass="admin-table"
+                    EmptyDataText="Chưa có dữ liệu bán hàng.">
+
+                    <Columns>
+
+                        <asp:BoundField
+                            DataField="TenSanPham"
+                            HeaderText="Sản phẩm" />
+
+                        <asp:BoundField
+                            DataField="TongSoLuongBan"
+                            HeaderText="Số lượng bán" />
+
+                        <asp:BoundField
+                            DataField="DoanhThu"
+                            HeaderText="Doanh thu"
+                            DataFormatString="{0:N0} ₫"
+                            HtmlEncode="false" />
+
+                    </Columns>
+
+                </asp:GridView>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================== -->
+    <!-- GIỚI THIỆU -->
+    <!-- ====================================== -->
+
+    <div class="admin-card">
+
+        <div class="admin-card-body">
+
+            <h3>
+                Chào mừng đến trang quản trị
+            </h3>
+
+            <p>
+                Tại đây bạn có thể quản lý sản phẩm,
+                danh mục, đơn hàng, khách hàng
+                và theo dõi doanh thu của cửa hàng.
+            </p>
+
+        </div>
 
     </div>
 

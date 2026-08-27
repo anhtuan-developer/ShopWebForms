@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using web_ban_hang2.DAL;
 
 namespace web_ban_hang2.Admin
@@ -26,40 +26,75 @@ namespace web_ban_hang2.Admin
                 new DashboardDAL();
 
 
-            // SẢN PHẨM
-
-            int totalSanPham =
-                dal.GetTotalSanPham();
+            // =====================================
+            // THỐNG KÊ CƠ BẢN
+            // =====================================
 
             lblSanPham.Text =
-                totalSanPham.ToString();
-
-
-            // DANH MỤC
-
-            int totalDanhMuc =
-                dal.GetTotalDanhMuc();
+                dal.GetTotalSanPham()
+                .ToString();
 
             lblDanhMuc.Text =
-                totalDanhMuc.ToString();
-
-
-            // ĐƠN HÀNG
-
-            int totalDonHang =
-                dal.GetTotalDonHang();
+                dal.GetTotalDanhMuc()
+                .ToString();
 
             lblDonHang.Text =
-                totalDonHang.ToString();
-
-
-            // KHÁCH HÀNG
-
-            int totalKhachHang =
-                dal.GetTotalKhachHang();
+                dal.GetTotalDonHang()
+                .ToString();
 
             lblKhachHang.Text =
-                totalKhachHang.ToString();
+                dal.GetTotalKhachHang()
+                .ToString();
+
+
+            // =====================================
+            // DOANH THU
+            // =====================================
+
+            decimal doanhThuHomNay =
+                dal.GetDoanhThuHomNay();
+
+            decimal doanhThuThang =
+                dal.GetDoanhThuThang();
+
+            decimal doanhThuNam =
+                dal.GetDoanhThuNam();
+
+
+            lblDoanhThuHomNay.Text =
+                doanhThuHomNay
+                .ToString("N0") + " ₫";
+
+            lblDoanhThuThang.Text =
+                doanhThuThang
+                .ToString("N0") + " ₫";
+
+            lblDoanhThuNam.Text =
+                doanhThuNam
+                .ToString("N0") + " ₫";
+
+
+            // =====================================
+            // TRẠNG THÁI ĐƠN HÀNG
+            // =====================================
+
+            lblSoDonDaGiao.Text =
+                dal.GetSoDonDaGiao()
+                .ToString();
+
+            lblSoDonDangGiao.Text =
+                dal.GetSoDonDangGiao()
+                .ToString();
+
+
+            // =====================================
+            // TOP SẢN PHẨM
+            // =====================================
+
+            gvTopSanPham.DataSource =
+                dal.GetTopSanPhamBanChay();
+
+            gvTopSanPham.DataBind();
         }
     }
 }
