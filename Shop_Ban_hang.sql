@@ -277,4 +277,68 @@ CREATE TABLE DanhGia
             REFERENCES KhachHang(MaKhachHang)
     );
 GO
-SELECT *  FROM Admin
+
+CREATE TABLE TinTuc
+(
+    MaTinTuc INT IDENTITY(1,1) PRIMARY KEY,
+
+    TieuDe NVARCHAR(250) NOT NULL,
+
+    NoiDung NVARCHAR(MAX) NOT NULL,
+
+    HinhAnh NVARCHAR(500) NULL,
+
+    TrangThai BIT NOT NULL DEFAULT 1,
+
+    NgayTao DATETIME NOT NULL DEFAULT GETDATE()
+);
+GO
+
+INSERT INTO TinTuc
+(
+    TieuDe,
+    NoiDung,
+    HinhAnh,
+    TrangThai
+)
+VALUES
+(
+    N'Chào mừng đến với SHOP 5 ANH EM',
+    N'Website bán hàng trực tuyến cung cấp các sản phẩm công nghệ và phụ kiện. Đây là bài viết mẫu để kiểm tra hệ thống tin tức.',
+    N'about.jpg',
+    1
+),
+(
+    N'Cập nhật sản phẩm và ưu đãi mới',
+    N'Thường xuyên theo dõi mục Tin tức để cập nhật sản phẩm mới, chương trình ưu đãi và các thông tin từ cửa hàng.',
+    N'carousel-1.jpg',
+    1
+);
+GO
+
+CREATE TABLE BinhLuan
+(
+    MaBinhLuan INT IDENTITY(1,1) PRIMARY KEY,
+
+    MaTinTuc INT NOT NULL,
+
+    MaKhachHang INT NOT NULL,
+
+    NoiDung NVARCHAR(1000) NOT NULL,
+
+    TrangThai BIT NOT NULL DEFAULT 1,
+
+    NgayBinhLuan DATETIME NOT NULL
+        DEFAULT GETDATE(),
+
+    CONSTRAINT FK_BinhLuan_TinTuc
+        FOREIGN KEY (MaTinTuc)
+        REFERENCES TinTuc(MaTinTuc),
+
+    CONSTRAINT FK_BinhLuan_KhachHang
+        FOREIGN KEY (MaKhachHang)
+        REFERENCES KhachHang(MaKhachHang)
+);
+GO
+SELECT *
+FROM TinTuc;
