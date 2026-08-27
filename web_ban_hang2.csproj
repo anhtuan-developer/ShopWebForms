@@ -44,6 +44,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
@@ -101,6 +107,7 @@
   <ItemGroup>
     <Content Include="404.aspx" />
     <Content Include=".gitignore" />
+    <Content Include="Admin\Admin_BaoCaoDoanThu.aspx" />
     <Content Include="Admin\Admin_BinhLuan.aspx" />
     <Content Include="Admin\Admin_DangNhap.aspx" />
     <Content Include="Admin\Admin_DangXuat.aspx" />
@@ -274,6 +281,13 @@
     <Compile Include="Admin\AdminBasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Admin\Admin_BaoCaoDoanThu.aspx.cs">
+      <DependentUpon>Admin_BaoCaoDoanThu.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Admin_BaoCaoDoanThu.aspx.designer.cs">
+      <DependentUpon>Admin_BaoCaoDoanThu.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\Admin_BinhLuan.aspx.cs">
       <DependentUpon>Admin_BinhLuan.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -403,6 +417,7 @@
       <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
     <Compile Include="DAL\AdminAccountDAL.cs" />
+    <Compile Include="DAL\BaoCaoDoanhThuDAL.cs" />
     <Compile Include="DAL\BinhLuanDAL.cs" />
     <Compile Include="DAL\DanhGiaDAL.cs" />
     <Compile Include="DAL\DanhMucDAL.cs" />

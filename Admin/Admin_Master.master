@@ -841,13 +841,17 @@
                 💬 Bình luận
             </a>
 
-
             <a href="Admin_KhachHang.aspx">
 
                 👤 Khách hàng
 
             </a>
 
+            <a href="Admin_BaoCaoDoanThu.aspx">
+
+                📊 Báo cáo doanh thu
+            
+            </a>
 
             <a href="../index.aspx">
 
