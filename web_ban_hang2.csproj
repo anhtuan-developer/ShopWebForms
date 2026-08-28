@@ -119,6 +119,7 @@
     <Content Include="Admin\Admin_DonHang.aspx" />
     <Content Include="Admin\Admin_DonHang_ChiTiet.aspx" />
     <Content Include="Admin\Admin_KhachHang.aspx" />
+    <Content Include="Admin\Admin_LienHe.aspx" />
     <Content Include="Admin\Admin_SanPham.aspx" />
     <Content Include="Admin\Admin_SanPham_Sua.aspx" />
     <Content Include="Admin\Admin_SanPham_Them.aspx" />
@@ -342,6 +343,13 @@
     <Compile Include="Admin\Admin_KhachHang.aspx.designer.cs">
       <DependentUpon>Admin_KhachHang.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\Admin_LienHe.aspx.cs">
+      <DependentUpon>Admin_LienHe.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Admin_LienHe.aspx.designer.cs">
+      <DependentUpon>Admin_LienHe.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\Admin_Master.master.cs">
       <DependentUpon>Admin_Master.master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -423,6 +431,7 @@
     <Compile Include="DAL\Database.cs" />
     <Compile Include="DAL\DonHangDAL.cs" />
     <Compile Include="DAL\KhachHangDAL.cs" />
+    <Compile Include="DAL\LienHeDAL.cs" />
     <Compile Include="DAL\SanPhamDAL.cs" />
     <Compile Include="DAL\TinTucDAL.cs" />
     <Compile Include="Dang_ky.aspx.cs">
@@ -484,6 +493,7 @@
     <Compile Include="Models\DanhGia.cs" />
     <Compile Include="Models\DonHang.cs" />
     <Compile Include="Models\KhachHang.cs" />
+    <Compile Include="Models\LienHe.cs" />
     <Compile Include="Models\SanPham.cs" />
     <Compile Include="Models\TinTuc.cs" />
     <Compile Include="ProductDetail.aspx.cs">

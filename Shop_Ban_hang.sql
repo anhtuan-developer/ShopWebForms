@@ -340,5 +340,33 @@ CREATE TABLE BinhLuan
         REFERENCES KhachHang(MaKhachHang)
 );
 GO
+
+CREATE TABLE LienHe
+    (
+        MaLienHe INT IDENTITY(1,1) PRIMARY KEY,
+
+        HoTen NVARCHAR(100) NOT NULL,
+
+        Email VARCHAR(150) NOT NULL,
+
+        TieuDe NVARCHAR(250) NOT NULL,
+
+        NoiDung NVARCHAR(MAX) NOT NULL,
+
+        NgayGui DATETIME NOT NULL
+            CONSTRAINT DF_LienHe_NgayGui
+            DEFAULT GETDATE(),
+
+        TrangThai BIT NOT NULL
+            CONSTRAINT DF_LienHe_TrangThai
+            DEFAULT 0
+    );
+GO
+
+
 SELECT *
 FROM TinTuc;
+
+
+SELECT *
+FROM LienHe;
