@@ -837,6 +837,13 @@
 
             </a>
 
+            <a href="Admin_TinTuc.aspx"
+               class="text-decoration-none text-white d-block px-3 py-3">
+            
+                📰 Tin tức
+            
+            </a>
+
             <a href="Admin_BinhLuan.aspx">
                 💬 Bình luận
             </a>
@@ -881,6 +888,11 @@
 
 
 </form>
+
+
+<script
+    src="../Scripts/bootstrap.bundle.min.js">
+</script>
 
 </body>
 
