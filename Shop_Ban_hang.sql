@@ -363,4 +363,35 @@ CREATE TABLE LienHe
     );
 GO
 
-SELECT * FROM Hang
+
+CREATE TABLE dbo.PasswordResetToken
+(
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+
+    MaKhachHang INT NOT NULL,
+
+    TokenHash VARCHAR(64) NOT NULL,
+
+    ExpiresAt DATETIME NOT NULL,
+
+    Used BIT NOT NULL
+        DEFAULT 0,
+
+    CreatedAt DATETIME NOT NULL
+        DEFAULT GETDATE(),
+
+
+    CONSTRAINT FK_PasswordResetToken_KhachHang
+
+        FOREIGN KEY (MaKhachHang)
+
+        REFERENCES dbo.KhachHang(MaKhachHang)
+);
+
+
+CREATE INDEX
+    IX_PasswordResetToken_TokenHash
+
+ON dbo.PasswordResetToken(TokenHash);
+
+GO

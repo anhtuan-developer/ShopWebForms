@@ -151,7 +151,9 @@
     <Content Include="Dang_ky.aspx" />
     <Content Include="Dang_nhap.aspx" />
     <Content Include="Dang_xuat.aspx" />
+    <Content Include="DatLaiMatKhau.aspx" />
     <Content Include="Dat_hang_thanh_cong.aspx" />
+    <Content Include="DoiMatKhau.aspx" />
     <Content Include="DonHangCuaToi.aspx" />
     <Content Include="DonHangCuaToi_ChiTiet.aspx" />
     <Content Include="favicon.ico" />
@@ -192,6 +194,7 @@
     <Content Include="lib\owlcarousel\owl.carousel.js" />
     <Content Include="lib\owlcarousel\owl.carousel.min.js" />
     <Content Include="ProductDetail.aspx" />
+    <Content Include="QuenMatKhau.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -252,6 +255,7 @@
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="shop.aspx" />
     <Content Include="Shop_Ban_Hang.sql" />
+    <Content Include="TaiKhoan.aspx" />
     <Content Include="TinTuc.aspx" />
     <Content Include="TinTuc_ChiTiet.aspx" />
     <Content Include="ViewSwitcher.ascx" />
@@ -468,12 +472,26 @@
     <Compile Include="Dang_xuat.aspx.designer.cs">
       <DependentUpon>Dang_xuat.aspx</DependentUpon>
     </Compile>
+    <Compile Include="DatLaiMatKhau.aspx.cs">
+      <DependentUpon>DatLaiMatKhau.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DatLaiMatKhau.aspx.designer.cs">
+      <DependentUpon>DatLaiMatKhau.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Dat_hang_thanh_cong.aspx.cs">
       <DependentUpon>Dat_hang_thanh_cong.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Dat_hang_thanh_cong.aspx.designer.cs">
       <DependentUpon>Dat_hang_thanh_cong.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DoiMatKhau.aspx.cs">
+      <DependentUpon>DoiMatKhau.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DoiMatKhau.aspx.designer.cs">
+      <DependentUpon>DoiMatKhau.aspx</DependentUpon>
     </Compile>
     <Compile Include="DonHangCuaToi.aspx.cs">
       <DependentUpon>DonHangCuaToi.aspx</DependentUpon>
@@ -517,6 +535,13 @@
       <DependentUpon>ProductDetail.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuenMatKhau.aspx.cs">
+      <DependentUpon>QuenMatKhau.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="QuenMatKhau.aspx.designer.cs">
+      <DependentUpon>QuenMatKhau.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Services\CartService.cs" />
     <Compile Include="shop.aspx.cs">
       <DependentUpon>shop.aspx</DependentUpon>
@@ -539,6 +564,13 @@
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
     </Compile>
+    <Compile Include="TaiKhoan.aspx.cs">
+      <DependentUpon>TaiKhoan.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TaiKhoan.aspx.designer.cs">
+      <DependentUpon>TaiKhoan.aspx</DependentUpon>
+    </Compile>
     <Compile Include="TinTuc.aspx.cs">
       <DependentUpon>TinTuc.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -553,6 +585,7 @@
     <Compile Include="TinTuc_ChiTiet.aspx.designer.cs">
       <DependentUpon>TinTuc_ChiTiet.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Utils\PasswordHelper.cs" />
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

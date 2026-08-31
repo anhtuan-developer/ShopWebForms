@@ -78,7 +78,13 @@
                 runat="server"
                 CssClass="auth-message">
             </asp:Label>
+            <div class="text-end mb-3">
 
+            <a href="QuenMatKhau.aspx">
+                Quên mật khẩu?
+            </a>
+            
+            </div>
 
             <div class="auth-footer">
 
