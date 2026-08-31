@@ -363,10 +363,4 @@ CREATE TABLE LienHe
     );
 GO
 
-
-SELECT *
-FROM TinTuc;
-
-
-SELECT *
-FROM LienHe;
+SELECT * FROM Hang

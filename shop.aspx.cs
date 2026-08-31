@@ -8,11 +8,17 @@ namespace web_ban_hang2
     public partial class shop :
         System.Web.UI.Page
     {
+        // ==========================================
+        // SỐ SẢN PHẨM TRÊN MỖI TRANG
+        // ==========================================
+
         private const int PageSize = 12;
 
 
         // ==========================================
         // TỪ KHÓA TÌM KIẾM
+        // URL:
+        // shop.aspx?search=iphone
         // ==========================================
 
         private string SearchKeyword
@@ -28,7 +34,38 @@ namespace web_ban_hang2
 
 
         // ==========================================
+        // DANH MỤC HIỆN TẠI
+        //
+        // 0 = TẤT CẢ DANH MỤC
+        //
+        // URL:
+        // shop.aspx?category=2
+        // ==========================================
+
+        private int CurrentCategory
+        {
+            get
+            {
+                int category;
+
+                if (!int.TryParse(
+                    Request.QueryString["category"],
+                    out category)
+                    || category < 1)
+                {
+                    return 0;
+                }
+
+                return category;
+            }
+        }
+
+
+        // ==========================================
         // TRANG HIỆN TẠI
+        //
+        // URL:
+        // shop.aspx?page=2
         // ==========================================
 
         private int CurrentPage
@@ -67,6 +104,11 @@ namespace web_ban_hang2
 
         // ==========================================
         // LOAD SẢN PHẨM
+        //
+        // Bao gồm:
+        // - Tìm kiếm
+        // - Lọc danh mục
+        // - Phân trang
         // ==========================================
 
         private void LoadProducts()
@@ -76,16 +118,26 @@ namespace web_ban_hang2
                 SanPhamDAL sanPhamDAL =
                     new SanPhamDAL();
 
+
                 int totalRecords;
 
+
+                // ======================================
+                // LẤY DANH SÁCH SẢN PHẨM
+                // ======================================
 
                 DataTable danhSach =
                     sanPhamDAL.SearchPaged(
                         SearchKeyword,
+                        CurrentCategory,
                         CurrentPage,
                         PageSize,
                         out totalRecords);
 
+
+                // ======================================
+                // BIND SẢN PHẨM
+                // ======================================
 
                 rptProducts.DataSource =
                     danhSach;
@@ -93,9 +145,17 @@ namespace web_ban_hang2
                 rptProducts.DataBind();
 
 
+                // ======================================
+                // KHÔNG CÓ SẢN PHẨM
+                // ======================================
+
                 pnlNoProduct.Visible =
                     danhSach.Rows.Count == 0;
 
+
+                // ======================================
+                // TÍNH TỔNG SỐ TRANG
+                // ======================================
 
                 int totalPages =
                     (int)Math.Ceiling(
@@ -104,7 +164,8 @@ namespace web_ban_hang2
 
 
                 // ======================================
-                // NẾU TRANG VƯỢT QUÁ TỔNG SỐ TRANG
+                // NẾU TRANG VƯỢT QUÁ
+                // TỔNG SỐ TRANG
                 // ======================================
 
                 if (totalPages > 0
@@ -122,29 +183,50 @@ namespace web_ban_hang2
 
 
                 // ======================================
-                // PHÂN TRANG
+                // HIỂN THỊ PHÂN TRANG
                 // ======================================
 
                 pnlPager.Visible =
                     totalPages > 1;
 
+
+                // ======================================
+                // NÚT TRANG TRƯỚC
+                // ======================================
+
                 btnPrevious.Enabled =
                     CurrentPage > 1;
+
+
+                // ======================================
+                // NÚT TRANG SAU
+                // ======================================
 
                 btnNext.Enabled =
                     CurrentPage < totalPages;
 
 
+                // ======================================
+                // TẠO DANH SÁCH SỐ TRANG
+                // ======================================
+
                 BindPager(totalPages);
 
 
                 // ======================================
-                // HIỂN THỊ KẾT QUẢ
+                // HIỂN THỊ THÔNG BÁO
                 // ======================================
 
-                if (string.IsNullOrWhiteSpace(
-                    SearchKeyword))
+                if (
+                    string.IsNullOrWhiteSpace(
+                        SearchKeyword)
+                    &&
+                    CurrentCategory == 0)
                 {
+                    // ----------------------------------
+                    // TẤT CẢ SẢN PHẨM
+                    // ----------------------------------
+
                     lblSearchResult.Text =
                         totalRecords > 0
                         ? string.Format(
@@ -152,8 +234,16 @@ namespace web_ban_hang2
                             totalRecords)
                         : "Chưa có sản phẩm đang bán";
                 }
-                else
+                else if (
+                    !string.IsNullOrWhiteSpace(
+                        SearchKeyword)
+                    &&
+                    CurrentCategory == 0)
                 {
+                    // ----------------------------------
+                    // CHỈ TÌM KIẾM
+                    // ----------------------------------
+
                     lblSearchResult.Text =
                         totalRecords > 0
                         ? string.Format(
@@ -166,12 +256,52 @@ namespace web_ban_hang2
                             Server.HtmlEncode(
                                 SearchKeyword));
                 }
+                else if (
+                    string.IsNullOrWhiteSpace(
+                        SearchKeyword)
+                    &&
+                    CurrentCategory > 0)
+                {
+                    // ----------------------------------
+                    // CHỈ LỌC DANH MỤC
+                    // ----------------------------------
+
+                    lblSearchResult.Text =
+                        totalRecords > 0
+                        ? string.Format(
+                            "Có {0} sản phẩm trong danh mục",
+                            totalRecords)
+                        : "Danh mục này chưa có sản phẩm";
+                }
+                else
+                {
+                    // ----------------------------------
+                    // TÌM KIẾM + DANH MỤC
+                    // ----------------------------------
+
+                    lblSearchResult.Text =
+                        totalRecords > 0
+                        ? string.Format(
+                            "Tìm thấy {0} sản phẩm",
+                            totalRecords)
+                        : "Không tìm thấy sản phẩm phù hợp";
+                }
             }
             catch (Exception)
             {
+                // ======================================
+                // XỬ LÝ LỖI
+                // ======================================
+
+                rptProducts.DataSource = null;
+
+                rptProducts.DataBind();
+
+
                 pnlNoProduct.Visible = true;
 
                 pnlPager.Visible = false;
+
 
                 lblSearchResult.Text =
                     "Không thể tải danh sách sản phẩm. "
@@ -191,11 +321,33 @@ namespace web_ban_hang2
                 new List<PageItem>();
 
 
+            // ======================================
+            // KHÔNG CÓ TRANG
+            // ======================================
+
+            if (totalPages <= 0)
+            {
+                rptPager.DataSource = null;
+
+                rptPager.DataBind();
+
+                return;
+            }
+
+
+            // ======================================
+            // XÁC ĐỊNH TRANG BẮT ĐẦU
+            // ======================================
+
             int start =
                 Math.Max(
                     1,
                     CurrentPage - 2);
 
+
+            // ======================================
+            // XÁC ĐỊNH TRANG KẾT THÚC
+            // ======================================
 
             int end =
                 Math.Min(
@@ -203,16 +355,25 @@ namespace web_ban_hang2
                     CurrentPage + 2);
 
 
+            // ======================================
+            // THÊM TRANG 1
+            // ======================================
+
             if (start > 1)
             {
                 pages.Add(
                     new PageItem
                     {
                         Page = 1,
+
                         IsCurrent =
                             CurrentPage == 1
                     });
 
+
+                // ----------------------------------
+                // DẤU ...
+                // ----------------------------------
 
                 if (start > 2)
                 {
@@ -220,11 +381,16 @@ namespace web_ban_hang2
                         new PageItem
                         {
                             Page = -1,
+
                             IsCurrent = false
                         });
                 }
             }
 
+
+            // ======================================
+            // THÊM CÁC TRANG Ở GIỮA
+            // ======================================
 
             for (
                 int i = start;
@@ -235,36 +401,53 @@ namespace web_ban_hang2
                     new PageItem
                     {
                         Page = i,
+
                         IsCurrent =
                             i == CurrentPage
                     });
             }
 
 
+            // ======================================
+            // THÊM TRANG CUỐI
+            // ======================================
+
             if (end < totalPages)
             {
+                // ----------------------------------
+                // DẤU ...
+                // ----------------------------------
+
                 if (end < totalPages - 1)
                 {
                     pages.Add(
                         new PageItem
                         {
                             Page = -1,
+
                             IsCurrent = false
                         });
                 }
 
 
+                // ----------------------------------
+                // TRANG CUỐI
+                // ----------------------------------
+
                 pages.Add(
                     new PageItem
                     {
                         Page = totalPages,
+
                         IsCurrent =
                             CurrentPage == totalPages
                     });
             }
 
 
-            // Chỉ lấy số trang hợp lệ
+            // ======================================
+            // LỌC CHỈ LẤY TRANG HỢP LỆ
+            // ======================================
 
             List<PageItem> validPages =
                 new List<PageItem>();
@@ -280,6 +463,10 @@ namespace web_ban_hang2
             }
 
 
+            // ======================================
+            // BIND REPEATER PHÂN TRANG
+            // ======================================
+
             rptPager.DataSource =
                 validPages;
 
@@ -289,6 +476,17 @@ namespace web_ban_hang2
 
         // ==========================================
         // TẠO URL PHÂN TRANG
+        //
+        // Giữ lại:
+        // - search
+        // - category
+        //
+        // Ví dụ:
+        // shop.aspx?page=2
+        //
+        // shop.aspx?page=2&category=3
+        //
+        // shop.aspx?page=2&search=iphone&category=3
         // ==========================================
 
         private string BuildPageUrl(
@@ -299,13 +497,30 @@ namespace web_ban_hang2
                 + page;
 
 
-            if (!string.IsNullOrWhiteSpace(
-                SearchKeyword))
+            // ======================================
+            // GIỮ TỪ KHÓA TÌM KIẾM
+            // ======================================
+
+            if (
+                !string.IsNullOrWhiteSpace(
+                    SearchKeyword))
             {
                 url +=
                     "&search="
                     + Server.UrlEncode(
                         SearchKeyword);
+            }
+
+
+            // ======================================
+            // GIỮ DANH MỤC
+            // ======================================
+
+            if (CurrentCategory > 0)
+            {
+                url +=
+                    "&category="
+                    + CurrentCategory;
             }
 
 
@@ -342,34 +557,47 @@ namespace web_ban_hang2
             object sender,
             EventArgs e)
         {
-            int totalRecords;
-
-            int totalPages;
-
-
-            new SanPhamDAL()
-                .SearchPaged(
-                    SearchKeyword,
-                    1,
-                    PageSize,
-                    out totalRecords);
-
-
-            totalPages =
-                (int)Math.Ceiling(
-                    (double)totalRecords
-                    / PageSize);
-
-
-            if (CurrentPage < totalPages)
+            try
             {
-                Response.Redirect(
-                    BuildPageUrl(
-                        CurrentPage + 1),
-                    false);
+                int totalRecords;
 
-                Context.ApplicationInstance
-                    .CompleteRequest();
+
+                // ==================================
+                // QUAN TRỌNG:
+                // PHẢI TRUYỀN CurrentCategory
+                // ==================================
+
+                new SanPhamDAL()
+                    .SearchPaged(
+                        SearchKeyword,
+                        CurrentCategory,
+                        1,
+                        PageSize,
+                        out totalRecords);
+
+
+                int totalPages =
+                    (int)Math.Ceiling(
+                        (double)totalRecords
+                        / PageSize);
+
+
+                if (
+                    CurrentPage < totalPages)
+                {
+                    Response.Redirect(
+                        BuildPageUrl(
+                            CurrentPage + 1),
+                        false);
+
+                    Context.ApplicationInstance
+                        .CompleteRequest();
+                }
+            }
+            catch (Exception)
+            {
+                // Không làm gì nếu xảy ra lỗi.
+                // Người dùng vẫn ở trang hiện tại.
             }
         }
 
@@ -383,17 +611,31 @@ namespace web_ban_hang2
             System.Web.UI.WebControls
                 .RepeaterCommandEventArgs e)
         {
-            if (e.CommandName != "PageNumber")
+            // ======================================
+            // CHỈ XỬ LÝ PageNumber
+            // ======================================
+
+            if (
+                e.CommandName !=
+                "PageNumber")
+            {
                 return;
+            }
 
 
             int page;
 
 
-            if (int.TryParse(
-                e.CommandArgument.ToString(),
-                out page)
-                && page > 0)
+            // ======================================
+            // KIỂM TRA SỐ TRANG
+            // ======================================
+
+            if (
+                int.TryParse(
+                    e.CommandArgument.ToString(),
+                    out page)
+                &&
+                page > 0)
             {
                 Response.Redirect(
                     BuildPageUrl(page),
@@ -406,7 +648,7 @@ namespace web_ban_hang2
 
 
         // ==========================================
-        // PAGE ITEM
+        // CLASS PAGE ITEM
         // ==========================================
 
         private class PageItem
@@ -416,6 +658,7 @@ namespace web_ban_hang2
                 get;
                 set;
             }
+
 
             public bool IsCurrent
             {

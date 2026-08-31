@@ -397,27 +397,28 @@ namespace web_ban_hang2.DAL
             }
         }
         
-        // TÌM KIẾM + PHÂN TRANG SẢN PHẨM
-        // Chỉ hiển thị sản phẩm đang bán
-        
-        public DataTable SearchPaged(
-            string keyword,
-            int pageNumber,
-            int pageSize,
-            out int totalRecords)
+      
+// ==========================================
+// TÌM KIẾM + DANH MỤC + PHÂN TRANG
+// CHỈ HIỂN THỊ SẢN PHẨM ĐANG BÁN
+// ==========================================
+
+    public DataTable SearchPaged(
+        string keyword,
+        int maDanhMuc,
+        int pageNumber,
+        int pageSize,
+        out int totalRecords)
         {
             keyword =
                 (keyword ?? string.Empty)
                 .Trim();
 
-
             if (pageNumber < 1)
                 pageNumber = 1;
 
-
             if (pageSize < 1)
                 pageSize = 12;
-
 
             int offset =
                 (pageNumber - 1)
@@ -443,24 +444,33 @@ namespace web_ban_hang2.DAL
         INNER JOIN DanhMuc dm
             ON sp.MaDanhMuc = dm.MaDanhMuc
 
-        WHERE sp.TrangThai = 1
+        WHERE
+            sp.TrangThai = 1
 
-        AND
-        (
-            @Keyword = ''
+            AND dm.TrangThai = 1
 
-            OR sp.TenSanPham
-                LIKE N'%' + @Keyword + N'%'
-
-            OR ISNULL(
-                sp.MoTa,
-                N''
+            AND
+            (
+                @MaDanhMuc = 0
+                OR sp.MaDanhMuc = @MaDanhMuc
             )
-                LIKE N'%' + @Keyword + N'%'
 
-            OR dm.TenDanhMuc
-                LIKE N'%' + @Keyword + N'%'
-        )
+            AND
+            (
+                @Keyword = ''
+
+                OR sp.TenSanPham
+                    LIKE N'%' + @Keyword + N'%'
+
+                OR ISNULL(
+                    sp.MoTa,
+                    N''
+                )
+                    LIKE N'%' + @Keyword + N'%'
+
+                OR dm.TenDanhMuc
+                    LIKE N'%' + @Keyword + N'%'
+            )
 
         ORDER BY
             sp.MaSanPham DESC
@@ -477,24 +487,33 @@ namespace web_ban_hang2.DAL
         INNER JOIN DanhMuc dm
             ON sp.MaDanhMuc = dm.MaDanhMuc
 
-        WHERE sp.TrangThai = 1
+        WHERE
+            sp.TrangThai = 1
 
-        AND
-        (
-            @Keyword = ''
+            AND dm.TrangThai = 1
 
-            OR sp.TenSanPham
-                LIKE N'%' + @Keyword + N'%'
-
-            OR ISNULL(
-                sp.MoTa,
-                N''
+            AND
+            (
+                @MaDanhMuc = 0
+                OR sp.MaDanhMuc = @MaDanhMuc
             )
-                LIKE N'%' + @Keyword + N'%'
 
-            OR dm.TenDanhMuc
-                LIKE N'%' + @Keyword + N'%'
-        );
+            AND
+            (
+                @Keyword = ''
+
+                OR sp.TenSanPham
+                    LIKE N'%' + @Keyword + N'%'
+
+                OR ISNULL(
+                    sp.MoTa,
+                    N''
+                )
+                    LIKE N'%' + @Keyword + N'%'
+
+                OR dm.TenDanhMuc
+                    LIKE N'%' + @Keyword + N'%'
+            );
     ";
 
 
@@ -512,6 +531,12 @@ namespace web_ban_hang2.DAL
                     SqlDbType.NVarChar,
                     200)
                     .Value = keyword;
+
+
+                cmd.Parameters.Add(
+                    "@MaDanhMuc",
+                    SqlDbType.Int)
+                    .Value = maDanhMuc;
 
 
                 cmd.Parameters.Add(
@@ -562,5 +587,6 @@ namespace web_ban_hang2.DAL
                 }
             }
         }
+
     }
 }

@@ -243,6 +243,41 @@ namespace web_ban_hang2.DAL
                 }
             }
         }
+
+
+        public DataTable GetActive()
+        {
+            string sql = @"
+        SELECT
+            MaDanhMuc,
+            TenDanhMuc,
+            MoTa
+        FROM DanhMuc
+        WHERE TrangThai = 1
+        ORDER BY TenDanhMuc ASC
+    ";
+
+            using (SqlConnection conn =
+                database.GetConnection())
+            {
+                using (SqlCommand cmd =
+                    new SqlCommand(sql, conn))
+                {
+                    using (SqlDataAdapter adapter =
+                        new SqlDataAdapter(cmd))
+                    {
+                        DataTable table =
+                            new DataTable();
+
+                        adapter.Fill(table);
+
+                        return table;
+                    }
+                }
+            }
+        }
+
+
         public bool Delete(int maDanhMuc)
         {
             string sql = @"

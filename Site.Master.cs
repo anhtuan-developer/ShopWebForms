@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Web.UI;
+using web_ban_hang2.DAL;
 
 namespace web_ban_hang2
 {
     public partial class SiteMaster : MasterPage
     {
+        // ==========================================
+        // PAGE LOAD
+        // ==========================================
+
         protected void Page_Load(
             object sender,
             EventArgs e)
@@ -12,6 +17,8 @@ namespace web_ban_hang2
             if (!IsPostBack)
             {
                 LoadUser();
+
+                LoadDanhMuc();
             }
         }
 
@@ -28,8 +35,7 @@ namespace web_ban_hang2
                 (txtSearch.Text ?? string.Empty)
                 .Trim();
 
-            string url =
-                "shop.aspx";
+            string url = "shop.aspx";
 
             if (!string.IsNullOrWhiteSpace(keyword))
             {
@@ -43,6 +49,31 @@ namespace web_ban_hang2
 
             Context.ApplicationInstance
                 .CompleteRequest();
+        }
+
+
+        // ==========================================
+        // LOAD DANH MỤC
+        // ==========================================
+
+        private void LoadDanhMuc()
+        {
+            try
+            {
+                DanhMucDAL danhMucDAL =
+                    new DanhMucDAL();
+
+                rptDanhMuc.DataSource =
+                    danhMucDAL.GetActive();
+
+                rptDanhMuc.DataBind();
+            }
+            catch (Exception)
+            {
+                rptDanhMuc.DataSource = null;
+
+                rptDanhMuc.DataBind();
+            }
         }
 
 

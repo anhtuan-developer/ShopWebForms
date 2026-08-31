@@ -1,6 +1,6 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true"
-    CodeBehind="Site.Master.cs"
-    Inherits="web_ban_hang2.SiteMaster" %>
+CodeBehind="Site.Master.cs"
+Inherits="web_ban_hang2.SiteMaster" %>
 
 <!DOCTYPE html>
 
@@ -8,33 +8,222 @@
 
 <head runat="server">
 
-    <meta charset="utf-8" />
+<meta charset="utf-8" />
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0" />
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0" />
 
-    <meta name="description"
-          content="SHOP 5 ANH EM - Website bán hàng trực tuyến" />
+<meta name="description"
+      content="SHOP 5 ANH EM - Website bán hàng trực tuyến" />
 
-    <title>
-        <%: Page.Title %> - SHOP 5 ANH EM
-    </title>
+<title>
+    <%: Page.Title %> - SHOP 5 ANH EM
+</title>
 
-    <!-- BOOTSTRAP -->
-    <link href="<%= ResolveUrl("~/Content/bootstrap.min.css") %>"
-          rel="stylesheet" />
+<!-- =========================================================
+     BOOTSTRAP 5
+     ========================================================= -->
 
-    <!-- CSS WEBSITE -->
-    <link href="<%= ResolveUrl("~/Content/Site.css") %>"
-          rel="stylesheet" />
+<link href="<%= ResolveUrl("~/Content/bootstrap.min.css") %>"
+      rel="stylesheet" />
 
-    <asp:ContentPlaceHolder
-        ID="HeadContent"
-        runat="server">
-    </asp:ContentPlaceHolder>
+<!-- =========================================================
+     SITE CSS
+     Chỉ giữ CSS riêng cho nhận diện website
+     ========================================================= -->
+
+<link href="<%= ResolveUrl("~/Content/Site.css") %>"
+      rel="stylesheet" />
+
+<!-- =========================================================
+     CSS RIÊNG CHO MASTER
+     ========================================================= -->
+
+<style>
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
+
+    .shop-header {
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .shop-logo {
+        text-decoration: none;
+        line-height: 1;
+    }
+
+    .shop-logo-main {
+        display: block;
+        font-size: 24px;
+        font-weight: 800;
+        color: #dc3545;
+    }
+
+    .shop-logo-sub {
+        display: block;
+        margin-top: 3px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        color: #6c757d;
+    }
+
+
+    /* =====================================================
+       SEARCH
+       ===================================================== */
+
+    .shop-search {
+        max-width: 650px;
+        width: 100%;
+    }
+
+    .shop-search .form-control {
+        border-right: 0;
+    }
+
+    .shop-search .btn {
+        border-left: 0;
+    }
+
+
+    /* =====================================================
+       USER ACTION
+       ===================================================== */
+
+    .shop-header-link {
+        color: #343a40;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .shop-header-link:hover {
+        color: #dc3545;
+    }
+
+
+    /* =====================================================
+       NAVBAR
+       ===================================================== */
+
+    .shop-navbar {
+        background: #dc3545;
+    }
+
+    .shop-navbar .navbar-nav .nav-link {
+        color: #ffffff;
+        font-weight: 600;
+        padding: 12px 16px;
+    }
+
+    .shop-navbar .navbar-nav .nav-link:hover,
+    .shop-navbar .navbar-nav .nav-link:focus,
+    .shop-navbar .navbar-nav .nav-link.active {
+        background: rgba(255,255,255,.12);
+        color: #ffffff;
+    }
+
+
+    /* =====================================================
+       DANH MỤC BOOTSTRAP DROPDOWN
+       ===================================================== */
+
+    .category-dropdown-menu {
+        min-width: 260px;
+        padding: 8px 0;
+        border: 0;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.15);
+    }
+
+    .category-dropdown-title {
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #212529;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    .category-dropdown-menu .dropdown-item {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+
+    .category-dropdown-menu .dropdown-item:hover,
+    .category-dropdown-menu .dropdown-item:focus {
+        background: #fff1f2;
+        color: #dc3545;
+    }
+
+
+    /* =====================================================
+       MAIN
+       ===================================================== */
+
+    .shop-main {
+        min-height: 500px;
+    }
+
+
+    /* =====================================================
+       FOOTER
+       ===================================================== */
+
+    .shop-footer {
+        background: #212529;
+        color: #adb5bd;
+    }
+
+    .shop-footer h5 {
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+
+    .shop-footer a {
+        color: #adb5bd;
+        text-decoration: none;
+    }
+
+    .shop-footer a:hover {
+        color: #ffffff;
+    }
+
+    .shop-footer-bottom {
+        border-top: 1px solid rgba(255,255,255,.1);
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
+
+    @media (max-width: 991.98px) {
+
+        .shop-search {
+            max-width: none;
+        }
+
+        .shop-header-actions {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+
+<asp:ContentPlaceHolder
+    ID="HeadContent"
+    runat="server">
+</asp:ContentPlaceHolder>
+
 
 </head>
-
 
 <body>
 
@@ -42,61 +231,32 @@
     id="form1"
     runat="server">
 
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
 
-    <!-- ================================================= -->
-    <!-- TOP BAR -->
-    <!-- ================================================= -->
+<header class="shop-header">
 
-    <div class="top-bar">
+    <div class="container py-3">
 
-        <div class="site-container top-bar-container">
-
-            <div class="top-bar-left">
-
-                <span>
-                    🚚 Giao hàng toàn quốc
-                </span>
-
-                <span>
-                    🔒 Thanh toán an toàn
-                </span>
-
-            </div>
+        <div class="row align-items-center g-3">
 
 
-            <div class="top-bar-right">
+            <!-- =================================================
+                 LOGO
+                 ================================================= -->
 
-                <span>
-                    📞 Hotline: 0123 456 789
-                </span>
+            <div class="col-12 col-lg-3">
 
-            </div>
+                <a
+                    href="<%= ResolveUrl("~/index.aspx") %>"
+                    class="shop-logo">
 
-        </div>
-
-    </div>
-
-
-    <!-- ================================================= -->
-    <!-- HEADER -->
-    <!-- ================================================= -->
-
-    <header class="main-header">
-
-        <div class="site-container header-container">
-
-
-            <!-- LOGO -->
-
-            <div class="logo">
-
-                <a href="<%= ResolveUrl("~/index.aspx") %>">
-
-                    <span class="logo-main">
+                    <span class="shop-logo-main">
                         SHOP
                     </span>
 
-                    <span class="logo-sub">
+                    <span class="shop-logo-sub">
                         5 ANH EM
                     </span>
 
@@ -105,340 +265,538 @@
             </div>
 
 
-            <!-- SEARCH -->
+            <!-- =================================================
+                 SEARCH
+                 ================================================= -->
 
-            <div class="search-box">
+            <div class="col-12 col-lg-6">
 
-                <asp:TextBox
-                    ID="txtSearch"
-                    runat="server"
-                    CssClass="search-input"
-                    placeholder="Tìm kiếm sản phẩm...">
-                </asp:TextBox>
+                <div class="input-group shop-search mx-auto">
 
+                    <asp:TextBox
+                        ID="txtSearch"
+                        runat="server"
+                        CssClass="form-control"
+                        placeholder="Tìm kiếm sản phẩm..."
+                        aria-label="Tìm kiếm sản phẩm">
+                    </asp:TextBox>
 
-                <asp:Button
-                    ID="btnSearch"
-                    runat="server"
-                    Text="🔍"
-                    CssClass="search-button"
-                    ToolTip="Tìm kiếm"
-                    OnClick="btnSearch_Click" />
+                    <asp:Button
+                        ID="btnSearch"
+                        runat="server"
+                        Text="🔍"
+                        CssClass="btn btn-danger px-4"
+                        ToolTip="Tìm kiếm"
+                        OnClick="btnSearch_Click" />
+
+                </div>
 
             </div>
 
 
-            <!-- HEADER ACTIONS -->
+            <!-- =================================================
+                 USER + CART
+                 ================================================= -->
 
-            <div class="header-actions">
+            <div class="col-12 col-lg-3">
+
+                <div
+                    class="d-flex justify-content-lg-end
+                           justify-content-center
+                           align-items-center
+                           gap-3
+                           shop-header-actions">
 
 
-                <!-- KHÁCH -->
+                    <!-- ===============================
+                         KHÁCH
+                         =============================== -->
 
-                <asp:Panel
-                    ID="pnlGuest"
-                    runat="server"
-                    CssClass="user-actions">
+                    <asp:Panel
+                        ID="pnlGuest"
+                        runat="server"
+                        CssClass="d-flex align-items-center gap-2">
 
-                    <a href="<%= ResolveUrl("~/Dang_nhap.aspx") %>"
-                       class="header-link">
+                        <a
+                            href="<%= ResolveUrl("~/Dang_nhap.aspx") %>"
+                            class="shop-header-link">
 
-                        <span class="header-icon">
-                            👤
+                            👤 Đăng nhập
+
+                        </a>
+
+                        <span class="text-secondary">
+                            |
                         </span>
 
-                        <span>
-                            Đăng nhập
-                        </span>
+                        <a
+                            href="<%= ResolveUrl("~/Dang_ky.aspx") %>"
+                            class="shop-header-link">
 
-                    </a>
+                            Đăng ký
 
+                        </a>
 
-                    <a href="<%= ResolveUrl("~/Dang_ky.aspx") %>"
-                       class="header-link header-register">
-
-                        Đăng ký
-
-                    </a>
-
-                </asp:Panel>
+                    </asp:Panel>
 
 
-                <!-- USER -->
+                    <!-- ===============================
+                         USER ĐÃ ĐĂNG NHẬP
+                         =============================== -->
 
-                <asp:Panel
-                    ID="pnlUser"
-                    runat="server"
-                    Visible="false"
-                    CssClass="user-actions">
+                    <asp:Panel
+                        ID="pnlUser"
+                        runat="server"
+                        Visible="false"
+                        CssClass="d-flex align-items-center gap-2 flex-wrap justify-content-center">
 
+                        <span class="text-dark">
 
-                    <div class="user-welcome">
-
-                        <span class="header-icon">
-                            👤
-                        </span>
-
-                        <span>
-
-                            Xin chào,
+                            👤 Xin chào,
 
                             <strong>
+
                                 <asp:Label
                                     ID="lblUserName"
                                     runat="server">
                                 </asp:Label>
+
                             </strong>
 
                         </span>
 
-                    </div>
+
+                        <a
+                            href="<%= ResolveUrl("~/DonHangCuaToi.aspx") %>"
+                            class="shop-header-link">
+
+                            Đơn hàng
+
+                        </a>
 
 
-                    <a href="<%= ResolveUrl("~/DonHangCuaToi.aspx") %>"
-                       class="header-link">
+                        <a
+                            href="<%= ResolveUrl("~/Dang_xuat.aspx") %>"
+                            class="shop-header-link text-danger">
 
-                        Đơn hàng
+                            Đăng xuất
 
-                    </a>
+                        </a>
 
-
-                    <a href="<%= ResolveUrl("~/Dang_xuat.aspx") %>"
-                       class="header-link logout-link">
-
-                        Đăng xuất
-
-                    </a>
-
-                </asp:Panel>
+                    </asp:Panel>
 
 
-                <!-- CART -->
+                    <!-- ===============================
+                         GIỎ HÀNG
+                         =============================== -->
 
-                <a href="<%= ResolveUrl("~/Cart.aspx") %>"
-                   class="cart-link">
+                    <a
+                        href="<%= ResolveUrl("~/Cart.aspx") %>"
+                        class="btn btn-outline-danger">
 
-                    <span class="cart-icon">
                         🛒
-                    </span>
+                        <span class="d-none d-md-inline">
+                            Giỏ hàng
+                        </span>
 
-                    <span>
-                        Giỏ hàng
-                    </span>
+                    </a>
 
-                </a>
+                </div>
 
             </div>
 
         </div>
 
-    </header>
+    </div>
+
+</header>
 
 
-    <!-- ================================================= -->
-    <!-- NAVIGATION -->
-    <!-- ================================================= -->
+<!-- =========================================================
+     NAVBAR
+     ========================================================= -->
 
-    <nav class="main-menu">
+<nav
+    class="navbar navbar-expand-lg shop-navbar navbar-dark">
 
-        <div class="site-container">
+    <div class="container">
 
-            <ul class="menu-list">
 
-                <li>
-                    <a href="<%= ResolveUrl("~/index.aspx") %>">
+        <!-- MOBILE TOGGLE -->
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Mở menu">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+
+        <!-- MENU -->
+
+        <div
+            class="collapse navbar-collapse"
+            id="mainNavbar">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+
+                <!-- ===============================
+                     TRANG CHỦ
+                     =============================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="<%= ResolveUrl("~/index.aspx") %>">
+
                         🏠 Trang chủ
+
                     </a>
+
                 </li>
 
 
-                <li>
-                    <a href="<%= ResolveUrl("~/shop.aspx") %>">
+                <!-- ===============================
+                     SẢN PHẨM
+                     =============================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="<%= ResolveUrl("~/shop.aspx") %>">
+
                         🛍️ Sản phẩm
+
                     </a>
+
                 </li>
 
 
-                <li>
-                    <a href="<%= ResolveUrl("~/shop.aspx") %>">
+                <!-- ===============================
+                     DANH MỤC
+                     =============================== -->
+
+                <li class="nav-item dropdown">
+
+                    <a
+                        class="nav-link dropdown-toggle"
+                        href="#"
+                        id="categoryDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+
                         📂 Danh mục
+
                     </a>
+
+
+                    <ul
+                        class="dropdown-menu
+                               category-dropdown-menu"
+                        aria-labelledby="categoryDropdown">
+
+
+                        <!-- TIÊU ĐỀ -->
+
+                        <li>
+
+                            <div class="category-dropdown-title">
+
+                                📂 Danh mục sản phẩm
+
+                            </div>
+
+                        </li>
+
+
+                        <!-- TẤT CẢ -->
+
+                        <li>
+
+                            <a
+                                class="dropdown-item"
+                                href="<%= ResolveUrl("~/shop.aspx") %>">
+
+                                🛍️ Tất cả sản phẩm
+
+                            </a>
+
+                        </li>
+
+
+                        <!-- DANH MỤC DATABASE -->
+
+                        <asp:Repeater
+                            ID="rptDanhMuc"
+                            runat="server">
+
+                            <ItemTemplate>
+
+                                <li>
+
+                                    <a
+                                        class="dropdown-item"
+                                        href='<%#
+                                            ResolveUrl(
+                                                "~/shop.aspx?category="
+                                                + Eval("MaDanhMuc")
+                                            )
+                                        %>'>
+
+                                        📁
+                                        <%# Eval("TenDanhMuc") %>
+
+                                    </a>
+
+                                </li>
+
+                            </ItemTemplate>
+
+                        </asp:Repeater>
+
+
+                    </ul>
+
                 </li>
 
 
-                <li>
-                    <a href="<%= ResolveUrl("~/TinTuc.aspx") %>">
+                <!-- ===============================
+                     TIN TỨC
+                     =============================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="<%= ResolveUrl("~/TinTuc.aspx") %>">
+
                         📰 Tin tức
+
                     </a>
+
                 </li>
 
 
-                <li>
-                    <a href="<%= ResolveUrl("~/Contact.aspx") %>">
+                <!-- ===============================
+                     LIÊN HỆ
+                     =============================== -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="<%= ResolveUrl("~/Contact.aspx") %>">
+
                         📞 Liên hệ
+
                     </a>
+
                 </li>
 
             </ul>
 
         </div>
 
-    </nav>
+    </div>
+
+</nav>
 
 
-    <!-- ================================================= -->
-    <!-- MAIN CONTENT -->
-    <!-- ================================================= -->
+<!-- =========================================================
+     MAIN CONTENT
+     ========================================================= -->
 
-    <main class="main-content">
+<main class="shop-main">
 
-        <div class="site-container">
+    <div class="container py-4">
 
-            <asp:ContentPlaceHolder
-                ID="MainContent"
-                runat="server">
-            </asp:ContentPlaceHolder>
+        <asp:ContentPlaceHolder
+            ID="MainContent"
+            runat="server">
+        </asp:ContentPlaceHolder>
 
-        </div>
+    </div>
 
-    </main>
-
-
-    <!-- ================================================= -->
-    <!-- FOOTER -->
-    <!-- ================================================= -->
-
-    <footer class="main-footer">
-
-        <div class="site-container footer-container">
+</main>
 
 
-            <!-- SHOP -->
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
 
-            <div class="footer-column footer-brand">
+<footer class="shop-footer">
 
-                <div class="footer-logo">
+
+    <div class="container py-5">
+
+        <div class="row g-4">
+
+
+            <!-- ===============================
+                 SHOP
+                 =============================== -->
+
+            <div class="col-12 col-md-6 col-lg-3">
+
+                <h5>
                     SHOP 5 ANH EM
-                </div>
+                </h5>
 
-                <p>
+                <p class="mb-3">
+
                     Website bán hàng trực tuyến
                     cung cấp các sản phẩm công nghệ
                     và phụ kiện chất lượng.
+
                 </p>
 
-
-                <div class="footer-feature">
+                <div class="mb-2">
                     🚚 Giao hàng toàn quốc
                 </div>
 
-                <div class="footer-feature">
+                <div class="mb-2">
                     🔒 Thanh toán an toàn
                 </div>
 
-                <div class="footer-feature">
+                <div>
                     ⭐ Sản phẩm chất lượng
                 </div>
 
             </div>
 
 
-            <!-- LIÊN KẾT -->
+            <!-- ===============================
+                 LIÊN KẾT
+                 =============================== -->
 
-            <div class="footer-column">
+            <div class="col-12 col-md-6 col-lg-3">
 
-                <h3>
+                <h5>
                     Liên kết nhanh
-                </h3>
+                </h5>
 
-                <a href="<%= ResolveUrl("~/index.aspx") %>">
-                    Trang chủ
-                </a>
+                <div class="d-flex flex-column gap-2">
 
-                <a href="<%= ResolveUrl("~/shop.aspx") %>">
-                    Sản phẩm
-                </a>
+                    <a href="<%= ResolveUrl("~/index.aspx") %>">
+                        Trang chủ
+                    </a>
 
-                <a href="<%= ResolveUrl("~/Cart.aspx") %>">
-                    Giỏ hàng
-                </a>
+                    <a href="<%= ResolveUrl("~/shop.aspx") %>">
+                        Sản phẩm
+                    </a>
 
-                <a href="<%= ResolveUrl("~/DonHangCuaToi.aspx") %>">
-                    Đơn hàng của tôi
-                </a>
+                    <a href="<%= ResolveUrl("~/Cart.aspx") %>">
+                        Giỏ hàng
+                    </a>
 
-                <a href="<%= ResolveUrl("~/TinTuc.aspx") %>">
-                    Tin tức
-                </a>
+                    <a href="<%= ResolveUrl("~/DonHangCuaToi.aspx") %>">
+                        Đơn hàng của tôi
+                    </a>
 
-                <a href="<%= ResolveUrl("~/Contact.aspx") %>">
-                    Liên hệ
-                </a>
+                    <a href="<%= ResolveUrl("~/TinTuc.aspx") %>">
+                        Tin tức
+                    </a>
+
+                    <a href="<%= ResolveUrl("~/Contact.aspx") %>">
+                        Liên hệ
+                    </a>
+
+                </div>
 
             </div>
 
 
-            <!-- HỖ TRỢ -->
+            <!-- ===============================
+                 HỖ TRỢ
+                 =============================== -->
 
-            <div class="footer-column">
+            <div class="col-12 col-md-6 col-lg-3">
 
-                <h3>
+                <h5>
                     Hỗ trợ khách hàng
-                </h3>
+                </h5>
 
-                <a href="<%= ResolveUrl("~/Contact.aspx") %>">
-                    Trung tâm hỗ trợ
-                </a>
+                <div class="d-flex flex-column gap-2">
 
-                <a href="<%= ResolveUrl("~/Contact.aspx") %>">
-                    Chính sách giao hàng
-                </a>
+                    <a href="<%= ResolveUrl("~/Contact.aspx") %>">
+                        Trung tâm hỗ trợ
+                    </a>
 
-                <a href="<%= ResolveUrl("~/Contact.aspx") %>">
-                    Chính sách đổi trả
-                </a>
+                    <a href="<%= ResolveUrl("~/Contact.aspx") %>">
+                        Chính sách giao hàng
+                    </a>
 
-                <a href="<%= ResolveUrl("~/Contact.aspx") %>">
-                    Chính sách bảo mật
-                </a>
+                    <a href="<%= ResolveUrl("~/Contact.aspx") %>">
+                        Chính sách đổi trả
+                    </a>
+
+                    <a href="<%= ResolveUrl("~/Contact.aspx") %>">
+                        Chính sách bảo mật
+                    </a>
+
+                </div>
 
             </div>
 
 
-            <!-- LIÊN HỆ -->
+            <!-- ===============================
+                 LIÊN HỆ
+                 =============================== -->
 
-            <div class="footer-column">
+            <div class="col-12 col-md-6 col-lg-3">
 
-                <h3>
+                <h5>
                     Liên hệ
-                </h3>
+                </h5>
 
-                <p>
+                <p class="mb-2">
                     📧 shop@gmail.com
                 </p>
 
-                <p>
+                <p class="mb-2">
                     📞 0123 456 789
                 </p>
 
-                <p>
+                <p class="mb-2">
                     📍 Hà Nội, Việt Nam
                 </p>
 
-                <div class="footer-social">
+                <p class="mb-0">
                     Facebook &nbsp; | &nbsp; Zalo
-                </div>
+                </p>
 
             </div>
 
         </div>
 
+    </div>
 
-        <!-- FOOTER BOTTOM -->
 
-        <div class="footer-bottom">
+    <!-- ===============================
+         FOOTER BOTTOM
+         =============================== -->
 
-            <div class="site-container">
+    <div class="shop-footer-bottom">
+
+        <div class="container py-3">
+
+            <div
+                class="d-flex
+                       flex-column
+                       flex-md-row
+                       justify-content-between
+                       align-items-center
+                       gap-2">
 
                 <span>
                     © 2026 SHOP 5 ANH EM
@@ -452,13 +810,17 @@
 
         </div>
 
-    </footer>
+    </div>
 
+</footer>
+
+
+
+<script src="<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>">
+</script>
 
 </form>
-
 
 </body>
 
 </html>
-

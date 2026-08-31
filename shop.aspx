@@ -1,252 +1,563 @@
 ﻿<%@ Page
-    Title="Sản phẩm"
-    Language="C#"
-    MasterPageFile="~/Site.Master"
-    AutoEventWireup="true"
-    CodeBehind="shop.aspx.cs"
-    Inherits="web_ban_hang2.shop"
+Title="Sản phẩm"
+Language="C#"
+MasterPageFile="~/Site.Master"
+AutoEventWireup="true"
+CodeBehind="shop.aspx.cs"
+Inherits="web_ban_hang2.shop"
 %>
 
 <asp:Content
-    ID="HeadContent"
-    ContentPlaceHolderID="HeadContent"
-    runat="server">
+ID="HeadContent"
+ContentPlaceHolderID="HeadContent"
+runat="server">
+
+<style>
+
+    /* =====================================================
+       SHOP PAGE
+       ===================================================== */
+
+    .shop-product-image {
+        height: 240px;
+        object-fit: cover;
+    }
+
+    .shop-product-title {
+        min-height: 48px;
+    }
+
+    .shop-product-description {
+        min-height: 48px;
+    }
+
+    .shop-product-price {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .shop-product-stock {
+        font-size: 14px;
+    }
+
+    .shop-product-card {
+        transition: transform .2s ease,
+                    box-shadow .2s ease;
+    }
+
+    .shop-product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.12) !important;
+    }
+
+    .shop-pagination .page-link {
+        min-width: 42px;
+        text-align: center;
+    }
+
+    @media (max-width: 767.98px) {
+
+        .shop-product-image {
+            height: 200px;
+        }
+
+    }
+
+</style>
+
 </asp:Content>
 
-
 <asp:Content
-    ID="MainContent"
-    ContentPlaceHolderID="MainContent"
-    runat="server">
+ID="MainContent"
+ContentPlaceHolderID="MainContent"
+runat="server">
 
-    <section class="shop-page">
+<!-- =========================================================
+     TRANG SẢN PHẨM
+     ========================================================= -->
+
+<section class="py-2">
 
 
-        <!-- ======================================
-             TIÊU ĐỀ
-             ====================================== -->
+    <!-- =====================================================
+         TIÊU ĐỀ
+         ===================================================== -->
 
-        <div class="shop-header">
+    <div
+        class="d-flex
+               flex-column
+               flex-md-row
+               justify-content-between
+               align-items-md-center
+               gap-3
+               mb-4">
 
-            <div>
 
-                <h1>
-                    Sản phẩm
-                </h1>
+        <div>
 
-                <p>
-                    Khám phá các sản phẩm của chúng tôi
-                </p>
+            <h1 class="fw-bold mb-2">
 
-            </div>
+                Sản phẩm
+
+            </h1>
+
+            <p class="text-secondary mb-0">
+
+                Khám phá các sản phẩm của chúng tôi
+
+            </p>
 
         </div>
 
 
-        <!-- ======================================
-             KẾT QUẢ TÌM KIẾM
-             ====================================== -->
+        <!-- NÚT VỀ TẤT CẢ SẢN PHẨM -->
 
-        <div class="shop-toolbar">
+        <a
+            href="<%= ResolveUrl("~/shop.aspx") %>"
+            class="btn btn-outline-danger">
 
-            <div class="shop-result-info">
+            🛍️ Tất cả sản phẩm
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         TOOLBAR
+         ===================================================== -->
+
+    <div
+        class="card
+               border-0
+               shadow-sm
+               mb-4">
+
+
+        <div
+            class="card-body
+                   d-flex
+                   flex-column
+                   flex-md-row
+                   justify-content-between
+                   align-items-md-center
+                   gap-2">
+
+
+            <!-- KẾT QUẢ -->
+
+            <div>
 
                 <asp:Label
                     ID="lblSearchResult"
-                    runat="server">
+                    runat="server"
+                    CssClass="fw-semibold text-dark">
                 </asp:Label>
 
             </div>
 
 
-            <div class="shop-page-size">
+            <!-- PAGE SIZE -->
 
-                <span>
+            <div>
+
+                <span class="text-secondary small">
+
                     Hiển thị 12 sản phẩm / trang
+
                 </span>
 
             </div>
 
         </div>
 
-
-        <!-- ======================================
-             DANH SÁCH SẢN PHẨM
-             ====================================== -->
-
-        <div class="product-grid">
-
-            <asp:Repeater
-                ID="rptProducts"
-                runat="server">
-
-                <ItemTemplate>
+    </div>
 
 
-                    <div class="product-card">
+    <!-- =====================================================
+         DANH SÁCH SẢN PHẨM
+         ===================================================== -->
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
 
 
-                        <!-- HÌNH ẢNH -->
+        <asp:Repeater
+            ID="rptProducts"
+            runat="server">
 
-                        <div class="product-image">
+
+            <ItemTemplate>
+
+
+                <!-- =================================================
+                     PRODUCT
+                     ================================================= -->
+
+                <div class="col">
+
+
+                    <div
+                        class="card
+                               h-100
+                               border-0
+                               shadow-sm
+                               shop-product-card
+                               overflow-hidden">
+
+
+                        <!-- ================================
+                             HÌNH ẢNH
+                             ================================ -->
+
+                        <a
+                            href='<%#
+                                ResolveUrl(
+                                    "~/ProductDetail.aspx?id="
+                                    + Eval("MaSanPham")
+                                )
+                            %>'
+                            class="text-decoration-none">
+
 
                             <img
-                                src='<%# ResolveUrl("~/img/" + Eval("HinhAnh")) %>'
-                                alt='<%# Eval("TenSanPham") %>' />
+                                src='<%#
+                                    ResolveUrl(
+                                        "~/img/"
+                                        + Eval("HinhAnh")
+                                    )
+                                %>'
+                                alt='<%# Eval("TenSanPham") %>'
+                                class="card-img-top
+                                       shop-product-image"
+                                loading="lazy" />
 
-                        </div>
-
-
-                        <!-- THÔNG TIN -->
-
-                        <div class="product-info">
-
-
-                            <span class="product-category">
-
-                                <%# Eval("TenDanhMuc") %>
-
-                            </span>
+                        </a>
 
 
-                            <h3>
+                        <!-- ================================
+                             THÔNG TIN
+                             ================================ -->
+
+                        <div class="card-body d-flex flex-column">
+
+
+                            <!-- DANH MỤC -->
+
+                            <div class="mb-2">
+
+                                <span
+                                    class="badge
+                                           text-bg-light
+                                           border">
+
+                                    📁
+                                    <%# Eval("TenDanhMuc") %>
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- TÊN -->
+
+                            <h5
+                                class="card-title
+                                       fw-bold
+                                       shop-product-title">
 
                                 <%# Eval("TenSanPham") %>
 
-                            </h3>
+                            </h5>
 
 
-                            <p class="product-description">
+                            <!-- MÔ TẢ -->
+
+                            <p
+                                class="card-text
+                                       text-secondary
+                                       small
+                                       shop-product-description">
+
 
                                 <%# Eval("MoTa") %>
+
 
                             </p>
 
 
-                            <div class="product-price">
+                            <!-- GIÁ -->
 
-                                <%# String.Format(
-                                    "{0:N0} ₫",
-                                    Eval("Gia")) %>
+                            <div
+                                class="shop-product-price
+                                       text-danger
+                                       mb-2">
+
+
+                                <%#
+                                    String.Format(
+                                        "{0:N0} ₫",
+                                        Eval("Gia")
+                                    )
+                                %>
+
 
                             </div>
 
 
-                            <div class="product-stock">
+                            <!-- TỒN KHO -->
 
-                                Còn lại:
+                            <div
+                                class="shop-product-stock
+                                       text-secondary
+                                       mb-3">
 
-                                <%# Eval("SoLuong") %>
 
-                                sản phẩm
+                                <span>
+
+                                    📦 Còn lại:
+
+                                </span>
+
+
+                                <strong>
+
+                                    <%# Eval("SoLuong") %>
+
+                                </strong>
+
+
+                                <span>
+
+                                    sản phẩm
+
+                                </span>
 
                             </div>
 
 
-                            <a
-                                href='<%#
-                                    "ProductDetail.aspx?id="
-                                    + Eval("MaSanPham")
-                                %>'
-                                class="product-button">
+                            <!-- BUTTON -->
 
-                                Xem sản phẩm
+                            <div class="mt-auto">
 
-                            </a>
+
+                                <a
+                                    href='<%#
+                                        ResolveUrl(
+                                            "~/ProductDetail.aspx?id="
+                                            + Eval("MaSanPham")
+                                        )
+                                    %>'
+                                    class="btn
+                                           btn-danger
+                                           w-100">
+
+                                    Xem sản phẩm
+
+                                </a>
+
+
+                            </div>
+
 
                         </div>
 
                     </div>
 
-                </ItemTemplate>
 
-            </asp:Repeater>
+                </div>
+
+
+            </ItemTemplate>
+
+
+        </asp:Repeater>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         PHÂN TRANG
+         ===================================================== -->
+
+    <asp:Panel
+        ID="pnlPager"
+        runat="server"
+        CssClass="shop-pagination mt-5">
+
+
+        <nav
+            aria-label="Phân trang sản phẩm">
+
+
+            <ul
+                class="pagination
+                       justify-content-center
+                       flex-wrap
+                       gap-1">
+
+
+                <!-- TRANG TRƯỚC -->
+
+                <li class="page-item">
+
+
+                    <asp:LinkButton
+                        ID="btnPrevious"
+                        runat="server"
+                        CssClass="page-link rounded"
+                        OnClick="btnPrevious_Click">
+
+
+                        ← Trước
+
+
+                    </asp:LinkButton>
+
+
+                </li>
+
+
+                <!-- CÁC TRANG -->
+
+                <asp:Repeater
+                    ID="rptPager"
+                    runat="server"
+                    OnItemCommand="rptPager_ItemCommand">
+
+
+                    <ItemTemplate>
+
+
+                        <li class='<%#
+                            Convert.ToBoolean(
+                                Eval("IsCurrent")
+                            )
+                            ? "page-item active"
+                            : "page-item"
+                        %>'>
+
+
+                            <asp:LinkButton
+                                ID="btnPage"
+                                runat="server"
+                                CommandName="PageNumber"
+                                CommandArgument='<%# Eval("Page") %>'
+                                CssClass="page-link rounded">
+
+
+                                <%# Eval("Page") %>
+
+
+                            </asp:LinkButton>
+
+
+                        </li>
+
+
+                    </ItemTemplate>
+
+
+                </asp:Repeater>
+
+
+                <!-- TRANG SAU -->
+
+                <li class="page-item">
+
+
+                    <asp:LinkButton
+                        ID="btnNext"
+                        runat="server"
+                        CssClass="page-link rounded"
+                        OnClick="btnNext_Click">
+
+
+                        Sau →
+
+
+                    </asp:LinkButton>
+
+
+                </li>
+
+
+            </ul>
+
+
+        </nav>
+
+
+    </asp:Panel>
+
+
+    <!-- =====================================================
+         KHÔNG CÓ SẢN PHẨM
+         ===================================================== -->
+
+    <asp:Panel
+        ID="pnlNoProduct"
+        runat="server"
+        Visible="false"
+        CssClass="mt-5">
+
+
+        <div
+            class="card
+                   border-0
+                   shadow-sm
+                   text-center">
+
+
+            <div class="card-body py-5">
+
+
+                <div
+                    class="display-4
+                           mb-3">
+
+                    🛍️
+
+                </div>
+
+
+                <h2
+                    class="h4
+                           fw-bold
+                           mb-2">
+
+                    Không có sản phẩm
+
+                </h2>
+
+
+                <p
+                    class="text-secondary
+                           mb-4">
+
+                    Hiện tại chưa có sản phẩm nào
+                    phù hợp với yêu cầu của bạn.
+
+                </p>
+
+
+                <a
+                    href="<%= ResolveUrl("~/shop.aspx") %>"
+                    class="btn btn-danger">
+
+                    Xem tất cả sản phẩm
+
+                </a>
+
+
+            </div>
 
         </div>
 
 
-        <!-- ======================================
-             PHÂN TRANG
-             ====================================== -->
-
-        <asp:Panel
-            ID="pnlPager"
-            runat="server"
-            CssClass="shop-pagination">
+    </asp:Panel>
 
 
-            <asp:LinkButton
-                ID="btnPrevious"
-                runat="server"
-                CssClass="page-link page-prev"
-                OnClick="btnPrevious_Click">
-
-                ← Trước
-
-            </asp:LinkButton>
-
-
-            <asp:Repeater
-                ID="rptPager"
-                runat="server"
-                OnItemCommand="rptPager_ItemCommand">
-
-                <ItemTemplate>
-
-                    <asp:LinkButton
-                        ID="btnPage"
-                        runat="server"
-                        CommandName="PageNumber"
-                        CommandArgument='<%# Eval("Page") %>'
-                        CssClass='<%#
-                            Convert.ToBoolean(
-                                Eval("IsCurrent"))
-                            ? "page-link active"
-                            : "page-link"
-                        %>'>
-
-                        <%# Eval("Page") %>
-
-                    </asp:LinkButton>
-
-                </ItemTemplate>
-
-            </asp:Repeater>
-
-
-            <asp:LinkButton
-                ID="btnNext"
-                runat="server"
-                CssClass="page-link page-next"
-                OnClick="btnNext_Click">
-
-                Sau →
-
-            </asp:LinkButton>
-
-        </asp:Panel>
-
-
-        <!-- ======================================
-             KHÔNG CÓ SẢN PHẨM
-             ====================================== -->
-
-        <asp:Panel
-            ID="pnlNoProduct"
-            runat="server"
-            Visible="false"
-            CssClass="no-product">
-
-            <h2>
-                Không có sản phẩm
-            </h2>
-
-            <p>
-                Hiện tại chưa có sản phẩm nào.
-            </p>
-
-        </asp:Panel>
-
-    </section>
+</section>
 
 </asp:Content>
