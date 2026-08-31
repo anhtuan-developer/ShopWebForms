@@ -304,8 +304,8 @@ namespace web_ban_hang2.DAL
         }
 
 
-         // XÓA SẢN PHẨM
-        
+        // XÓA SẢN PHẨM
+
         public bool Delete(int maSanPham)
         {
             string sql = @"
@@ -338,7 +338,7 @@ namespace web_ban_hang2.DAL
 
 
         // NGỪNG BÁN SẢN PHẨM
-        
+
         public bool NgungBan(int maSanPham)
         {
             string sql = @"
@@ -396,19 +396,19 @@ namespace web_ban_hang2.DAL
                 }
             }
         }
-        
-      
-// ==========================================
-// TÌM KIẾM + DANH MỤC + PHÂN TRANG
-// CHỈ HIỂN THỊ SẢN PHẨM ĐANG BÁN
-// ==========================================
 
-    public DataTable SearchPaged(
-        string keyword,
-        int maDanhMuc,
-        int pageNumber,
-        int pageSize,
-        out int totalRecords)
+
+        // ==========================================
+        // TÌM KIẾM + DANH MỤC + PHÂN TRANG
+        // CHỈ HIỂN THỊ SẢN PHẨM ĐANG BÁN
+        // ==========================================
+
+        public DataTable SearchPaged(
+            string keyword,
+            int maDanhMuc,
+            int pageNumber,
+            int pageSize,
+            out int totalRecords)
         {
             keyword =
                 (keyword ?? string.Empty)
@@ -588,5 +588,66 @@ namespace web_ban_hang2.DAL
             }
         }
 
+    
+    public DataTable GetFeaturedProducts(int numberOfProducts)
+        {
+            if (numberOfProducts < 1)
+                numberOfProducts = 4;
+
+            string sql = @"
+        SELECT TOP (@NumberOfProducts)
+            sp.MaSanPham,
+            sp.MaDanhMuc,
+            sp.TenSanPham,
+            sp.MoTa,
+            sp.Gia,
+            sp.SoLuong,
+            sp.HinhAnh,
+            sp.TrangThai,
+            sp.NgayTao,
+
+            dm.TenDanhMuc
+
+        FROM SanPham sp
+
+        INNER JOIN DanhMuc dm
+            ON sp.MaDanhMuc = dm.MaDanhMuc
+
+        WHERE
+            sp.TrangThai = 1
+
+            AND dm.TrangThai = 1
+
+            AND sp.SoLuong > 0
+
+        ORDER BY
+            sp.MaSanPham DESC
+    ";
+
+            using (SqlConnection conn =
+                database.GetConnection())
+            {
+                using (SqlCommand cmd =
+                    new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.Add(
+                        "@NumberOfProducts",
+                        SqlDbType.Int
+                    ).Value = numberOfProducts;
+
+                    using (SqlDataAdapter adapter =
+                        new SqlDataAdapter(cmd))
+                    {
+                        DataTable table =
+                            new DataTable();
+
+                        adapter.Fill(table);
+
+                        return table;
+                    }
+                }
+            }
+        }
     }
+   
 }

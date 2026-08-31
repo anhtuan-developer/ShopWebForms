@@ -1,13 +1,13 @@
-﻿<%@ Page Title="Trang chủ"
-    Language="C#"
-    MasterPageFile="~/Site.Master"
-    AutoEventWireup="true"
-    CodeBehind="index.aspx.cs"
+﻿<%@ Page Title="Trang chủ" 
+    Language="C#" 
+    MasterPageFile="~/Site.Master" 
+    AutoEventWireup="true" 
+    CodeBehind="index.aspx.cs" 
     Inherits="web_ban_hang2.index" %>
 
-<asp:Content
-    ID="MainContent"
-    ContentPlaceHolderID="MainContent"
+<asp:Content 
+    ID="MainContent" 
+    ContentPlaceHolderID="MainContent" 
     runat="server">
 
 
@@ -23,13 +23,11 @@
                 🔥 SẢN PHẨM MỚI
             </span>
 
-
             <h1>
                 Mua sắm dễ dàng
                 <br />
                 Giá tốt mỗi ngày
             </h1>
-
 
             <p>
                 Khám phá các sản phẩm công nghệ,
@@ -37,8 +35,7 @@
                 chất lượng với mức giá hấp dẫn.
             </p>
 
-
-            <a
+            <a 
                 href="shop.aspx"
                 class="banner-button">
 
@@ -81,8 +78,7 @@
 
         <div class="category-grid">
 
-
-            <a
+            <a 
                 href="shop.aspx"
                 class="category-card">
 
@@ -101,7 +97,7 @@
             </a>
 
 
-            <a
+            <a 
                 href="shop.aspx"
                 class="category-card">
 
@@ -120,7 +116,7 @@
             </a>
 
 
-            <a
+            <a 
                 href="shop.aspx"
                 class="category-card">
 
@@ -139,7 +135,7 @@
             </a>
 
 
-            <a
+            <a 
                 href="shop.aspx"
                 class="category-card">
 
@@ -187,165 +183,116 @@
 
         <div class="product-grid">
 
+            <asp:Repeater
+                ID="rptFeaturedProducts"
+                runat="server">
 
-            <!-- PRODUCT 1 -->
+                <ItemTemplate>
 
-            <div class="product-card">
+                    <div class="product-card">
 
-                <div class="product-image">
 
-                    <div style="font-size:75px;">
-                        📱
+                        <!-- ================================= -->
+                        <!-- HÌNH ẢNH SẢN PHẨM -->
+                        <!-- ================================= -->
+
+                        <div class="product-image">
+
+                            <asp:Image
+                                ID="imgProduct"
+                                runat="server"
+
+                                ImageUrl='<%# GetProductImageUrl(Eval("HinhAnh")) %>'
+
+                                AlternateText='<%#
+                                    Convert.ToString(
+                                        Eval("TenSanPham")
+                                    )
+                                %>'
+
+                                Style="
+                                    max-width:100%;
+                                    max-height:100%;
+                                    object-fit:contain;
+                                "
+                            />
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- THÔNG TIN SẢN PHẨM -->
+                        <!-- ================================= -->
+
+                        <div class="product-info">
+
+
+                            <!-- DANH MỤC -->
+
+                            <span class="product-category">
+
+                                <%#
+                                    Server.HtmlEncode(
+                                        Convert.ToString(
+                                            Eval("TenDanhMuc")
+                                        )
+                                    )
+                                %>
+
+                            </span>
+
+
+                            <!-- TÊN SẢN PHẨM -->
+
+                            <h3>
+
+                                <%#
+                                    Server.HtmlEncode(
+                                        Convert.ToString(
+                                            Eval("TenSanPham")
+                                        )
+                                    )
+                                %>
+
+                            </h3>
+
+
+                            <!-- GIÁ -->
+
+                            <div class="product-price">
+
+                                <%#
+                                    Convert.ToDecimal(
+                                        Eval("Gia")
+                                    ).ToString("N0")
+                                %>
+
+                                ₫
+
+                            </div>
+
+
+                            <!-- XEM SẢN PHẨM -->
+
+                            <a
+                                href='<%#
+                                    "ProductDetail.aspx?id="
+                                    + Eval("MaSanPham")
+                                %>'
+
+                                class="product-button">
+
+                                Xem sản phẩm
+
+                            </a>
+
+                        </div>
+
                     </div>
 
-                </div>
+                </ItemTemplate>
 
-
-                <div class="product-info">
-
-                    <span class="product-category">
-                        Điện thoại
-                    </span>
-
-                    <h3>
-                        Smartphone Pro
-                    </h3>
-
-                    <div class="product-price">
-                        12.990.000 ₫
-                    </div>
-
-                    <a
-                        href="shop.aspx"
-                        class="product-button">
-
-                        Xem sản phẩm
-
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- PRODUCT 2 -->
-
-            <div class="product-card">
-
-                <div class="product-image">
-
-                    <div style="font-size:75px;">
-                        💻
-                    </div>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <span class="product-category">
-                        Laptop
-                    </span>
-
-                    <h3>
-                        Laptop Pro 15
-                    </h3>
-
-                    <div class="product-price">
-                        18.990.000 ₫
-                    </div>
-
-                    <a
-                        href="shop.aspx"
-                        class="product-button">
-
-                        Xem sản phẩm
-
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- PRODUCT 3 -->
-
-            <div class="product-card">
-
-                <div class="product-image">
-
-                    <div style="font-size:75px;">
-                        🎧
-                    </div>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <span class="product-category">
-                        Phụ kiện
-                    </span>
-
-                    <h3>
-                        Tai nghe Bluetooth
-                    </h3>
-
-                    <div class="product-price">
-                        1.290.000 ₫
-                    </div>
-
-                    <a
-                        href="shop.aspx"
-                        class="product-button">
-
-                        Xem sản phẩm
-
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- PRODUCT 4 -->
-
-            <div class="product-card">
-
-                <div class="product-image">
-
-                    <div style="font-size:75px;">
-                        ⌚
-                    </div>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <span class="product-category">
-                        Đồng hồ
-                    </span>
-
-                    <h3>
-                        Smart Watch
-                    </h3>
-
-                    <div class="product-price">
-                        2.490.000 ₫
-                    </div>
-
-                    <a
-                        href="shop.aspx"
-                        class="product-button">
-
-                        Xem sản phẩm
-
-                    </a>
-
-                </div>
-
-            </div>
+            </asp:Repeater>
 
         </div>
 
@@ -441,6 +388,7 @@
             </div>
 
         </div>
+
 
     </section>
 

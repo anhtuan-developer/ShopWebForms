@@ -13,5 +13,14 @@ namespace web_ban_hang2
 
     public partial class index
     {
+
+        /// <summary>
+        /// rptFeaturedProducts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptFeaturedProducts;
     }
 }
