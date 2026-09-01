@@ -27,17 +27,10 @@ Inherits="web_ban_hang2.SiteMaster" %>
 <link href="<%= ResolveUrl("~/Content/bootstrap.min.css") %>"
       rel="stylesheet" />
 
-<!-- =========================================================
-     SITE CSS
-     Chỉ giữ CSS riêng cho nhận diện website
-     ========================================================= -->
 
 <link href="<%= ResolveUrl("~/Content/Site.css") %>"
       rel="stylesheet" />
 
-<!-- =========================================================
-     CSS RIÊNG CHO MASTER
-     ========================================================= -->
 
 <style>
 

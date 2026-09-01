@@ -166,6 +166,7 @@
     <Content Include="img\15plusden.png" />
     <Content Include="img\15prmden.jpg" />
     <Content Include="img\17promaxcam.jpg" />
+    <Content Include="img\Apple Watch SE 3 40mm_1.jpg" />
     <Content Include="img\iphone14do.jpg" />
     <Content Include="img\iphone16trang.jpg" />
     <Content Include="img\Iphonexsmax.jpg" />
@@ -176,8 +177,12 @@
     <Content Include="img\Loa di động không dây Sony-3.jpg" />
     <Content Include="img\Loa JBL PartyBox On-2.jpg" />
     <Content Include="img\Loa Marshall Acton IV-5.jpg" />
+    <Content Include="img\logo.png" />
+    <Content Include="img\Oppo Band 2 xanh duong_1.jpg" />
     <Content Include="img\Redmi Note 17 Pro Max đen.jpg" />
     <Content Include="img\Xiaomi Redmi Note 14 đen.jpg" />
+    <Content Include="img\Đồng hồ thông minh Huawei Band 11 Pro den.jpg" />
+    <Content Include="img\Đồng hồ thông minh Xiaomi Mi Band 10_1.jpg" />
     <Content Include="index.aspx" />
     <Content Include="js\main.js" />
     <Content Include="lib\animate\animate.min.css" />

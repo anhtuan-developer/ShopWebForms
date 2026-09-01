@@ -49,9 +49,16 @@
         <div class="banner-image">
 
             <div class="banner-product">
-                🛍️
+        
+                <img
+                    src="<%= ResolveUrl("~/img/logo.png") %>"
+                    alt="SHOP 5 ANH EM"
+                    class="banner-logo"
+                    style=" width: 210px;  height: 210px;  object-fit: contain; display: block;
+            "
+                />
+        
             </div>
-
         </div>
 
     </section>

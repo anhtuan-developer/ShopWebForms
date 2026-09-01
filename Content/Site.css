@@ -130,18 +130,17 @@ select {
 /* =========================================================
    SEARCH
    ========================================================= */
-
 .search-box {
-  flex: 1;
-  max-width: 620px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  background: #ffffff;
-  border: 2px solid #e53935;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(229, 57, 53, 0.08);
-  transition: all 0.2s ease;
+    flex: 1;
+    max-width: 620px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: #ffffff;
+    border: 2px solid #e53935;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(229, 57, 53, 0.08);
+    transition: all 0.2s ease;
 }
 
 .search-box:focus-within {
