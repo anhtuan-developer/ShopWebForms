@@ -14,10 +14,6 @@ namespace web_ban_hang2.Admin
             new DanhMucDAL();
 
 
-        // ==========================================
-        // PAGE LOAD
-        // ==========================================
-
         protected void Page_Load(
             object sender,
             EventArgs e)
@@ -30,10 +26,6 @@ namespace web_ban_hang2.Admin
             }
         }
 
-
-        // ==========================================
-        // LẤY MÃ SẢN PHẨM TỪ URL
-        // ==========================================
 
         private int GetMaSanPham()
         {
@@ -49,10 +41,6 @@ namespace web_ban_hang2.Admin
             return maSanPham;
         }
 
-
-        // ==========================================
-        // LOAD DANH MỤC
-        // ==========================================
 
         private void LoadDanhMuc()
         {
@@ -76,10 +64,6 @@ namespace web_ban_hang2.Admin
             );
         }
 
-
-        // ==========================================
-        // LOAD SẢN PHẨM
-        // ==========================================
 
         private void LoadSanPham()
         {
@@ -155,6 +139,13 @@ namespace web_ban_hang2.Admin
                 );
 
 
+            chkNoiBat.Checked =
+                row["NoiBat"] != DBNull.Value &&
+                Convert.ToBoolean(
+                    row["NoiBat"]
+                );
+
+
             ddlDanhMuc.SelectedValue =
                 row["MaDanhMuc"].ToString();
 
@@ -178,10 +169,6 @@ namespace web_ban_hang2.Admin
             }
         }
 
-
-        // ==========================================
-        // CẬP NHẬT SẢN PHẨM
-        // ==========================================
 
         protected void btnCapNhat_Click(
             object sender,
@@ -292,7 +279,8 @@ namespace web_ban_hang2.Admin
                         gia,
                         soLuong,
                         txtHinhAnh.Text.Trim(),
-                        chkTrangThai.Checked
+                        chkTrangThai.Checked,
+                        chkNoiBat.Checked
                     );
 
 
@@ -320,10 +308,6 @@ namespace web_ban_hang2.Admin
         }
 
 
-        // ==========================================
-        // HỦY
-        // ==========================================
-
         protected void btnHuy_Click(
             object sender,
             EventArgs e)
@@ -333,10 +317,6 @@ namespace web_ban_hang2.Admin
             );
         }
 
-
-        // ==========================================
-        // HIỂN THỊ THÔNG BÁO
-        // ==========================================
 
         private void ShowMessage(
             string title,
@@ -348,7 +328,6 @@ namespace web_ban_hang2.Admin
                     title
                 );
 
-
             string safeMessage =
                 System.Web.HttpUtility
                 .JavaScriptStringEncode(
@@ -356,18 +335,14 @@ namespace web_ban_hang2.Admin
                 );
 
 
-            string script =
+            ClientScript.RegisterStartupScript(
+                GetType(),
+                "message",
                 "alert('"
                 + safeTitle
                 + "\\n"
                 + safeMessage
-                + "');";
-
-
-            ClientScript.RegisterStartupScript(
-                GetType(),
-                "message",
-                script,
+                + "');",
                 true
             );
         }

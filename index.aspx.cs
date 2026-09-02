@@ -13,11 +13,6 @@ namespace web_ban_hang2
         private readonly DanhMucDAL danhMucDAL =
             new DanhMucDAL();
 
-
-        // ==========================================
-        // PAGE LOAD
-        // ==========================================
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -26,11 +21,6 @@ namespace web_ban_hang2
                 LoadFeaturedProducts();
             }
         }
-
-
-        // ==========================================
-        // LOAD DANH MỤC TỪ DATABASE
-        // ==========================================
 
         private void LoadDanhMuc()
         {
@@ -51,11 +41,6 @@ namespace web_ban_hang2
             }
         }
 
-
-        // ==========================================
-        // LOAD SẢN PHẨM NỔI BẬT
-        // ==========================================
-
         private void LoadFeaturedProducts()
         {
             try
@@ -63,36 +48,23 @@ namespace web_ban_hang2
                 DataTable products =
                     sanPhamDAL.GetFeaturedProducts(4);
 
-
                 rptFeaturedProducts.DataSource =
                     products;
-
 
                 rptFeaturedProducts.DataBind();
             }
             catch (Exception)
             {
-                rptFeaturedProducts.DataSource =
-                    null;
-
+                rptFeaturedProducts.DataSource = null;
                 rptFeaturedProducts.DataBind();
             }
         }
 
-
-        // ==========================================
-        // TẠO ĐƯỜNG DẪN ẢNH SẢN PHẨM
-        // ==========================================
-
-        protected string GetProductImageUrl(object imageValue)
+        protected string GetProductImageUrl(
+            object imageValue)
         {
             string imageName =
                 Convert.ToString(imageValue);
-
-
-            // ======================================
-            // KHÔNG CÓ TÊN ẢNH
-            // ======================================
 
             if (string.IsNullOrWhiteSpace(imageName))
             {
@@ -101,50 +73,34 @@ namespace web_ban_hang2
                 );
             }
 
-
             imageName =
-                imageName
-                .Trim()
-                .Replace("\\", "/");
-
-
-            // ======================================
-            // DATABASE LƯU ~/img/...
-            // ======================================
+                imageName.Trim()
+                         .Replace("\\", "/");
 
             if (imageName.StartsWith("~/"))
             {
                 string physicalPath =
                     Server.MapPath(imageName);
 
-
                 if (File.Exists(physicalPath))
                 {
                     return ResolveUrl(imageName);
                 }
-
 
                 return ResolveUrl(
                     "~/img/17promaxcam.jpg"
                 );
             }
 
-
-            // ======================================
-            // DATABASE LƯU /img/...
-            // ======================================
-
             if (imageName.StartsWith("/"))
             {
                 string appRelativePath =
                     "~" + imageName;
 
-
                 string physicalPath =
                     Server.MapPath(
                         appRelativePath
                     );
-
 
                 if (File.Exists(physicalPath))
                 {
@@ -153,16 +109,10 @@ namespace web_ban_hang2
                     );
                 }
 
-
                 return ResolveUrl(
                     "~/img/17promaxcam.jpg"
                 );
             }
-
-
-            // ======================================
-            // DATABASE LƯU img/...
-            // ======================================
 
             if (
                 imageName.StartsWith(
@@ -174,12 +124,10 @@ namespace web_ban_hang2
                 string appRelativePath =
                     "~/" + imageName;
 
-
                 string physicalPath =
                     Server.MapPath(
                         appRelativePath
                     );
-
 
                 if (File.Exists(physicalPath))
                 {
@@ -188,38 +136,21 @@ namespace web_ban_hang2
                     );
                 }
 
-
                 return ResolveUrl(
                     "~/img/17promaxcam.jpg"
                 );
             }
 
-
-            // ======================================
-            // DATABASE CHỈ LƯU TÊN FILE
-            // ======================================
-
             string relativePath =
                 "~/img/" + imageName;
 
-
             string fullPath =
-                Server.MapPath(
-                    relativePath
-                );
-
+                Server.MapPath(relativePath);
 
             if (File.Exists(fullPath))
             {
-                return ResolveUrl(
-                    relativePath
-                );
+                return ResolveUrl(relativePath);
             }
-
-
-            // ======================================
-            // ẢNH MẶC ĐỊNH
-            // ======================================
 
             return ResolveUrl(
                 "~/img/17promaxcam.jpg"

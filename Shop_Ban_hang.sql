@@ -32,6 +32,8 @@ CREATE TABLE SanPham
 
     HinhAnh NVARCHAR(500),
 
+    NoiBat BIT NOT NULL DEFAULT 0,
+
     TrangThai BIT NOT NULL DEFAULT 1,
 
     NgayTao DATETIME NOT NULL DEFAULT GETDATE(),
@@ -41,6 +43,7 @@ CREATE TABLE SanPham
         REFERENCES DanhMuc(MaDanhMuc)
 );
 GO
+
 
 INSERT INTO DanhMuc
 (

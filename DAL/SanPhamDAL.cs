@@ -21,26 +21,27 @@ namespace web_ban_hang2.DAL
         public DataTable GetAll()
         {
             string sql = @"
-                SELECT
-                    sp.MaSanPham,
-                    sp.MaDanhMuc,
-                    sp.TenSanPham,
-                    sp.MoTa,
-                    sp.Gia,
-                    sp.SoLuong,
-                    sp.HinhAnh,
-                    sp.TrangThai,
-                    sp.NgayTao,
+        SELECT
+            sp.MaSanPham,
+            sp.MaDanhMuc,
+            sp.TenSanPham,
+            sp.MoTa,
+            sp.Gia,
+            sp.SoLuong,
+            sp.HinhAnh,
+            sp.TrangThai,
+            sp.NoiBat,
+            sp.NgayTao,
 
-                    dm.TenDanhMuc
+            dm.TenDanhMuc
 
-                FROM SanPham sp
+        FROM SanPham sp
 
-                INNER JOIN DanhMuc dm
-                    ON sp.MaDanhMuc = dm.MaDanhMuc
+        INNER JOIN DanhMuc dm
+            ON sp.MaDanhMuc = dm.MaDanhMuc
 
-                ORDER BY sp.MaSanPham DESC
-            ";
+        ORDER BY sp.MaSanPham DESC
+    ";
 
             using (SqlConnection conn =
                 database.GetConnection())
@@ -70,21 +71,22 @@ namespace web_ban_hang2.DAL
         public DataTable GetById(int maSanPham)
         {
             string sql = @"
-                SELECT
-                    MaSanPham,
-                    MaDanhMuc,
-                    TenSanPham,
-                    MoTa,
-                    Gia,
-                    SoLuong,
-                    HinhAnh,
-                    TrangThai,
-                    NgayTao
+        SELECT
+            MaSanPham,
+            MaDanhMuc,
+            TenSanPham,
+            MoTa,
+            Gia,
+            SoLuong,
+            HinhAnh,
+            TrangThai,
+            NoiBat,
+            NgayTao
 
-                FROM SanPham
+        FROM SanPham
 
-                WHERE MaSanPham = @MaSanPham
-            ";
+        WHERE MaSanPham = @MaSanPham
+    ";
 
             using (SqlConnection conn =
                 database.GetConnection())
@@ -117,37 +119,40 @@ namespace web_ban_hang2.DAL
         // ==========================================
 
         public bool Insert(
-            int maDanhMuc,
-            string tenSanPham,
-            string moTa,
-            decimal gia,
-            int soLuong,
-            string hinhAnh,
-            bool trangThai)
+    int maDanhMuc,
+    string tenSanPham,
+    string moTa,
+    decimal gia,
+    int soLuong,
+    string hinhAnh,
+    bool trangThai,
+    bool noiBat)
         {
             string sql = @"
-                INSERT INTO SanPham
-                (
-                    MaDanhMuc,
-                    TenSanPham,
-                    MoTa,
-                    Gia,
-                    SoLuong,
-                    HinhAnh,
-                    TrangThai
-                )
+        INSERT INTO SanPham
+        (
+            MaDanhMuc,
+            TenSanPham,
+            MoTa,
+            Gia,
+            SoLuong,
+            HinhAnh,
+            TrangThai,
+            NoiBat
+        )
 
-                VALUES
-                (
-                    @MaDanhMuc,
-                    @TenSanPham,
-                    @MoTa,
-                    @Gia,
-                    @SoLuong,
-                    @HinhAnh,
-                    @TrangThai
-                )
-            ";
+        VALUES
+        (
+            @MaDanhMuc,
+            @TenSanPham,
+            @MoTa,
+            @Gia,
+            @SoLuong,
+            @HinhAnh,
+            @TrangThai,
+            @NoiBat
+        )
+    ";
 
             using (SqlConnection conn =
                 database.GetConnection())
@@ -174,10 +179,16 @@ namespace web_ban_hang2.DAL
                             ? (object)DBNull.Value
                             : moTa;
 
-                    cmd.Parameters.Add(
-                        "@Gia",
-                        SqlDbType.Decimal
-                    ).Value = gia;
+                    SqlParameter pGia =
+                        cmd.Parameters.Add(
+                            "@Gia",
+                            SqlDbType.Decimal
+                        );
+
+                    pGia.Precision = 18;
+                    pGia.Scale = 2;
+                    pGia.Value = gia;
+
 
                     cmd.Parameters.Add(
                         "@SoLuong",
@@ -198,6 +209,12 @@ namespace web_ban_hang2.DAL
                         SqlDbType.Bit
                     ).Value = trangThai;
 
+                    cmd.Parameters.Add(
+                        "@NoiBat",
+                        SqlDbType.Bit
+                    ).Value = noiBat;
+
+
                     conn.Open();
 
                     int result =
@@ -214,30 +231,32 @@ namespace web_ban_hang2.DAL
         // ==========================================
 
         public bool Update(
-            int maSanPham,
-            int maDanhMuc,
-            string tenSanPham,
-            string moTa,
-            decimal gia,
-            int soLuong,
-            string hinhAnh,
-            bool trangThai)
+    int maSanPham,
+    int maDanhMuc,
+    string tenSanPham,
+    string moTa,
+    decimal gia,
+    int soLuong,
+    string hinhAnh,
+    bool trangThai,
+    bool noiBat)
         {
             string sql = @"
-                UPDATE SanPham
+        UPDATE SanPham
 
-                SET
-                    MaDanhMuc = @MaDanhMuc,
-                    TenSanPham = @TenSanPham,
-                    MoTa = @MoTa,
-                    Gia = @Gia,
-                    SoLuong = @SoLuong,
-                    HinhAnh = @HinhAnh,
-                    TrangThai = @TrangThai
+        SET
+            MaDanhMuc = @MaDanhMuc,
+            TenSanPham = @TenSanPham,
+            MoTa = @MoTa,
+            Gia = @Gia,
+            SoLuong = @SoLuong,
+            HinhAnh = @HinhAnh,
+            TrangThai = @TrangThai,
+            NoiBat = @NoiBat
 
-                WHERE
-                    MaSanPham = @MaSanPham
-            ";
+        WHERE
+            MaSanPham = @MaSanPham
+    ";
 
             using (SqlConnection conn =
                 database.GetConnection())
@@ -269,10 +288,16 @@ namespace web_ban_hang2.DAL
                             ? (object)DBNull.Value
                             : moTa;
 
-                    cmd.Parameters.Add(
-                        "@Gia",
-                        SqlDbType.Decimal
-                    ).Value = gia;
+                    SqlParameter pGia =
+                        cmd.Parameters.Add(
+                            "@Gia",
+                            SqlDbType.Decimal
+                        );
+
+                    pGia.Precision = 18;
+                    pGia.Scale = 2;
+                    pGia.Value = gia;
+
 
                     cmd.Parameters.Add(
                         "@SoLuong",
@@ -292,6 +317,12 @@ namespace web_ban_hang2.DAL
                         "@TrangThai",
                         SqlDbType.Bit
                     ).Value = trangThai;
+
+                    cmd.Parameters.Add(
+                        "@NoiBat",
+                        SqlDbType.Bit
+                    ).Value = noiBat;
+
 
                     conn.Open();
 
@@ -588,45 +619,43 @@ namespace web_ban_hang2.DAL
             }
         }
 
-    
-    public DataTable GetFeaturedProducts(int numberOfProducts)
+
+        public DataTable GetFeaturedProducts(int numberOfProducts)
         {
-            if (numberOfProducts < 1)
-                numberOfProducts = 4;
-
-            string sql = @"
-        SELECT TOP (@NumberOfProducts)
-            sp.MaSanPham,
-            sp.MaDanhMuc,
-            sp.TenSanPham,
-            sp.MoTa,
-            sp.Gia,
-            sp.SoLuong,
-            sp.HinhAnh,
-            sp.TrangThai,
-            sp.NgayTao,
-
-            dm.TenDanhMuc
-
-        FROM SanPham sp
-
-        INNER JOIN DanhMuc dm
-            ON sp.MaDanhMuc = dm.MaDanhMuc
-
-        WHERE
-            sp.TrangThai = 1
-
-            AND dm.TrangThai = 1
-
-            AND sp.SoLuong > 0
-
-        ORDER BY
-            sp.MaSanPham DESC
-    ";
+            DataTable dt = new DataTable();
 
             using (SqlConnection conn =
                 database.GetConnection())
             {
+                string sql = @"
+            SELECT TOP (@NumberOfProducts)
+                sp.MaSanPham,
+                sp.MaDanhMuc,
+                sp.TenSanPham,
+                sp.MoTa,
+                sp.Gia,
+                sp.SoLuong,
+                sp.HinhAnh,
+                sp.NoiBat,
+                sp.TrangThai,
+                sp.NgayTao,
+                dm.TenDanhMuc
+
+            FROM SanPham sp
+
+            INNER JOIN DanhMuc dm
+                ON sp.MaDanhMuc = dm.MaDanhMuc
+
+            WHERE
+                sp.NoiBat = 1
+                AND sp.TrangThai = 1
+                AND dm.TrangThai = 1
+                AND sp.SoLuong > 0
+
+            ORDER BY
+                sp.MaSanPham DESC;
+        ";
+
                 using (SqlCommand cmd =
                     new SqlCommand(sql, conn))
                 {
@@ -638,16 +667,13 @@ namespace web_ban_hang2.DAL
                     using (SqlDataAdapter adapter =
                         new SqlDataAdapter(cmd))
                     {
-                        DataTable table =
-                            new DataTable();
-
-                        adapter.Fill(table);
-
-                        return table;
+                        adapter.Fill(dt);
                     }
                 }
             }
+
+            return dt;
         }
+
     }
-   
 }

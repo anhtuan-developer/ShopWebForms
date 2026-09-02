@@ -4,14 +4,16 @@ using web_ban_hang2.DAL;
 
 namespace web_ban_hang2.Admin
 {
-    public partial class Admin_SanPham :  AdminBasePage
+    public partial class Admin_SanPham : AdminBasePage
     {
         private readonly SanPhamDAL sanPhamDAL =
             new SanPhamDAL();
 
 
+        // ==========================================
         // PAGE LOAD
-       
+        // ==========================================
+
         protected void Page_Load(
             object sender,
             EventArgs e)
@@ -22,8 +24,11 @@ namespace web_ban_hang2.Admin
             }
         }
 
+
+        // ==========================================
         // LOAD SẢN PHẨM
-        
+        // ==========================================
+
         private void LoadSanPham()
         {
             gvSanPham.DataSource =
@@ -33,8 +38,10 @@ namespace web_ban_hang2.Admin
         }
 
 
+        // ==========================================
         // THÊM SẢN PHẨM
-       
+        // ==========================================
+
         protected void btnThemSanPham_Click(
             object sender,
             EventArgs e)
@@ -45,8 +52,10 @@ namespace web_ban_hang2.Admin
         }
 
 
+        // ==========================================
         // GRIDVIEW ROW COMMAND
-        
+        // ==========================================
+
         protected void gvSanPham_RowCommand(
             object sender,
             GridViewCommandEventArgs e)
@@ -78,93 +87,44 @@ namespace web_ban_hang2.Admin
         }
 
 
+        // ==========================================
         // XÓA / NGỪNG BÁN SẢN PHẨM
-       
+        // ==========================================
+
         private void DeleteSanPham(
             int maSanPham)
         {
             try
             {
-                 // Kiểm tra sản phẩm đã xuất hiện
-                // trong đơn hàng hay chưa
-               
-                int soLuongDonHang =
-                    sanPhamDAL.CountOrderDetails(
-                        maSanPham
-                    );
-
-
-                // SẢN PHẨM ĐÃ CÓ TRONG ĐƠN HÀNG
-               
-                if (soLuongDonHang > 0)
-                {
-                    bool result =
-                        sanPhamDAL.NgungBan(
-                            maSanPham
-                        );
-
-
-                    if (result)
-                    {
-                        LoadSanPham();
-
-                        ShowMessage(
-                            "Đã ngừng bán",
-                            "Sản phẩm này đã xuất hiện trong "
-                            + soLuongDonHang
-                            + " chi tiết đơn hàng nên không thể xóa. "
-                            + "Sản phẩm đã được chuyển sang trạng thái Ngừng bán.",
-                            "⚠️"
-                        );
-                    }
-                    else
-                    {
-                        ShowMessage(
-                            "Thất bại",
-                            "Không thể chuyển sản phẩm sang trạng thái Ngừng bán.",
-                            "❌"
-                        );
-                    }
-
-
-                    return;
-                }
-
-
-               // SẢN PHẨM CHƯA CÓ TRONG ĐƠN HÀNG
-               
-                bool deleteResult =
+                bool result =
                     sanPhamDAL.Delete(
                         maSanPham
                     );
 
 
-                if (deleteResult)
+                if (result)
                 {
-                    LoadSanPham();
-
                     ShowMessage(
-                        "Xóa thành công",
-                        "Sản phẩm đã được xóa khỏi hệ thống.",
+                        "Thành công",
+                        "Đã xóa sản phẩm.",
                         "✅"
                     );
 
-                    return;
+                    LoadSanPham();
                 }
-
-
-                // KHÔNG TÌM THẤY SẢN PHẨM
-                
-                ShowMessage(
-                    "Xóa thất bại",
-                    "Không tìm thấy sản phẩm cần xóa.",
-                    "❌"
-                );
+                else
+                {
+                    ShowMessage(
+                        "Thông báo",
+                        "Không tìm thấy sản phẩm cần xóa.",
+                        "⚠️"
+                    );
+                }
             }
             catch (Exception ex)
             {
                 ShowMessage(
-                    "Có lỗi xảy ra",
+                    "Lỗi",
                     ex.Message,
                     "❌"
                 );
@@ -172,7 +132,9 @@ namespace web_ban_hang2.Admin
         }
 
 
+        // ==========================================
         // HIỂN THỊ THÔNG BÁO
+        // ==========================================
 
         private void ShowMessage(
             string title,

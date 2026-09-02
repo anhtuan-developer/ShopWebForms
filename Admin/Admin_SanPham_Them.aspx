@@ -376,6 +376,22 @@
 
         </div>
 
+        <!-- SẢN PHẨM NỔI BẬT -->
+
+        <div class="form-group">
+        
+            <div class="form-check">
+        
+                <asp:CheckBox
+                    ID="chkNoiBat"
+                    runat="server"
+                    CssClass="form-check-input"
+                    Text=" ⭐ Sản phẩm nổi bật" />
+        
+            </div>
+        
+        </div>
+
 
         <!-- BUTTON -->
 

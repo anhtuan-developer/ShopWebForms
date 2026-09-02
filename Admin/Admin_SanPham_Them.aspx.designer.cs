@@ -132,6 +132,15 @@ namespace web_ban_hang2.Admin
         protected global::System.Web.UI.WebControls.DropDownList ddlTrangThai;
 
         /// <summary>
+        /// chkNoiBat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkNoiBat;
+
+        /// <summary>
         /// btnLuu control.
         /// </summary>
         /// <remarks>

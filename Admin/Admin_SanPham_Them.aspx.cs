@@ -195,15 +195,16 @@ namespace web_ban_hang2.Admin
                 // ------------------------------
 
                 bool result =
-                    sanPhamDAL.Insert(
-                        maDanhMuc,
-                        tenSanPham,
-                        moTa,
-                        gia,
-                        soLuong,
-                        hinhAnh,
-                        trangThai
-                    );
+                sanPhamDAL.Insert(
+                    maDanhMuc,
+                    tenSanPham,
+                    moTa,
+                    gia,
+                    soLuong,
+                    hinhAnh,
+                    trangThai,
+                    chkNoiBat.Checked
+                );
 
 
                 if (result)

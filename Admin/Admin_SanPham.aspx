@@ -175,7 +175,6 @@
                                             CssClass="btn btn-warning btn-sm fw-semibold"
                                             NavigateUrl='<%# "Admin_SanPham_Sua.aspx?id=" + Eval("MaSanPham") %>' />
 
-
                                         <asp:Button
                                             ID="btnXoa"
                                             runat="server"

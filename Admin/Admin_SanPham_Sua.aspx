@@ -335,18 +335,25 @@
 
             <div class="status-box">
 
-                <asp:CheckBox
-                    ID="chkTrangThai"
-                    runat="server" />
-
-                <label
-                    for="<%= chkTrangThai.ClientID %>">
-
-                    Đang bán
-
-                </label>
-
-            </div>
+            <asp:CheckBox
+                ID="chkTrangThai"
+                runat="server" />
+        
+            <label
+                for="<%= chkTrangThai.ClientID %>">
+        
+                Đang bán
+        
+            </label>
+        
+        
+            <asp:CheckBox
+                ID="chkNoiBat"
+                runat="server"
+                Text=" ⭐ Sản phẩm nổi bật"
+                CssClass="ms-3" />
+        
+        </div>
 
         </div>
 

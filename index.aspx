@@ -146,11 +146,10 @@
                 Xem tất cả →
             </a>
 
-        </div>
+            </div>
 
 
-        <div class="product-grid">
-
+             <div class="product-grid">
             <asp:Repeater
                 ID="rptFeaturedProducts"
                 runat="server">
@@ -159,46 +158,33 @@
 
                     <div class="product-card">
 
+                        <a href='<%#
+                            ResolveUrl(
+                                "~/ProductDetail.aspx?id="
+                                + Eval("MaSanPham")
+                            )
+                        %>'
+                           class="product-image">
 
-                        <!-- ================================= -->
-                        <!-- HÌNH ẢNH SẢN PHẨM -->
-                        <!-- ================================= -->
-
-                        <div class="product-image">
-
-                            <asp:Image
-                                ID="imgProduct"
-                                runat="server"
-
-                                ImageUrl='<%# GetProductImageUrl(Eval("HinhAnh")) %>'
-
-                                AlternateText='<%#
-                                    Convert.ToString(
-                                        Eval("TenSanPham")
+                            <img
+                                src='<%#
+                                    GetProductImageUrl(
+                                        Eval("HinhAnh")
                                     )
                                 %>'
+                                alt='<%#
+                                    Server.HtmlEncode(
+                                        Convert.ToString(
+                                            Eval("TenSanPham")
+                                        )
+                                    )
+                                %>' />
 
-                                Style="
-                                    max-width:100%;
-                                    max-height:100%;
-                                    object-fit:contain;
-                                "
-                            />
-
-                        </div>
-
-
-                        <!-- ================================= -->
-                        <!-- THÔNG TIN SẢN PHẨM -->
-                        <!-- ================================= -->
+                        </a>
 
                         <div class="product-info">
 
-
-                            <!-- DANH MỤC -->
-
-                            <span class="product-category">
-
+                            <div class="product-category">
                                 <%#
                                     Server.HtmlEncode(
                                         Convert.ToString(
@@ -206,53 +192,30 @@
                                         )
                                     )
                                 %>
+                            </div>
 
-                            </span>
-
-
-                            <!-- TÊN SẢN PHẨM -->
-
-                            <h3>
-
-                                <%#
-                                    Server.HtmlEncode(
+                            <h3 class="product-name mb-2">
+                                <a
+                                    href='<%# ResolveUrl("~/ProductDetail.aspx?id=" + Eval("MaSanPham")) %>'
+                                    class="text-dark text-decoration-none fw-semibold">
+                            
+                                    <%# Server.HtmlEncode(
                                         Convert.ToString(
                                             Eval("TenSanPham")
                                         )
-                                    )
-                                %>
-
+                                    ) %>
+                            
+                                </a>
                             </h3>
 
-
-                            <!-- GIÁ -->
-
                             <div class="product-price">
-
                                 <%#
-                                    Convert.ToDecimal(
+                                    String.Format(
+                                        "{0:N0} ₫",
                                         Eval("Gia")
-                                    ).ToString("N0")
+                                    )
                                 %>
-
-                                ₫
-
                             </div>
-
-
-                            <!-- XEM SẢN PHẨM -->
-
-                            <a
-                                href='<%#
-                                    "ProductDetail.aspx?id="
-                                    + Eval("MaSanPham")
-                                %>'
-
-                                class="product-button">
-
-                                Xem sản phẩm
-
-                            </a>
 
                         </div>
 
@@ -261,7 +224,6 @@
                 </ItemTemplate>
 
             </asp:Repeater>
-
         </div>
 
     </section>

@@ -17,6 +17,7 @@ namespace web_ban_hang2.Models
         public int SoLuong { get; set; }
 
         public string HinhAnh { get; set; }
+        public bool NoiBat { get; set; }
 
         public bool TrangThai { get; set; }
 
