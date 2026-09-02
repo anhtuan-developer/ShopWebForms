@@ -70,99 +70,60 @@
 
     <section class="category-section">
 
-        <div class="section-header">
+    <div class="section-header">
 
-            <h2>
-                Danh mục sản phẩm
-            </h2>
+        <h2>
+            Danh mục sản phẩm
+        </h2>
 
-            <a href="shop.aspx">
-                Xem tất cả →
-            </a>
+        <a href="shop.aspx">
+            Xem tất cả →
+        </a>
 
-        </div>
-
-
-        <div class="category-grid">
-
-            <a 
-                href="shop.aspx"
-                class="category-card">
-
-                <div class="category-icon">
-                    📱
-                </div>
-
-                <h3>
-                    Điện thoại
-                </h3>
-
-                <p>
-                    Smartphone chính hãng
-                </p>
-
-            </a>
+    </div>
 
 
-            <a 
-                href="shop.aspx"
-                class="category-card">
+    <div class="category-grid">
 
-                <div class="category-icon">
-                    💻
-                </div>
+        <asp:Repeater
+            ID="rptDanhMuc"
+            runat="server">
 
-                <h3>
-                    Laptop
-                </h3>
+            <ItemTemplate>
 
-                <p>
-                    Laptop học tập và làm việc
-                </p>
+                <a
+                    href='<%# ResolveUrl("~/shop.aspx?category=" + Eval("MaDanhMuc")) %>'
+                    class="category-card">
 
-            </a>
+                    <div class="category-icon">
+                        📁
+                    </div>
 
+                    <h3>
+                        <%# Server.HtmlEncode(
+                            Convert.ToString(
+                                Eval("TenDanhMuc")
+                            )
+                        ) %>
+                    </h3>
 
-            <a 
-                href="shop.aspx"
-                class="category-card">
+                    <p>
+                        <%# Server.HtmlEncode(
+                            Convert.ToString(
+                                Eval("MoTa")
+                            )
+                        ) %>
+                    </p>
 
-                <div class="category-icon">
-                    🎧
-                </div>
+                </a>
 
-                <h3>
-                    Phụ kiện
-                </h3>
+            </ItemTemplate>
 
-                <p>
-                    Phụ kiện công nghệ
-                </p>
+        </asp:Repeater>
 
-            </a>
+    </div>
 
-
-            <a 
-                href="shop.aspx"
-                class="category-card">
-
-                <div class="category-icon">
-                    ⌚
-                </div>
-
-                <h3>
-                    Đồng hồ
-                </h3>
-
-                <p>
-                    Đồng hồ thông minh
-                </p>
-
-            </a>
-
-        </div>
-
-    </section>
+</section>
 
 
     <!-- ================================================= -->

@@ -10,6 +10,9 @@ namespace web_ban_hang2
         private readonly SanPhamDAL sanPhamDAL =
             new SanPhamDAL();
 
+        private readonly DanhMucDAL danhMucDAL =
+            new DanhMucDAL();
+
 
         // ==========================================
         // PAGE LOAD
@@ -19,7 +22,32 @@ namespace web_ban_hang2
         {
             if (!IsPostBack)
             {
+                LoadDanhMuc();
                 LoadFeaturedProducts();
+            }
+        }
+
+
+        // ==========================================
+        // LOAD DANH MỤC TỪ DATABASE
+        // ==========================================
+
+        private void LoadDanhMuc()
+        {
+            try
+            {
+                DataTable categories =
+                    danhMucDAL.GetActive();
+
+                rptDanhMuc.DataSource =
+                    categories;
+
+                rptDanhMuc.DataBind();
+            }
+            catch (Exception)
+            {
+                rptDanhMuc.DataSource = null;
+                rptDanhMuc.DataBind();
             }
         }
 
@@ -44,11 +72,6 @@ namespace web_ban_hang2
             }
             catch (Exception)
             {
-                /*
-                 * Không để lỗi database
-                 * làm hỏng toàn bộ trang chủ.
-                 */
-
                 rptFeaturedProducts.DataSource =
                     null;
 
@@ -174,11 +197,6 @@ namespace web_ban_hang2
 
             // ======================================
             // DATABASE CHỈ LƯU TÊN FILE
-            // Ví dụ:
-            //
-            // 11 den.jpg
-            // 13prmden.png
-            // 17promaxcam.jpg
             // ======================================
 
             string relativePath =
