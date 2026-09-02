@@ -435,186 +435,648 @@ namespace web_ban_hang2.DAL
         // ==========================================
 
         public DataTable SearchPaged(
-            string keyword,
-            int maDanhMuc,
-            int pageNumber,
-            int pageSize,
-            out int totalRecords)
+    string keyword,
+    int maDanhMuc,
+    decimal? minPrice,
+    decimal? maxPrice,
+    int status,
+    string sort,
+    int pageNumber,
+    int pageSize,
+    out int totalRecords)
         {
+            DataTable dt = new DataTable();
+
+            totalRecords = 0;
+
             keyword =
                 (keyword ?? string.Empty)
                 .Trim();
 
+
             if (pageNumber < 1)
+            {
                 pageNumber = 1;
+            }
+
 
             if (pageSize < 1)
+            {
                 pageSize = 12;
+            }
+
+
+            if (maDanhMuc < 0)
+            {
+                maDanhMuc = 0;
+            }
+
+
+            if (
+                status < 0
+                ||
+                status > 2
+            )
+            {
+                status = 0;
+            }
+
+
+            sort =
+                (sort ?? "newest")
+                .Trim()
+                .ToLowerInvariant();
+
+
+            if (
+                sort != "price_asc"
+                &&
+                sort != "price_desc"
+                &&
+                sort != "bestseller"
+            )
+            {
+                sort = "newest";
+            }
+
 
             int offset =
                 (pageNumber - 1)
-                * pageSize;
+                *
+                pageSize;
 
 
             string sql = @"
-        SELECT
-            sp.MaSanPham,
-            sp.MaDanhMuc,
-            sp.TenSanPham,
-            sp.MoTa,
-            sp.Gia,
-            sp.SoLuong,
-            sp.HinhAnh,
-            sp.TrangThai,
-            sp.NgayTao,
 
-            dm.TenDanhMuc
+        ;WITH ProductData AS
+        (
+            SELECT
 
-        FROM SanPham sp
+                sp.MaSanPham,
 
-        INNER JOIN DanhMuc dm
-            ON sp.MaDanhMuc = dm.MaDanhMuc
+                sp.MaDanhMuc,
 
-        WHERE
-            sp.TrangThai = 1
+                sp.TenSanPham,
 
-            AND dm.TrangThai = 1
+                sp.MoTa,
 
-            AND
+                sp.Gia,
+
+                sp.SoLuong,
+
+                sp.HinhAnh,
+
+                sp.TrangThai,
+
+                sp.NgayTao,
+
+                dm.TenDanhMuc,
+
+                ISNULL(
+                    Sales.TotalSold,
+                    0
+                ) AS TotalSold
+
+
+            FROM SanPham sp
+
+
+            INNER JOIN DanhMuc dm
+
+                ON sp.MaDanhMuc =
+                   dm.MaDanhMuc
+
+
+            LEFT JOIN
             (
-                @MaDanhMuc = 0
-                OR sp.MaDanhMuc = @MaDanhMuc
-            )
+                SELECT
 
-            AND
-            (
-                @Keyword = ''
+                    ctdh.MaSanPham,
 
-                OR sp.TenSanPham
-                    LIKE N'%' + @Keyword + N'%'
+                    SUM(
+                        ctdh.SoLuong
+                    ) AS TotalSold
 
-                OR ISNULL(
-                    sp.MoTa,
-                    N''
+                FROM ChiTietDonHang ctdh
+
+
+                INNER JOIN DonHang dh
+
+                    ON ctdh.MaDonHang =
+                       dh.MaDonHang
+
+
+                WHERE
+
+                    dh.TrangThai NOT IN
+                    (
+                        N'Đã hủy',
+                        N'Đã huỷ',
+                        N'Hủy',
+                        N'Huỷ'
+                    )
+
+
+                GROUP BY
+                    ctdh.MaSanPham
+
+            ) Sales
+
+                ON sp.MaSanPham =
+                   Sales.MaSanPham
+
+
+            WHERE
+
+                sp.TrangThai = 1
+
+                AND
+
+                dm.TrangThai = 1
+
+
+                -- =========================================
+                -- DANH MỤC
+                -- =========================================
+
+                AND
+                (
+                    @MaDanhMuc = 0
+
+                    OR
+
+                    sp.MaDanhMuc =
+                    @MaDanhMuc
                 )
-                    LIKE N'%' + @Keyword + N'%'
 
-                OR dm.TenDanhMuc
-                    LIKE N'%' + @Keyword + N'%'
-            )
+
+                -- =========================================
+                -- TÌM KIẾM
+                --
+                -- Tên sản phẩm
+                -- Mô tả
+                -- Danh mục
+                -- =========================================
+
+                AND
+                (
+                    @Keyword = N''
+
+                    OR
+
+                    sp.TenSanPham
+                        LIKE
+                        N'%' +
+                        @Keyword +
+                        N'%'
+
+                    OR
+
+                    ISNULL(
+                        sp.MoTa,
+                        N''
+                    )
+                    LIKE
+                    N'%' +
+                    @Keyword +
+                    N'%'
+
+                    OR
+
+                    dm.TenDanhMuc
+                        LIKE
+                        N'%' +
+                        @Keyword +
+                        N'%'
+                )
+
+
+                -- =========================================
+                -- GIÁ TỐI THIỂU
+                -- =========================================
+
+                AND
+                (
+                    @MinPrice IS NULL
+
+                    OR
+
+                    sp.Gia >= @MinPrice
+                )
+
+
+                -- =========================================
+                -- GIÁ TỐI ĐA
+                -- =========================================
+
+                AND
+                (
+                    @MaxPrice IS NULL
+
+                    OR
+
+                    sp.Gia <= @MaxPrice
+                )
+
+
+                -- =========================================
+                -- TRẠNG THÁI KHO
+                --
+                -- 0 = Tất cả
+                -- 1 = Còn hàng
+                -- 2 = Hết hàng
+                -- =========================================
+
+                AND
+                (
+                    @Status = 0
+
+                    OR
+
+                    (
+                        @Status = 1
+                        AND
+                        sp.SoLuong > 0
+                    )
+
+                    OR
+
+                    (
+                        @Status = 2
+                        AND
+                        sp.SoLuong <= 0
+                    )
+                )
+        )
+
+
+        -- =====================================================
+        -- LẤY DANH SÁCH
+        -- =====================================================
+
+        SELECT
+
+            MaSanPham,
+
+            MaDanhMuc,
+
+            TenSanPham,
+
+            MoTa,
+
+            Gia,
+
+            SoLuong,
+
+            HinhAnh,
+
+            TrangThai,
+
+            NgayTao,
+
+            TenDanhMuc
+
+
+        FROM ProductData
+
 
         ORDER BY
-            sp.MaSanPham DESC
+
+            CASE
+                WHEN
+                    @Sort = 'price_asc'
+                THEN Gia
+            END ASC,
+
+
+            CASE
+                WHEN
+                    @Sort = 'price_desc'
+                THEN Gia
+            END DESC,
+
+
+            CASE
+                WHEN
+                    @Sort = 'bestseller'
+                THEN TotalSold
+            END DESC,
+
+
+            CASE
+                WHEN
+                    @Sort = 'bestseller'
+                THEN MaSanPham
+            END DESC,
+
+
+            CASE
+                WHEN
+                    @Sort = 'newest'
+                THEN NgayTao
+            END DESC,
+
+
+            MaSanPham DESC
+
 
         OFFSET @Offset ROWS
 
         FETCH NEXT @PageSize ROWS ONLY;
 
 
-        SELECT COUNT(*)
+        -- =====================================================
+        -- ĐẾM TỔNG SẢN PHẨM
+        -- =====================================================
+
+        SELECT
+            COUNT(*)
 
         FROM SanPham sp
 
+
         INNER JOIN DanhMuc dm
-            ON sp.MaDanhMuc = dm.MaDanhMuc
+
+            ON sp.MaDanhMuc =
+               dm.MaDanhMuc
+
 
         WHERE
+
             sp.TrangThai = 1
 
-            AND dm.TrangThai = 1
+            AND
+
+            dm.TrangThai = 1
+
 
             AND
             (
                 @MaDanhMuc = 0
-                OR sp.MaDanhMuc = @MaDanhMuc
+
+                OR
+
+                sp.MaDanhMuc =
+                @MaDanhMuc
             )
+
 
             AND
             (
-                @Keyword = ''
+                @Keyword = N''
 
-                OR sp.TenSanPham
-                    LIKE N'%' + @Keyword + N'%'
+                OR
 
-                OR ISNULL(
+                sp.TenSanPham
+                    LIKE
+                    N'%' +
+                    @Keyword +
+                    N'%'
+
+                OR
+
+                ISNULL(
                     sp.MoTa,
                     N''
                 )
-                    LIKE N'%' + @Keyword + N'%'
+                LIKE
+                N'%' +
+                @Keyword +
+                N'%'
 
-                OR dm.TenDanhMuc
-                    LIKE N'%' + @Keyword + N'%'
+                OR
+
+                dm.TenDanhMuc
+                    LIKE
+                    N'%' +
+                    @Keyword +
+                    N'%'
+            )
+
+
+            AND
+            (
+                @MinPrice IS NULL
+
+                OR
+
+                sp.Gia >= @MinPrice
+            )
+
+
+            AND
+            (
+                @MaxPrice IS NULL
+
+                OR
+
+                sp.Gia <= @MaxPrice
+            )
+
+
+            AND
+            (
+                @Status = 0
+
+                OR
+
+                (
+                    @Status = 1
+                    AND
+                    sp.SoLuong > 0
+                )
+
+                OR
+
+                (
+                    @Status = 2
+                    AND
+                    sp.SoLuong <= 0
+                )
             );
+
     ";
 
 
             using (
                 SqlConnection conn =
-                    database.GetConnection())
+                    database.GetConnection()
+            )
             using (
                 SqlCommand cmd =
                     new SqlCommand(
                         sql,
-                        conn))
+                        conn
+                    )
+            )
             {
+                // =====================================================
+                // KEYWORD
+                // =====================================================
+
                 cmd.Parameters.Add(
                     "@Keyword",
                     SqlDbType.NVarChar,
-                    200)
-                    .Value = keyword;
+                    200
+                ).Value =
+                    keyword;
 
+
+                // =====================================================
+                // CATEGORY
+                // =====================================================
 
                 cmd.Parameters.Add(
                     "@MaDanhMuc",
-                    SqlDbType.Int)
-                    .Value = maDanhMuc;
+                    SqlDbType.Int
+                ).Value =
+                    maDanhMuc;
 
+
+                // =====================================================
+                // MIN PRICE
+                // =====================================================
+
+                SqlParameter pMin =
+                    cmd.Parameters.Add(
+                        "@MinPrice",
+                        SqlDbType.Decimal
+                    );
+
+
+                pMin.Precision = 18;
+                pMin.Scale = 2;
+
+
+                pMin.Value =
+                    minPrice.HasValue
+                    ?
+                    (object)minPrice.Value
+                    :
+                    DBNull.Value;
+
+
+                // =====================================================
+                // MAX PRICE
+                // =====================================================
+
+                SqlParameter pMax =
+                    cmd.Parameters.Add(
+                        "@MaxPrice",
+                        SqlDbType.Decimal
+                    );
+
+
+                pMax.Precision = 18;
+                pMax.Scale = 2;
+
+
+                pMax.Value =
+                    maxPrice.HasValue
+                    ?
+                    (object)maxPrice.Value
+                    :
+                    DBNull.Value;
+
+
+                // =====================================================
+                // STATUS
+                // =====================================================
+
+                cmd.Parameters.Add(
+                    "@Status",
+                    SqlDbType.Int
+                ).Value =
+                    status;
+
+
+                // =====================================================
+                // SORT
+                // =====================================================
+
+                cmd.Parameters.Add(
+                    "@Sort",
+                    SqlDbType.VarChar,
+                    20
+                ).Value =
+                    sort;
+
+
+                // =====================================================
+                // OFFSET
+                // =====================================================
 
                 cmd.Parameters.Add(
                     "@Offset",
-                    SqlDbType.Int)
-                    .Value = offset;
+                    SqlDbType.Int
+                ).Value =
+                    offset;
 
+
+                // =====================================================
+                // PAGE SIZE
+                // =====================================================
 
                 cmd.Parameters.Add(
                     "@PageSize",
-                    SqlDbType.Int)
-                    .Value = pageSize;
+                    SqlDbType.Int
+                ).Value =
+                    pageSize;
 
+
+                // =====================================================
+                // THỰC THI
+                // =====================================================
 
                 using (
                     SqlDataAdapter adapter =
-                        new SqlDataAdapter(cmd))
+                        new SqlDataAdapter(cmd)
+                )
                 {
                     DataSet dataSet =
                         new DataSet();
 
 
-                    adapter.Fill(dataSet);
+                    adapter.Fill(
+                        dataSet
+                    );
 
 
-                    totalRecords = 0;
-
+                    // =================================================
+                    // TỔNG SỐ RECORD
+                    // =================================================
 
                     if (
                         dataSet.Tables.Count > 1
                         &&
-                        dataSet.Tables[1].Rows.Count > 0)
+                        dataSet.Tables[1]
+                            .Rows.Count > 0
+                    )
                     {
                         totalRecords =
                             Convert.ToInt32(
-                                dataSet.Tables[1]
-                                .Rows[0][0]);
+                                dataSet
+                                    .Tables[1]
+                                    .Rows[0][0]
+                            );
                     }
 
 
-                    if (dataSet.Tables.Count > 0)
+                    // =================================================
+                    // DATA
+                    // =================================================
+
+                    if (
+                        dataSet.Tables.Count > 0
+                    )
                     {
-                        return dataSet.Tables[0];
+                        return
+                            dataSet.Tables[0];
                     }
 
 
-                    return new DataTable();
+                    return
+                        new DataTable();
                 }
             }
         }
