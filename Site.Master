@@ -31,7 +31,9 @@ Inherits="web_ban_hang2.SiteMaster" %>
 <link href="<%= ResolveUrl("~/Content/Site.css") %>"
       rel="stylesheet" />
 
-
+<link
+    rel="stylesheet"
+    href="<%= ResolveUrl("~/Content/chatbot.css") %>" />
 <style>
 
     /* =====================================================
@@ -623,6 +625,125 @@ Inherits="web_ban_hang2.SiteMaster" %>
 </main>
 
 
+
+<!-- =========================================================
+     AI CHATBOT
+     ========================================================= -->
+
+<button
+    type="button"
+    id="aiChatbotLauncher"
+    class="ai-chatbot-launcher"
+    aria-label="Mở trợ lý AI"
+    aria-expanded="false">
+
+    🤖
+
+</button>
+
+
+<div
+    id="aiChatbotWindow"
+    class="ai-chatbot-window"
+    data-endpoint="<%= ResolveUrl("~/ChatbotHandler.ashx") %>">
+
+
+    <!-- HEADER -->
+
+    <div class="ai-chatbot-header">
+
+        <div class="ai-chatbot-title">
+
+            <div class="ai-chatbot-avatar">
+                🤖
+            </div>
+
+            <div>
+
+                <strong>
+                    AI Shop Assistant
+                </strong>
+
+                <small>
+                    Tư vấn sản phẩm & hỗ trợ khách hàng
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="aiChatbotClose"
+            class="ai-chatbot-close"
+            aria-label="Đóng chatbot">
+
+            ×
+
+        </button>
+
+    </div>
+
+
+    <!-- MESSAGES -->
+
+    <div
+        id="aiChatbotMessages"
+        class="ai-chatbot-messages"
+        aria-live="polite">
+
+
+        <div class="ai-chatbot-message bot">
+
+            <div class="ai-chatbot-bubble">
+
+                Xin chào 👋<br />
+
+                Mình là trợ lý AI của
+                SHOP 5 ANH EM.
+
+                Bạn có thể hỏi mình về
+                sản phẩm, giá, tồn kho
+                hoặc đơn hàng của bạn nhé!
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- INPUT -->
+
+    <div class="ai-chatbot-footer">
+
+    <div
+        id="aiChatbotForm"
+        class="ai-chatbot-form">
+
+        <textarea
+            id="aiChatbotInput"
+            class="ai-chatbot-input"
+            maxlength="1000"
+            placeholder="Ví dụ: Có laptop dưới 20 triệu không?"
+            autocomplete="off"></textarea>
+
+        <button
+            type="button"
+            id="aiChatbotSend"
+            class="ai-chatbot-send"
+            aria-label="Gửi câu hỏi">
+
+            ➤
+
+        </button>
+
+        </div>
+    
+    </div>
+</div>
+
 <!-- =========================================================
      FOOTER
      ========================================================= -->
@@ -809,8 +930,9 @@ Inherits="web_ban_hang2.SiteMaster" %>
 
 
 
-<script src="<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>">
-</script>
+<script src="<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>"></script>
+
+<script src="<%= ResolveUrl("~/Scripts/chatbot.js") %>"></script>
 
 </form>
 
