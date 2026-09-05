@@ -45,17 +45,24 @@ namespace web_ban_hang2
             context.Response.Cache
                 .SetNoStore();
 
-            if (!string.Equals(
-                context.Request.HttpMethod,
-                "POST",
-                StringComparison.OrdinalIgnoreCase))
+            /*
+             * =====================================================
+             * CHỈ CHẤP NHẬN POST
+             * =====================================================
+             */
+            if (
+                !string.Equals(
+                    context.Request.HttpMethod,
+                    "POST",
+                    StringComparison.OrdinalIgnoreCase))
             {
                 WriteJson(
                     context,
 
                     new ChatbotResponse
                     {
-                        Success = false,
+                        Success =
+                            false,
 
                         Message =
                             "Phương thức không được hỗ trợ."
@@ -68,6 +75,11 @@ namespace web_ban_hang2
 
             try
             {
+                /*
+                 * =================================================
+                 * RATE LIMIT
+                 * =================================================
+                 */
                 if (!CheckRateLimit(context))
                 {
                     WriteJson(
@@ -75,12 +87,12 @@ namespace web_ban_hang2
 
                         new ChatbotResponse
                         {
-                            Success = false,
+                            Success =
+                                false,
 
                             Message =
                                 "Bạn đang gửi hơi nhanh. "
-                                + "Vui lòng chờ khoảng "
-                                + "1 phút rồi thử lại nhé."
+                                + "Vui lòng chờ khoảng 1 phút nhé."
                         },
 
                         429);
@@ -88,6 +100,11 @@ namespace web_ban_hang2
                     return;
                 }
 
+                /*
+                 * =================================================
+                 * ĐỌC REQUEST JSON
+                 * =================================================
+                 */
                 string body;
 
                 using (
@@ -100,23 +117,27 @@ namespace web_ban_hang2
                 }
 
                 ChatbotRequest request =
-                    JsonConvert.DeserializeObject
-                    <ChatbotRequest>(body);
+                    JsonConvert
+                        .DeserializeObject
+                        <ChatbotRequest>(
+                            body);
 
                 string question =
                     request == null
                         ? null
                         : request.Message;
 
-                if (string.IsNullOrWhiteSpace(
-                    question))
+                if (
+                    string.IsNullOrWhiteSpace(
+                        question))
                 {
                     WriteJson(
                         context,
 
                         new ChatbotResponse
                         {
-                            Success = false,
+                            Success =
+                                false,
 
                             Message =
                                 "Bạn hãy nhập câu hỏi nhé 😊"
@@ -130,22 +151,80 @@ namespace web_ban_hang2
                 question =
                     question.Trim();
 
-                if (question.Length > 1000)
+                /*
+                 * Không cho gửi câu hỏi quá dài.
+                 */
+                if (question.Length > 800)
                 {
                     question =
                         question.Substring(
                             0,
-                            1000);
+                            800);
                 }
 
+                /*
+                 * =================================================
+                 * TRẢ LỜI NHANH
+                 * =================================================
+                 *
+                 * Các câu đơn giản không cần gọi AI.
+                 */
+                string quickAnswer =
+                    GetQuickAnswer(
+                        question);
+
+                if (
+                    !string.IsNullOrWhiteSpace(
+                        quickAnswer))
+                {
+                    AddHistory(
+                        context,
+                        "user",
+                        question);
+
+                    AddHistory(
+                        context,
+                        "assistant",
+                        quickAnswer);
+
+                    WriteJson(
+                        context,
+
+                        new ChatbotResponse
+                        {
+                            Success =
+                                true,
+
+                            Message =
+                                quickAnswer
+                        },
+
+                        200);
+
+                    return;
+                }
+
+                /*
+                 * =================================================
+                 * CUSTOMER SESSION
+                 * =================================================
+                 */
                 int? maKhachHang =
                     GetCustomerId(
                         context);
 
+                /*
+                 * Lấy lịch sử hiện tại.
+                 */
                 List<ChatMessage> history =
                     GetHistory(
                         context);
 
+                /*
+                 * =================================================
+                 * DATABASE
+                 * =================================================
+                 */
                 ChatbotCatalogService
                     catalogService =
                         new ChatbotCatalogService();
@@ -154,8 +233,14 @@ namespace web_ban_hang2
                     catalogService
                         .BuildCatalogContext(
                             question,
-                            maKhachHang);
+                            maKhachHang,
+                            history);
 
+                /*
+                 * =================================================
+                 * AI
+                 * =================================================
+                 */
                 AIChatbotService aiService =
                     new AIChatbotService();
 
@@ -168,6 +253,11 @@ namespace web_ban_hang2
                         .GetAwaiter()
                         .GetResult();
 
+                /*
+                 * =================================================
+                 * LƯU HISTORY
+                 * =================================================
+                 */
                 AddHistory(
                     context,
                     "user",
@@ -178,14 +268,21 @@ namespace web_ban_hang2
                     "assistant",
                     answer);
 
+                /*
+                 * =================================================
+                 * RESPONSE
+                 * =================================================
+                 */
                 WriteJson(
                     context,
 
                     new ChatbotResponse
                     {
-                        Success = true,
+                        Success =
+                            true,
 
-                        Message = answer
+                        Message =
+                            answer
                     },
 
                     200);
@@ -202,7 +299,8 @@ namespace web_ban_hang2
 
                     new ChatbotResponse
                     {
-                        Success = false,
+                        Success =
+                            false,
 
                         Message =
                             GetSafeErrorMessage(
@@ -213,6 +311,88 @@ namespace web_ban_hang2
             }
         }
 
+        /*
+         * =========================================================
+         * TRẢ LỜI NHANH
+         * =========================================================
+         */
+        private static string GetQuickAnswer(
+            string question)
+        {
+            string q =
+                question
+                    .Trim()
+                    .ToLowerInvariant();
+
+            /*
+             * Xin chào
+             */
+            if (
+                q == "xin chào" ||
+                q == "xin chao" ||
+                q == "chào" ||
+                q == "chao" ||
+                q == "hello" ||
+                q == "hi")
+            {
+                return
+                    "Xin chào 👋 "
+                    + "Mình là trợ lý AI của SHOP 5 ANH EM. "
+                    + "Bạn có thể hỏi mình về sản phẩm, "
+                    + "giá, tồn kho, tư vấn mua hàng "
+                    + "hoặc đơn hàng nhé.";
+            }
+
+            /*
+             * Cảm ơn
+             */
+            if (
+                q == "cảm ơn" ||
+                q == "cam on" ||
+                q.Contains("cảm ơn bạn") ||
+                q.Contains("cam on ban"))
+            {
+                return
+                    "Không có gì 😊 "
+                    + "Mình luôn sẵn sàng hỗ trợ bạn!";
+            }
+
+            /*
+             * Hỏi chatbot là ai
+             */
+            if (
+                q == "bạn là ai" ||
+                q == "ban la ai")
+            {
+                return
+                    "Mình là trợ lý bán hàng AI "
+                    + "của SHOP 5 ANH EM. "
+                    + "Mình có thể giúp bạn tìm sản phẩm, "
+                    + "tư vấn theo ngân sách và so sánh sản phẩm.";
+            }
+
+            /*
+             * Tạm biệt
+             */
+            if (
+                q == "tạm biệt" ||
+                q == "tam biet" ||
+                q == "bye")
+            {
+                return
+                    "Tạm biệt 👋 "
+                    + "Khi cần tư vấn sản phẩm, "
+                    + "bạn cứ quay lại nhé!";
+            }
+
+            return null;
+        }
+
+        /*
+         * =========================================================
+         * LẤY ID KHÁCH HÀNG
+         * =========================================================
+         */
         private static int? GetCustomerId(
             HttpContext context)
         {
@@ -226,10 +406,12 @@ namespace web_ban_hang2
 
             int id;
 
-            if (int.TryParse(
-                Convert.ToString(value),
-                out id)
-                && id > 0)
+            if (
+                int.TryParse(
+                    Convert.ToString(value),
+                    out id)
+                &&
+                id > 0)
             {
                 return id;
             }
@@ -237,6 +419,11 @@ namespace web_ban_hang2
             return null;
         }
 
+        /*
+         * =========================================================
+         * HISTORY
+         * =========================================================
+         */
         private static List<ChatMessage>
             GetHistory(
                 HttpContext context)
@@ -259,27 +446,51 @@ namespace web_ban_hang2
             return history;
         }
 
+        /*
+         * =========================================================
+         * THÊM HISTORY
+         * =========================================================
+         *
+         * Chỉ giữ 6 message gần nhất:
+         *
+         * user
+         * assistant
+         * user
+         * assistant
+         * user
+         * assistant
+         */
         private static void AddHistory(
             HttpContext context,
             string role,
             string content)
         {
             List<ChatMessage> history =
-                GetHistory(context);
+                GetHistory(
+                    context);
 
             history.Add(
                 new ChatMessage
                 {
-                    Role = role,
-                    Content = content
+                    Role =
+                        role,
+
+                    Content =
+                        content
                 });
 
-            while (history.Count > 12)
+            while (
+                history.Count > 6)
             {
                 history.RemoveAt(0);
             }
         }
 
+        /*
+         * =========================================================
+         * RATE LIMIT
+         * =========================================================
+         */
         private static bool CheckRateLimit(
             HttpContext context)
         {
@@ -291,15 +502,19 @@ namespace web_ban_hang2
             DateTime now =
                 DateTime.UtcNow;
 
-            if (state == null ||
+            if (
+                state == null ||
                 now - state.StartedAtUtc
                     >= TimeSpan.FromMinutes(1))
             {
                 state =
                     new RateLimitState
                     {
-                        StartedAtUtc = now,
-                        Count = 0
+                        StartedAtUtc =
+                            now,
+
+                        Count =
+                            0
                     };
 
                 context.Session[
@@ -309,10 +524,16 @@ namespace web_ban_hang2
 
             state.Count++;
 
-            return state.Count
+            return
+                state.Count
                 <= MaxRequestsPerMinute;
         }
 
+        /*
+         * =========================================================
+         * XỬ LÝ LỖI AN TOÀN
+         * =========================================================
+         */
         private static string
             GetSafeErrorMessage(
                 Exception ex)
@@ -323,45 +544,80 @@ namespace web_ban_hang2
                     : ex.ToString()
                         .ToLowerInvariant();
 
+            /*
+             * TIMEOUT
+             */
             if (
                 text.Contains(
-                    "không thể kết nối tới ollama")
-                || text.Contains(
-                    "unable to connect")
-                || text.Contains(
-                    "connection refused")
-                || text.Contains(
-                    "no connection could be made"))
+                    "ollama_timeout") ||
+                text.Contains(
+                    "timeout") ||
+                text.Contains(
+                    "timed out"))
+            {
+                if (
+                    text.Contains(
+                        "ollama_timeout"))
+                {
+                    return
+                        "AI đang xử lý hơi lâu. "
+                        + "Bạn vui lòng thử lại sau vài giây nhé.";
+                }
+            }
+
+            /*
+             * CONNECTION
+             */
+            if (
+                text.Contains(
+                    "ollama_connection") ||
+                text.Contains(
+                    "connection refused") ||
+                text.Contains(
+                    "unable to connect"))
             {
                 return
                     "Không thể kết nối tới Ollama. "
-                    + "Bạn hãy kiểm tra Ollama đang chạy trên máy và thử lại nhé.";
+                    + "Bạn hãy kiểm tra Ollama đang chạy.";
             }
 
+            /*
+             * MODEL
+             */
             if (
-                text.Contains("model")
-                && text.Contains("not found"))
+                text.Contains("model") &&
+                text.Contains("not found"))
             {
                 return
-                    "Model AI chưa được cài đặt trong Ollama. "
-                    + "Hãy kiểm tra lại model trong Web.config.";
+                    "Model Qwen3 chưa được cài đặt "
+                    + "hoặc tên model trong Web.config không đúng.";
             }
 
+            /*
+             * DATABASE
+             */
             if (
-                text.Contains("timeout")
-                || text.Contains("timed out")
-                || text.Contains("quá lâu"))
+                text.Contains("sql") ||
+                text.Contains("invalid object") ||
+                text.Contains("invalid column") ||
+                text.Contains("cannot open database"))
             {
                 return
-                    "AI đang phản hồi chậm. "
-                    + "Bạn vui lòng thử lại sau ít giây nhé.";
+                    "Chatbot không đọc được dữ liệu sản phẩm "
+                    + "từ cơ sở dữ liệu. "
+                    + "Bạn hãy kiểm tra SQL Server.";
             }
 
             return
                 "Xin lỗi, chatbot đang gặp sự cố tạm thời. "
-                + "Bạn vui lòng thử lại sau nhé.";
+                + "Bạn vui lòng thử lại nhé.";
         }
 
+        /*
+         * =========================================================
+         * GHI JSON
+         * =========================================================
+         */
         private static void WriteJson(
             HttpContext context,
             object value,
@@ -375,6 +631,11 @@ namespace web_ban_hang2
                     value));
         }
 
+        /*
+         * =========================================================
+         * CLASS RATE LIMIT
+         * =========================================================
+         */
         private class RateLimitState
         {
             public DateTime StartedAtUtc
@@ -390,6 +651,11 @@ namespace web_ban_hang2
             }
         }
 
+        /*
+         * =========================================================
+         * REQUEST
+         * =========================================================
+         */
         private class ChatbotRequest
         {
             public string Message
@@ -399,6 +665,11 @@ namespace web_ban_hang2
             }
         }
 
+        /*
+         * =========================================================
+         * RESPONSE
+         * =========================================================
+         */
         private class ChatbotResponse
         {
             [JsonProperty("success")]
